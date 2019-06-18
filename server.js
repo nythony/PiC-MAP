@@ -6,7 +6,7 @@ const bodyParser = require ('body-parser');
 //?? Required??
 var app = express();
 
-const port = 3000; //Talk to browser through this port
+const port = process.env.PORT || 3000; //Talk to browser through this port
 
 app.get('/', (req,res)=>{
     //use sendFile since this is a simple html apage
