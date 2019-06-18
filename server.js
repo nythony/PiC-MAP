@@ -13,7 +13,7 @@ app.get('/', (req,res)=>{
     res.sendFile(__dirname+'/home.html');
 });
 
-app.get('/login', (req,res)=>{
+app.get('/userForm', (req,res)=>{
     //use sendFile since this is a simple html apage
     res.sendFile(__dirname+'/userForm.html');
 });
