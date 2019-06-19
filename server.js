@@ -9,7 +9,7 @@ var app = express();
 const port = process.env.PORT || 3000; //Talk to browser through this port
 
 app.get('/', (req,res)=>{
-    //use sendFile since this is a simple html apage
+    //use sendFile since this is a simple html page
     res.sendFile(__dirname+'/home.html');
 });
 
