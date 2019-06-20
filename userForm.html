@@ -1,43 +1,51 @@
-<!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="ISO-8859-1">
-<title>Main Page</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 </head>
-<body ng-app="demo">
-	<hr />
-	<div class="container" ng-controller="UserController">
-		<div class="row">
-			<label>User</label> <input type="text" ng-model="userDto.userName"
-				class="input-sm spacing" /> <label>Skills</label> <input
-				type="text" ng-model="skills" ng-list
-				class="input-sm custom-width spacing"
-				placeholder="use comma to separate skills" />
-		</div>
-		<div class="row">
-			<button ng-click="saveUser()" class="btn btn-sm btn-info">Save
-				User</button>
-			<button ng-click="getAllUsers()" class="btn btn-sm btn-info">Get
-				All Users</button>
-		</div>
-		<hr />
-		<div class="row">
-			<p>{{allUsers | json}}</p>
-		</div>
-		<hr />
-		<div class="row" ng-repeat="user in allUsers">
-			<div class="">
-				<h3>{{user.userName}}</h3>
-				<span ng-repeat="skill in user.skillDtos" class="spacing">{{skill.skillName}}</span>
-			</div>
-		</div>
-	</div>
+
+<body>
+    <div>
+
+        <br/>
+        <form class="form-horizontal" role="form" style="width: 50%;" action="/submitted" method="POST" target = "_blank">
+            <div class="form-group">
+                <label for="name" class="col-sm-2 control-label">Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="name" name="name" placeholder="First & Last Name" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email" class="col-sm-2 control-label">Email</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="example@domain.com" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="message" class="col-sm-2 control-label">Message</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" rows="4" name="message"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="human" class="col-sm-2 control-label">2 + 3 = ?</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="human" name="human" placeholder="Your Answer">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-10 col-sm-offset-2">
+                    <input onclick = "window.location= 'https://www.youtube.com/'" id="submit" name="submit" type="submit" value="Send" class="btn btn-primary">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-10 col-sm-offset-2">
+                    <! Will be used to display an alert to the user>
+                </div>
+            </div>
+        </form>
+    </div>
 </body>
-<script src="js/lib/angular.min.js"></script>
-<script src="js/lib/ui-bootstrap-tpls-2.5.0.min.js"></script>
-<script src="js/app/app.js"></script>
-<script src="js/app/UserController.js"></script>
-<script src="js/app/UserService.js"></script>
-<link rel="stylesheet" href="css/lib/bootstrap.min.css" />
-<link rel="stylesheet" href="css/app/app.css" />
+
 </html>
