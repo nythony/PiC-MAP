@@ -12,6 +12,8 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 const port = process.env.PORT || 3000; //Talk to browser through this port
 
+console.log("testing console");
+
 app.get('/', (req,res)=>{
     //use sendFile since this is a simple html apage
     //__dirname attaches the file path of the server.js file. 
@@ -54,6 +56,7 @@ app.post("/contact-submitted", function(req,res){
 });
 
 app.post("/userform-submitted", function(req,res){
+	console.log("WE GOT HERE");
 	var uname = req.body.name;
 	var uemail = req.body.email;
 	var umessage = req.body.message;
