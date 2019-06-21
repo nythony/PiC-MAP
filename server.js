@@ -56,7 +56,6 @@ app.post("/contact-submitted", function(req,res){
 });
 
 app.post("/userform-submitted", function(req,res){
-	console.log("WE GOT HERE");
 	var uname = req.body.name;
 	var uemail = req.body.email;
 	var umessage = req.body.message;
@@ -66,6 +65,16 @@ app.post("/userform-submitted", function(req,res){
 	console.log(uemail);
 	console.log(umessage);
 	console.log(uhuman);
+});
+
+app.post("/taskform-submitted", function(req,res){
+	var task= req.body.task;
+	var taskOwner = req.body.taskOwner;
+	var status = req.body.status;
+
+	console.log(task);
+	console.log(taskOwner);
+	console.log(status);
 });
 
 
