@@ -9,9 +9,9 @@
     <div>
 
         <br/>
-        <form class="form-horizontal" role="form" style="width: 50%;">
+        <form class="form-horizontal" role="form" style="width: 50%;" action="/submitted" method="POST" target = "_blank">
             <div class="form-group">
-                <label for="task" class="col-sm-2 control-label">Task :</label>
+                <label for="task" class="col-sm-2 control-label">Task:</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="task" name="task" placeholder="Enter task details" value="">
                 </div>
@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="status" class="col-sm-2 control-label">Status</label>
+                <label for="status" class="col-sm-2 control-label">Status:</label>
                 <div class="col-sm-10">
                     <textarea class="form-control" rows="4" name="status"></textarea>
                 </div>
@@ -31,7 +31,7 @@
            
             <div class="form-group">
                 <div class="col-sm-10 col-sm-offset-2">
-                    <input id="submit" name="submit" type="submit" value="Send" class="btn btn-primary">
+                    <input onclick = "window.location= 'https://www.google.com/'" id="submit" name="submit" type="submit" value="Send" class="btn btn-primary">
                 </div>
             </div>
             <div class="form-group">

@@ -18,6 +18,11 @@ app.get('/userForm', (req,res)=>{
     res.sendFile(__dirname+'/userForm.html');
 });
 
+app.get('/taskForm', (req,res)=>{
+    //use sendFile since this is a simple html apage
+    res.sendFile(__dirname+'/taskForm.html');
+});
+
 
 app.post("/userform-submitted", function(req,res){
 	var uname = req.body.name;
