@@ -19,6 +19,27 @@ app.get('/userForm', (req,res)=>{
 });
 
 
+app.post("/userform-submitted", function(req,res){
+	var uname = req.body.name;
+	var uemail = req.body.email;
+	var umessage = req.body.message;
+	var uhuman = req.body.human;
+
+	console.log(uname);
+	console.log(uemail);
+	console.log(umessage);
+	console.log(uhuman);
+});
+
+app.post("/taskform-submitted", function(req,res){
+	var task= req.body.task;
+	var taskOwner = req.body.taskOwner;
+	var status = req.body.status;
+
+	console.log(task);
+	console.log(taskOwner);
+	console.log(status);
+});
 
 
 
