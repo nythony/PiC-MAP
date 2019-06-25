@@ -22,8 +22,6 @@ function checkLogin(event) {
     username = event.target.elements.username.value
     password = event.target.elements.username.password
 
-    const fs = require('fs')
-    fs.readFile('../users.txt', (err,data) => {
-        console.log(data.toString())
-    })
+    console.log(username)
+    console.log(password)
 }
