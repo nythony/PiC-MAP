@@ -19,9 +19,7 @@ $loginForm.addEventListener('submit', checkLogin)
 function checkLogin(event) {
     event.preventDefault()
     // Retrieve message value of message form
-    console.log(event)
-    console.log(event.valueOf)
-    console.log(event.target)
-    console.log($loginFormUsername)
-    console.log($loginFormUsername.getAttribute)
+    console.log(event.target.Element)
+    console.log(event.target.Element.toString)
+    console.log(event.target.Element.valueOf)
 }
