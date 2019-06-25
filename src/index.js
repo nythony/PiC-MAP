@@ -71,11 +71,20 @@ app.get("/contact",function(req,res){
 app.get("/userform",function(req,res){
   res.sendFile(views + "userForm.html");
 });
+app.get("/projectform", function (req, res) {
+    res.sendFile(views + "projectForm.html");
 
+});
+app.get("/jobstoryform", function (req, res) {
+    res.sendFile(views + "jobStoryForm.html");
+
+});
 app.get("/taskform",function(req,res){
   res.sendFile(views + "taskForm.html");
 });
-
+app.get("/issueform", function (req, res) {
+    res.sendFile(views + "issueForm.html");
+});
 app.get("/chatapp",function(req,res){
 	res.sendFile(views + "chatApp.html")
 })

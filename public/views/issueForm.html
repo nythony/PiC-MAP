@@ -1,0 +1,96 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div>
+
+        <br/>
+        <form class="form-horizontal" role="form" style="width: 50%;" action="/issueform-submitted" method="POST">
+            <div class="form-group">
+                <label for="issue" class="col-sm-2 control-label">Issue : </label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="issue" name="issue" placeholder="log issue " value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="issueDetails" class="col-sm-2 control-label">Issue Details:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="issueDetails" name="issueDetails" placeholder="enter issue details">
+                </div>
+            </div>
+           <div class="form-group">
+    <label for="priority" class="col-sm-2 control-label"> Priority:</label>
+    <div class="col-sm-10">
+
+        <select name="priority" size="4" class="form-control" id="priority" name="priority" placeholder="Select priority">
+  <option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+  
+</select>
+    </div>
+            </div>
+            <div class="form-group">
+                <label for="createdBy" class="col-sm-2 control-label">Created By : </label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="name" name="createdBy" placeholder="createdBy" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="createdDate" class="col-sm-2 control-label">Created Date : </label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="name" name="createdDate" placeholder="createdDate" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="project" class="col-sm-2 control-label">Project Name :</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="project" name="project" placeholder="MET CS Agile" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="job" class="col-sm-2 control-label">Job Story :</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="job" name="job" placeholder="Job Story" value="">
+                </div>
+            </div>
+            <div class="form-group ">
+                <label for="assignTo" class="col-sm-2 control-label ">Assign To : </label>
+                <div class="col-sm-10 ">
+                    <input type="text " class="form-control " id="assignTo" rows="4 " name="assignTo" placeholder="Kanchan,Alina "></input>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label for="cause" class="col-sm-2 control-label ">Root Cause : </label>
+                <div class="col-sm-10 ">
+                    <input type="text " class="form-control " id="cause" rows="4 " name="cause" placeholder="Enter root cause of issue"></input>
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label for="resolution" class="col-sm-2 control-label ">Resolution : </label>
+                <div class="col-sm-10 ">
+                    <input type="text " class="form-control " id="resolution" rows="4 " name="resolution" placeholder="Enter resolution"></input>
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <div class="col-sm-10 col-sm-offset-2 ">
+                    <input onclick="window.location='https://picmapmanager.herokuapp.com/' " id="submit " name="submit
+                        " type="submit " value="Send " class="btn btn-primary ">
+                </div>
+            </div>
+            <div class="form-group ">
+                <div class="col-sm-10 col-sm-offset-2 ">
+                    <! Will be used to display an alert to the user>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
