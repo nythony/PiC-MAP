@@ -21,7 +21,6 @@ function checkLogin(event) {
     // Retrieve message value of message form
     username = event.target.elements.username.value
     password = event.target.elements.username.password
-    var fs = require("fs");
     var accounts = read("../users.txt").split("\n")
     console.log(accounts)
 
