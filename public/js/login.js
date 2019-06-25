@@ -19,6 +19,10 @@ $loginForm.addEventListener('submit', checkLogin)
 function checkLogin(event) {
     event.preventDefault()
     // Retrieve message value of message form
-    console.log(event.target.elements.username.value)
-    console.log(event.target.elements.password.value)
+    username = event.target.elements.username.value
+    password = event.target.elements.username.password
+    var fs = require("fs");
+    var accounts = read("../users.txt").split("\n")
+    console.log(accounts)
+
 }
