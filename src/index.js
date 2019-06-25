@@ -80,6 +80,10 @@ app.get("/chatapp",function(req,res){
 	res.sendFile(views + "chatApp.html")
 })
 
+app.get("/loginpage",function(req,res){
+    res.sendFile(views + "loginPage.html")
+})
+
 app.post("/contact-submitted", function(req,res){
 	var cname = req.body.name;
 	var cemail = req.body.email;
