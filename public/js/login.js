@@ -1,6 +1,6 @@
 // JavaScript source code
 
-console.log('running login script')
+console.log('running login script');
 
 const $loginForm = document.querySelector('#login-form')
 const $loginFormUsername = $loginForm.querySelector('username')
@@ -12,11 +12,16 @@ const $createLoginFormUsername = $createLoginForm.querySelector('username')
 const $createLoginFormPassword = $createLoginForm.querySelector('password')
 const $createLoginFormButton = $createLoginForm.querySelector('button')
 
-$loginForm.addEventListener('submit', checkLogin())
+$loginForm.addEventListener('submit', checkLogin)
 
 
 
-
-function checkLogin() {
-    console.log('in checkLogin function')
+function checkLogin(event) {
+    event.preventDefault()
+    // Retrieve message value of message form
+    console.log(event)
+    console.log(event.valueOf)
+    console.log(event.target)
+    console.log($loginFormUsername)
+    console.log($loginFormUsername.getAttribute)
 }
