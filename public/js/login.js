@@ -19,7 +19,6 @@ $loginForm.addEventListener('submit', checkLogin)
 function checkLogin(event) {
     event.preventDefault()
     // Retrieve message value of message form
-    console.log(event.target.Element)
-    console.log(event.target.Element.toString)
-    console.log(event.target.Element.valueOf)
+    console.log(event.target.elements.username.value)
+    console.log(event.target.elements.password.value)
 }
