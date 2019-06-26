@@ -108,6 +108,10 @@ app.get("/chatSignIn",function(req,res){
     res.sendFile(views + "chatSignIn.html")
 })
 
+app.get("/chatApp.html",function(req,res){
+    res.sendFile(views + "chatApp.html")
+})
+
 app.post("/contact-submitted", function(req,res){
 	var cname = req.body.name;
 	var cemail = req.body.email;
