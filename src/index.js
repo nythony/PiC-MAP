@@ -2,6 +2,7 @@ const path = require('path')
 const http = require('http')
 const express = require('express')
 const socketio = require('socket.io')
+const { generateMessage, generateLocationMessage } = require('./utils/messages')
 
 //Will need when integrate this with database and APIs
 const bodyParser = require ('body-parser')
@@ -23,29 +24,27 @@ io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
     // Display only to connection
-    socket.emit('message', 'Welcome!')
+    socket.emit('message', generateMessage('Welcome!'))
     // Display to everyone but the connection
-    socket.broadcast.emit('message', 'A new user has joined!')
+    socket.broadcast.emit('message', generateMessage('A new user has joined!'))
 
     // Display to everyone
     socket.on('sendMessage', (message, callback) => {
-        io.emit('message', message)
+        io.emit('message', generateMessage(message))
         callback()
     })
 
     socket.on('sendLocation', (coords, callback) => {
-        io.emit('message', `https://google.com/maps?q=${coords.latitude},${coords.longitude}`)
+        io.emit('locationMessage', generateLocationMessage(`https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
         callback()
     })
 
     // When a user disconnects
     // Disconnect event is built in
     socket.on('disconnect', () => {
-        io.emit('message', 'A user has left!')
+        io.emit('message', generateMessage('A user has left!'))
     })
 })
-
-// console.log("testing console");
 
 app.get('/', (req,res)=>{
     //use sendFile since this is a simple html apage
@@ -58,7 +57,6 @@ app.get('/login', (req,res)=>{
     //use sendFile since this is a simple html apage
     res.sendFile(views +'userForm.html');
 });
-
 
 app.get("/about", function (req, res) {
     res.sendFile(views + "about.html");
@@ -154,6 +152,6 @@ app.post("/taskform-submitted", function(req,res){
 
 
 //This server is running through the port 3000
-server.listen(port,()=>{
-    console.log(`Server is up on port:${port}`);
-}); 
+server.listen(port, () => {
+    console.log(`Server is up on port ${port}!`)
+})
