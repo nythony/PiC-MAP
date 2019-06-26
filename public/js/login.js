@@ -1,6 +1,10 @@
 // JavaScript source code
 
+
 console.log('running login script');
+
+const pg = require('pg')
+
 
 const $loginForm = document.querySelector('#login-form')
 const $loginFormUsername = $loginForm.querySelector('username')
@@ -25,10 +29,7 @@ function checkLogin(event) {
     console.log(username)
     console.log(password)
 
-    const fs = require('fs')
-    fs.readFile('../users.txt', 'utf8', function (err, data) {
-        console.log(data)
-    })
+    var pg = require('pg')
 }
 
 
