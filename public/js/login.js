@@ -1,9 +1,9 @@
 // JavaScript source code
 
 
-console.log('running login script');
+console.log('running login script')
 
-databaseURI = postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0
+var databaseURI = postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0
 var client = new pg.Client(databaseURI)
 client.connect()
 
