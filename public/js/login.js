@@ -13,15 +13,32 @@ const $createLoginFormPassword = $createLoginForm.querySelector('password')
 const $createLoginFormButton = $createLoginForm.querySelector('button')
 
 $loginForm.addEventListener('submit', checkLogin)
-
+$createLoginForm.addEventListener('submit', createNewLogin)
 
 
 function checkLogin(event) {
     event.preventDefault()
-    // Retrieve message value of message form
+    // Retrieve username and password from login-form
     username = event.target.elements.username.value
-    password = event.target.elements.username.password
+    password = event.target.elements.password.value
 
     console.log(username)
     console.log(password)
+
+    const fs = require('fs')
+    fs.readFile('../users.txt', 'utf8', function (err, data) {
+        console.log(data)
+    })
+}
+
+
+function createNewLogin(event) {
+    event.preventDefault()
+    // Retrieve username and password from create-login-form
+    username = event.target.elements.username.value
+    password = event.target.elements.password.value
+    
+    console.log(username)
+    console.log(password)
+
 }
