@@ -7,6 +7,8 @@ const pg = require('pg')
 
 // connect to database
 var connectionString = 'postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0'
+console.log(connectionString)
+/*
 pg.connect(connectionString, function(err, client, done) {
     client.query('SELECT * FROM User', function(err, result) {
         done();
@@ -14,6 +16,7 @@ pg.connect(connectionString, function(err, client, done) {
         console.log(result.rows);
     });
 });
+*/
 
 //Will need when integrate this with database and APIs
 const bodyParser = require ('body-parser')
