@@ -22,6 +22,7 @@ app.use(express.static(publicDirectoryPath))
 io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
+<<<<<<< HEAD
     // Display only to connection
     socket.emit('message', 'Welcome!')
     // Display to everyone but the connection
@@ -30,6 +31,29 @@ io.on('connection', (socket) => {
     // Display to everyone
     socket.on('sendMessage', (message, callback) => {
         io.emit('message', message)
+=======
+    socket.on('join', ({ username, room }) => {
+        socket.join(room)
+
+        // Display only to connection
+        socket.emit('message', generateMessage(`Welcome to ${room}!`))
+        // Display to everyone but the connection
+        socket.broadcast.to(room).emit('message', generateMessage(`${username} has joined ${room}`))
+
+        // socket.emit, io.emit, socket.broadcast.emit
+        // io.to.emit, socket.broadcast.to.emit
+    })
+
+    // Display to everyone
+    socket.on('sendMessage', (message, callback) => {
+        // const filter = new Filter()
+
+        // if (filter.isProfane(message)) {
+        //     return callback('Profanity is not allowed!')
+        // }
+
+        io.emit('message', generateMessage(message))
+>>>>>>> 7dc57d2ce9bf6e925cffc91f2e829d0670018dc9
         callback()
     })
 
@@ -82,6 +106,14 @@ app.get("/chatapp",function(req,res){
 
 app.get("/loginpage",function(req,res){
     res.sendFile(views + "loginPage.html")
+})
+
+app.get("/chatSignIn",function(req,res){
+    res.sendFile(views + "chatSignIn.html")
+})
+
+app.get("/chatApp.html",function(req,res){
+    res.sendFile(views + "chatApp.html")
 })
 
 app.post("/contact-submitted", function(req,res){
@@ -147,4 +179,4 @@ app.post("/taskform-submitted", function(req,res){
 //This server is running through the port 3000
 server.listen(port,()=>{
     console.log(`Server is up on port:${port}`);
-}); 
+});
