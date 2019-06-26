@@ -2,7 +2,6 @@ const path = require('path')
 const http = require('http')
 const express = require('express')
 const socketio = require('socket.io')
-const { generateMessage, generateLocationMessage } = require('./utils/messages')
 
 //Will need when integrate this with database and APIs
 const bodyParser = require ('body-parser')
@@ -24,27 +23,29 @@ io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
     // Display only to connection
-    socket.emit('message', generateMessage('Welcome!'))
+    socket.emit('message', 'Welcome!')
     // Display to everyone but the connection
-    socket.broadcast.emit('message', generateMessage('A new user has joined!'))
+    socket.broadcast.emit('message', 'A new user has joined!')
 
     // Display to everyone
     socket.on('sendMessage', (message, callback) => {
-        io.emit('message', generateMessage(message))
+        io.emit('message', message)
         callback()
     })
 
     socket.on('sendLocation', (coords, callback) => {
-        io.emit('locationMessage', generateLocationMessage(`https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
+        io.emit('message', `https://google.com/maps?q=${coords.latitude},${coords.longitude}`)
         callback()
     })
 
     // When a user disconnects
     // Disconnect event is built in
     socket.on('disconnect', () => {
-        io.emit('message', generateMessage('A user has left!'))
+        io.emit('message', 'A user has left!')
     })
 })
+
+// console.log("testing console");
 
 app.get('/', (req,res)=>{
     //use sendFile since this is a simple html apage
@@ -58,6 +59,7 @@ app.get('/login', (req,res)=>{
     res.sendFile(views +'userForm.html');
 });
 
+
 app.get("/about", function (req, res) {
     res.sendFile(views + "about.html");
 });
@@ -69,20 +71,11 @@ app.get("/contact",function(req,res){
 app.get("/userform",function(req,res){
   res.sendFile(views + "userForm.html");
 });
-app.get("/projectform", function (req, res) {
-    res.sendFile(views + "projectForm.html");
 
-});
-app.get("/jobstoryform", function (req, res) {
-    res.sendFile(views + "jobStoryForm.html");
-
-});
 app.get("/taskform",function(req,res){
   res.sendFile(views + "taskForm.html");
 });
-app.get("/issueform", function (req, res) {
-    res.sendFile(views + "issueForm.html");
-});
+
 app.get("/chatapp",function(req,res){
 	res.sendFile(views + "chatApp.html")
 })
@@ -148,25 +141,10 @@ app.post("/taskform-submitted", function(req,res){
 
 
 
-const { Client } = require('pg');
 
-const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: true,
-});
-
-client.connect();
-
-client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
-    if (err) throw err;
-    for (let row of res.rows) {
-        console.log(JSON.stringify(row));
-    }
-    client.end();
-});
 
 
 //This server is running through the port 3000
-server.listen(port, () => {
-    console.log(`Server is up on port ${port}!`)
-})
+server.listen(port,()=>{
+    console.log(`Server is up on port:${port}`);
+}); 

@@ -3,7 +3,9 @@
 
 console.log('running login script');
 
-const pg = require('pg')
+databaseURI = postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0
+var client = new pg.Client(databaseURI)
+client.connect()
 
 
 const $loginForm = document.querySelector('#login-form')
@@ -29,7 +31,6 @@ function checkLogin(event) {
     console.log(username)
     console.log(password)
 
-    var pg = require('pg')
 }
 
 
