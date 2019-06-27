@@ -5,6 +5,11 @@
     <title>Login Result</title>
 </head>
 <body>
-    Result: {{output}}
+    <h1>This is the login result
+    <script type="text/javascript">
+        var myVar = <%- JSON.stringify(output) %>;
+        document.write(myVar)
+    </script>
+    </h1>
 </body>
 </html>

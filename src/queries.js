@@ -12,7 +12,6 @@ client.connect();
 
 
 const getUsers = (request, response) => {
-    console.log('hello')
     client.query('SELECT * FROM User', (error, results) => {
         if (error) {
             throw error

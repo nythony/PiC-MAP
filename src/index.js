@@ -136,23 +136,19 @@ app.get("/chatSignIn",function(req,res){
 
 
 app.get("/loginResult/:result", function(req, res) {
+    console.log(req.params.result)
     res.render("loginResult", {output: req.params.result})
 })
 
 app.post("/loginPage/submit", function(req, res) {
-    var username = req.params.username
-    var password = req.params.password
-    var result = 1
-    res.redirect("loginResult/" + result)
+    var username = req.body.username
+    var password = req.body.password
+    // add code to check if user exists, pass result to redirect
+    toRedirect = '/loginResult/'+username
+    res.redirect(toRedirect)
 })
 
 
-
-
-module.exports = {
-    app,
-    db
-}
 
 
 
