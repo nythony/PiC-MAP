@@ -13,10 +13,7 @@ const $createLoginFormPassword = $createLoginForm.querySelector('password')
 const $createLoginFormButton = $createLoginForm.querySelector('button')
 
 
-const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: true,
-});
+const db = pg()
 
 
 $loginForm.addEventListener('submit', checkLogin)
