@@ -21,12 +21,12 @@ pg.connect(connectionString, function(err, client, done) {
 */
 
 //Will need when integrate this with database and APIs
-app.use(bodyParser.json())
 const bodyParser = require ('body-parser')
 const app = express()
 const server = http.createServer(app)
 const io = socketio(server)
 
+app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const port = process.env.PORT || 3000; //Talk to browser through this port
