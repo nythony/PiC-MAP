@@ -21,6 +21,7 @@ pg.connect(connectionString, function(err, client, done) {
 */
 
 //Will need when integrate this with database and APIs
+app.use(bodyParser.json())
 const bodyParser = require ('body-parser')
 const app = express()
 const server = http.createServer(app)
