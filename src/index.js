@@ -169,7 +169,7 @@ app.post("/taskform-submitted", function(req,res){
  const { Client } = require('pg');
 
  const client = new Client({
-   connectionString: process.env."postgres://*picmapmanager*:*MET-Agile3*@*ec2-54-221-212-126.compute-1.amazonaws.com*:*5432*/*deku7qrk30lh0*",
+   connectionString: process.env."postgres://picmapmanager:MET-Agile3@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
    ssl: true,
  });
 
