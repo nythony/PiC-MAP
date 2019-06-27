@@ -132,6 +132,8 @@ app.get("/chatSignIn",function(req,res){
 
 app.get('/users', db.getUsers)
 
+app.get('/loginPage', db.getUsers)
+
 
 module.exports = {
     app,
