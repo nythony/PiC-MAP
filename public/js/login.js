@@ -1,7 +1,6 @@
 
 console.log('running login script')
 
-
 const $loginForm = document.querySelector('#login-form')
 const $loginFormUsername = $loginForm.querySelector('username')
 const $loginFormPassword = $loginForm.querySelector('password')

@@ -122,15 +122,27 @@ app.get("/chatapp",function(req,res){
     res.sendFile(views + "chatApp.html")
 })
 
-app.get("/loginpage",function(req,res){
+app.get("/loginPage",function(req,res){
     res.sendFile(views + "loginPage.html")
 })
+
 
 app.get("/chatSignIn",function(req,res){
     res.sendFile(views + "chatSignIn.html")
 })
 
-app.get('/loginPage', db.getUsers)
+
+app.get("/loginResult/:result", function(req, res) {
+    res.render('loginResult', {output: req.params.result})
+})
+
+app.post("/loginPage/submit", function(req, res) {
+    var username = req.params.username
+    var password = req.params.password
+    var result = 1
+    res.redirect('loginResult/' + result)
+})
+
 
 
 
