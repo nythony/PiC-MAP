@@ -133,7 +133,8 @@ app.get("/chatSignIn",function(req,res){
 
 
 app.get("/loginResult/:result", function(req, res) {
-    res.sendFile(views + "loginResult.html", {output: req.params.result})
+    res.render(views + "loginResult.html", {output: req.params.result})
+    //res.sendFile(views + "loginResult.html", {output: req.params.result})
 })
 
 app.post("/loginPage/submit", function(req, res) {
