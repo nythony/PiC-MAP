@@ -176,7 +176,7 @@ app.post("/taskform-submitted", function(req,res){
  client.connect();
 
 
- client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+ client.query('SELECT * "AssignProject";', (err, res) => {
    if (err) throw err;
    for (let row of res.rows) {
      console.log(JSON.stringify(row));
