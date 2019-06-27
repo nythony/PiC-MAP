@@ -29,7 +29,7 @@ const client = new Client({
 client.connect();
 
 
-client.query('SELECT * FROM "AssignProject";', (err, res) => {     //SELECT table_schema,table_name FROM information_schema.tables;
+client.query('SELECT * FROM "User";', (err, res) => {     //SELECT table_schema,table_name FROM information_schema.tables;
     if (err) throw err;
     for (let row of res.rows) {
         console.log(JSON.stringify(row));
