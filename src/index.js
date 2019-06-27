@@ -130,9 +130,8 @@ app.get("/chatSignIn",function(req,res){
     res.sendFile(views + "chatSignIn.html")
 })
 
-app.get('/users', db.getUsers)
-
 app.get('/loginPage', db.getUsers)
+
 
 
 module.exports = {

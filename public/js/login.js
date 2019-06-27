@@ -13,9 +13,6 @@ const $createLoginFormPassword = $createLoginForm.querySelector('password')
 const $createLoginFormButton = $createLoginForm.querySelector('button')
 
 
-const db = pg()
-
-
 $loginForm.addEventListener('submit', checkLogin)
 $createLoginForm.addEventListener('submit', createNewLogin)
 

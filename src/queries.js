@@ -12,12 +12,24 @@ client.connect();
 
 
 const getUsers = (request, response) => {
+    console.log('hello')
     client.query('SELECT * FROM User', (error, results) => {
         if (error) {
             throw error
         }
-        response.status(200).json(results.rows)
-        console.log(results.rows)
+        response.send(results)
+    })
+}
+
+
+const createUser = (request, response) => {
+    const { name, email } = request.body
+
+    pool.query('INSERT INTO users (name, email) VALUES ($1, $2)', [name, email], (error, results) => {
+        if (error) {
+            throw error
+        }
+        response.status(201).send(`User added with ID: ${result.insertId}`)
     })
 }
 
@@ -25,4 +37,5 @@ const getUsers = (request, response) => {
 
 module.exports = {
     getUsers,
+    createUser,
 }
