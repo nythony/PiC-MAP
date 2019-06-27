@@ -177,6 +177,8 @@ app.post("/taskform-submitted", function(req,res){
 
  client.connect();
 
+console.log(process.env.DATABASE_URL);
+console.log("Testing ALINA");
 
  client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
    if (err) throw err;
