@@ -11,13 +11,20 @@ client.connect();
 
 
 
-const getUsers = (request, response) => {
-    client.query('SELECT * FROM User', (error, results) => {
-        if (error) {
-            throw error
+
+const getUsers = (req, res) => {
+    var username = req.body.username
+    var password = req.body.password
+    toRedirect = '/loginResult/'+username
+
+    client.query('SELECT * FROM "User";', (error, results) => {
+        if (error) throw error
+        for (let row of response.rows) {
+            console.log(JSON.stringify(rows))
         }
-        response.send(results)
     })
+    console.log('test')
+    res.redirect(toRedirect)
 }
 
 
