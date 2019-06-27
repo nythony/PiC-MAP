@@ -171,7 +171,7 @@ console.log("Testing ALINA1");
  const { Client } = require('pg');
 
  const client = new Client({
-   connectionString: process.env."postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0"
+   connectionString: process.env.DATABASE_URL;
    ssl: true,
  });
 
