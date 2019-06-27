@@ -63,6 +63,8 @@ io.on('connection', (socket) => {
     })
 })
 
+
+
 app.get('/', (req,res)=>{
     //use sendFile since this is a simple html apage
     //__dirname attaches the file path of the server.js file. 
@@ -112,9 +114,9 @@ app.get("/chatSignIn",function(req,res){
     res.sendFile(views + "chatSignIn.html")
 })
 
-app.get("/chatApp.html",function(req,res){
-    res.sendFile(views + "chatApp.html")
-})
+
+
+
 
 app.post("/contact-submitted", function(req,res){
     var cname = req.body.name;
@@ -149,6 +151,8 @@ app.post("/taskform-submitted", function(req,res){
     console.log(taskOwner);
     console.log(status);
 });
+
+
 
 
 
