@@ -7,19 +7,6 @@ const socketio = require('socket.io')
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const pg = require('pg')
 
-// connect to database
-var connectionString = 'postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0'
-console.log(connectionString)
-/*
-pg.connect(connectionString, function(err, client, done) {
-    client.query('SELECT * FROM User', function(err, result) {
-        done();
-        if(err) return console.error(err);
-        console.log(result.rows);
-    });
-});
-*/
-
 //Will need when integrate this with database and APIs
 const bodyParser = require ('body-parser')
 const app = express()
@@ -165,7 +152,7 @@ app.post("/taskform-submitted", function(req,res){
 
 
 
-
+//Connecting to cloud based database:
  const { Client } = require('pg');
 
  const client = new Client({
@@ -176,57 +163,13 @@ app.post("/taskform-submitted", function(req,res){
  client.connect();
 
 
- client.query('SELECT * FROM "AssignProject";', (err, res) => {
+ client.query('SELECT * FROM "AssignProject";', (err, res) => {     //SELECT table_schema,table_name FROM information_schema.tables;
    if (err) throw err;
    for (let row of res.rows) {
      console.log(JSON.stringify(row));
    }
    client.end();
  });
-
- 
-
-// var pg = require('pg');
-
-// var connectionString = "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0"
-
-
-// pg.connect(connectionString, function(err, client, done) {
-// client.query('SELECT table_schema,table_name FROM information_schema.tables;', function(err, result) {
-// done();
-// if(err) return console.error(err);
-// console.log(result.rows);
-// });
-// });
-
-
-
-
-
-// var pgp = require('pg-promise')(/*options*/);
-
-// var cn = {
-//    host: 'ec2-54-221-212-126.compute-1.amazonaws.com', // server name or IP address;
-//    port: 5432,
-//    database: 'deku7qrk30lh0',
-//    user: 'yyuppeulmuhcob',
-//    password: '205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5'
-// };
-// // alternative:
-// // var cn = 'postgres://username:password@host:port/database';
-
-// var db = pgp(cn); // database instance;
-
-// // select and return user name from id:
-// db.one('SELECT table_schema,table_name FROM information_schema.tables;', 123)
-//    .then(user => {
-//        console.log(user.name); // print user name;
-//    })
-//    .catch(error => {
-//        console.log(error); // print the error;
-//    });
-
-
 
 
 
