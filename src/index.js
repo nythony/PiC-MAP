@@ -7,6 +7,7 @@ const socketio = require('socket.io')
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
 const pg = require('pg')
+const db = require('./queries')
 
 //Will need when integrate this with database and APIs
 const bodyParser = require ('body-parser')
@@ -128,6 +129,8 @@ app.get("/chatSignIn",function(req,res){
     res.sendFile(views + "chatSignIn.html")
 })
 
+app.get('/users', db.getUsers)
+
 
 
 
@@ -168,26 +171,6 @@ app.post("/taskform-submitted", function(req,res){
 
 
 
-
-
-//Connecting to cloud based database:
- const { Client } = require('pg');
-
- const client = new Client({
-   connectionString: process.env.DATABASE_URL,
-   ssl: true,
- });
-
- client.connect();
-
-
- client.query('SELECT * FROM "AssignProject";', (err, res) => {     //SELECT table_schema,table_name FROM information_schema.tables;
-   if (err) throw err;
-   for (let row of res.rows) {
-     console.log(JSON.stringify(row));
-   }
-   client.end();
- });
 
 
 
