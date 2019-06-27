@@ -13,7 +13,7 @@ const db = require('./queries')
 const bodyParser = require ('body-parser')
 const app = express()
 app.engine('.html', require('ejs').__express);
-app.set('views', __dirname + '../public/views/');
+app.set('views', path.join(__dirname, '../public/views/'));
 app.set('view engine', 'html');
 const server = http.createServer(app)
 const io = socketio(server)
@@ -136,8 +136,7 @@ app.get("/chatSignIn",function(req,res){
 
 
 app.get("/loginResult/:result", function(req, res) {
-    res.render(views + "loginResult", {output: req.params.result})
-    //res.sendFile(views + "loginResult.html", {output: req.params.result})
+    res.render("loginResult", {output: req.params.result})
 })
 
 app.post("/loginPage/submit", function(req, res) {
