@@ -184,6 +184,20 @@ app.post("/taskform-submitted", function(req,res){
 // });
 
 
+var pg = require('pg');
+
+var connectionString = "postgres://*picmapmanager*:*MET-Agile3*@*ec2-54-221-212-126.compute-1.amazonaws.com*:*5432*/*deku7qrk30lh0*"
+
+pg.connect(connectionString, function(err, client, done) {
+client.query('SELECT * "AssignProject";', function(err, result) {
+    console.log("Success: ALINA");
+done();
+if(err) return console.error(err);
+console.log(result.rows);
+});
+});
+
+
 
 
 
