@@ -166,23 +166,24 @@ app.post("/taskform-submitted", function(req,res){
 
 
 
-
+console.log("Testing ALINA1");
 
  const { Client } = require('pg');
 
  const client = new Client({
-   connectionString: process.env.DATABASE_URL,
+   connectionString: process.env."postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0"
    ssl: true,
  });
 
  client.connect();
 
-console.log(process.env.DATABASE_URL);
-console.log("Testing ALINA");
+console.log("Testing ALINA2");
 
  client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+    console.log("Testing ALINA3");
    if (err) throw err;
    for (let row of res.rows) {
+    console.log("Testing ALINA4");
      console.log(JSON.stringify(row));
    }
    client.end();
