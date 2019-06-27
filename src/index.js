@@ -164,38 +164,40 @@ app.post("/taskform-submitted", function(req,res){
 
 
 
-
-
-// const { Client } = require('pg');
-
-// const client = new Client({
-//   connectionString: process.env.DATABASE_URL,
-//   ssl: true,
-// });
-
-// client.connect();
-
-// client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
-//   if (err) throw err;
-//   for (let row of res.rows) {
-//     console.log(JSON.stringify(row));
-//   }
-//   client.end();
-// });
-
-
-//var pg = require('pg');
-
-//var connectionString = "postgres://*picmapmanager*:*MET-Agile3*@*ec2-54-221-212-126.compute-1.amazonaws.com*:*5432*/*deku7qrk30lh0*"
 /*
+
+ const { Client } = require('pg');
+
+ const client = new Client({
+   connectionString: process.env.DATABASE_URL,
+   ssl: true,
+ });
+
+ client.connect();
+
+
+ client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+   if (err) throw err;
+   for (let row of res.rows) {
+     console.log(JSON.stringify(row));
+   }
+   client.end();
+ });
+*/
+
+var pg = require('pg');
+
+var connectionString = "postgres://*picmapmanager*:*MET-Agile3*@*ec2-54-221-212-126.compute-1.amazonaws.com*:*5432*/*deku7qrk30lh0*"
+
 pg.connect(connectionString, function(err, client, done) {
 client.query('SELECT * "AssignProject";', function(err, result) {
+    console.log("Success: ALINA");
 done();
 if(err) return console.error(err);
 console.log(result.rows);
 });
 });
-*/
+
 
 
 
