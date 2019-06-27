@@ -12,6 +12,9 @@ const db = require('./queries')
 //Will need when integrate this with database and APIs
 const bodyParser = require ('body-parser')
 const app = express()
+app.engine('.html', require('ejs').__express);
+app.set('views', __dirname + '../public/views/');
+app.set('view engine', 'html');
 const server = http.createServer(app)
 const io = socketio(server)
 
