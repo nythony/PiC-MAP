@@ -6,7 +6,7 @@ const express = require('express')
 const socketio = require('socket.io')
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
-//const pg = require('pg')
+const pg = require('pg')
 const db = require('./queries')
 
 //Will need when integrate this with database and APIs
@@ -76,6 +76,11 @@ io.on('connection', (socket) => {
             })
         }
     })
+})
+
+
+db.on('connection', (database) => {
+    
 })
 
 
