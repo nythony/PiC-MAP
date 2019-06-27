@@ -18,6 +18,26 @@ const $createLoginFormUsername = $createLoginForm.querySelector('username')
 const $createLoginFormPassword = $createLoginForm.querySelector('password')
 const $createLoginFormButton = $createLoginForm.querySelector('button')
 
+//Connecting to cloud based database:
+const { Client } = require('pg');
+
+const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+});
+
+client.connect();
+
+
+client.query('SELECT * FROM "AssignProject";', (err, res) => {     //SELECT table_schema,table_name FROM information_schema.tables;
+    if (err) throw err;
+    for (let row of res.rows) {
+        console.log(JSON.stringify(row));
+    }
+    client.end();
+});
+
+
 $loginForm.addEventListener('submit', checkLogin)
 $createLoginForm.addEventListener('submit', createNewLogin)
 
