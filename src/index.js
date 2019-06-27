@@ -165,11 +165,13 @@ app.post("/taskform-submitted", function(req,res){
 
 
 
+
+
 /*
  const { Client } = require('pg');
 
  const client = new Client({
-   connectionString: process.env."postgres://picmapmanager:MET-Agile3@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+   connectionString: process.env.DATABASE_URL,
    ssl: true,
  });
 
@@ -177,8 +179,8 @@ app.post("/taskform-submitted", function(req,res){
 
 
  client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+    console.log("SUCCESS: ALINA");
    if (err) throw err;
-   console.log("SUCCESS: ALINA");
    for (let row of res.rows) {
      console.log(JSON.stringify(row));
    }
@@ -189,7 +191,7 @@ app.post("/taskform-submitted", function(req,res){
 
 var pg = require('pg');
 
-var connectionString = "postgres://picmapmanager:MET-Agile3@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0"
+var connectionString = "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0"
 
 
 pg.connect(connectionString, function(err, client, done) {
@@ -202,6 +204,31 @@ console.log(result.rows);
 });
 
 
+
+
+
+// var pgp = require('pg-promise')(/*options*/);
+
+// var cn = {
+//    host: 'ec2-54-221-212-126.compute-1.amazonaws.com', // server name or IP address;
+//    port: 5432,
+//    database: 'deku7qrk30lh0',
+//    user: 'yyuppeulmuhcob',
+//    password: '205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5'
+// };
+// // alternative:
+// // var cn = 'postgres://username:password@host:port/database';
+
+// var db = pgp(cn); // database instance;
+
+// // select and return user name from id:
+// db.one('SELECT table_schema,table_name FROM information_schema.tables;', 123)
+//    .then(user => {
+//        console.log(user.name); // print user name;
+//    })
+//    .catch(error => {
+//        console.log(error); // print the error;
+//    });
 
 
 
