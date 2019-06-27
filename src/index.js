@@ -79,10 +79,6 @@ io.on('connection', (socket) => {
 })
 
 
-db.on('connection', (database) => {
-    
-})
-
 
 
 app.get('/', (req,res)=>{
