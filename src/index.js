@@ -26,7 +26,7 @@ const app = express()
 const server = http.createServer(app)
 const io = socketio(server)
 
-//app.use(bodyParser.json());
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const port = process.env.PORT || 3000; //Talk to browser through this port
@@ -176,7 +176,7 @@ app.post("/taskform-submitted", function(req,res){
  client.connect();
 
 
- client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+ client.query('SELECT * FROM "AssignProject";', (err, res) => {
    if (err) throw err;
    for (let row of res.rows) {
      console.log(JSON.stringify(row));
