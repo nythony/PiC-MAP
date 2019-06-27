@@ -12,7 +12,7 @@ client.connect();
 
 
 const getUsers = (request, response) => {
-    client.query('SELECT * FROM Users', (error, results) => {
+    client.query('SELECT * FROM User', (error, results) => {
         if (error) {
             throw error
         }
