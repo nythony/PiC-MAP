@@ -19,14 +19,7 @@ const $createLoginFormPassword = $createLoginForm.querySelector('password')
 const $createLoginFormButton = $createLoginForm.querySelector('button')
 
 
-
-client.query('SELECT * FROM "User";', (err, res) => {     //SELECT table_schema,table_name FROM information_schema.tables;
-    if (err) throw err;
-    for (let row of res.rows) {
-        console.log(JSON.stringify(row));
-    }
-    client.end();
-});
+app.get('/users', db.getUsers)
 
 
 $loginForm.addEventListener('submit', checkLogin)
