@@ -194,6 +194,7 @@ app.post("/loginPage/submit", function(req, res) {
                     if (results1["rows"][0]["_Password"] == password)  {
                         console.log('test1')
                         toRedirect = '/loginResult/'+username
+                        console.log(toRedirect)
                     }
                 })
             }
