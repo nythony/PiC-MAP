@@ -196,11 +196,10 @@ app.post("/loginPage/submit", function(req, res) {
                         toRedirect = '/loginResult/'+username
                         console.log(toRedirect)
                     }
+                    res.redirect(toRedirect)
                 })
             }
         }
-        console.log(toRedirect)
-        res.redirect(toRedirect)
     })
 })
 
