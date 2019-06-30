@@ -148,7 +148,6 @@ app.get("/chatSignIn",function(req,res){
 
 
 app.get("/loginResult/:result", function(req, res) {
-    console.log(req.params.result)
     res.render("loginResult", {output: req.params.result})
 })
 
@@ -157,7 +156,7 @@ app.post("/loginPage/submit", function(req, res) {
     var password = req.body.password
     toRedirect = '/loginResult/'+username
 
-    client.query('SELECT * FROM "User";', (error, results) => {
+    client.query('SELECT * FROM User;', (error, results) => {
         if (error) throw error
         for (let row of results.rows) {
             console.log(JSON.stringify(rows))
