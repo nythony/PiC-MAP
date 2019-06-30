@@ -154,16 +154,23 @@ app.get("/loginResult/:result", function(req, res) {
 app.post("/loginPage/submit", function(req, res) {
     var username = req.body.username
     var password = req.body.password
-    toRedirect = '/loginResult/'+username
-
     client.query('SELECT * FROM User;', (error, results) => {
         if (error) throw error
         for (let row of results.rows) {
             console.log(JSON.stringify(row))
         }
     })
+    // comparison code
+    res.redirect('/loginResult/'+username)
+})
 
-    res.redirect(toRedirect)
+app.post("/loginPage/create", function(req, res) {
+    var username = req.body.username
+    var password = req.body.password
+    client.query('INSERT INTO User(_UserName, _Password) VALUES ('+username+','+password+');', (error, results) => {
+        if (error) throw error
+    })
+    res.redirect('loginPage')
 })
 
 
