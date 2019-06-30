@@ -99,8 +99,8 @@ io.on('connection', (socket) => {
 app.get('/', (req,res)=>{
     //use sendFile since this is a simple html apage
     //__dirname attaches the file path of the server.js file. 
-    //Since home.thml is in the same directory as server.js, there is nothing else to add to it.
-    res.sendFile(publicDirectoryPath +'/index.html');
+    //Since home.html is in the same directory as server.js, there is nothing else to add to it.
+    res.sendFile(views +'/loginPage.html');
 });
 
 app.get('/login', (req,res)=>{
