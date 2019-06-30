@@ -192,6 +192,7 @@ app.post("/loginPage/submit", function(req, res) {
                     if (error1) throw error1
                     console.log(results1["rows"][0]["_Password"])
                     if (results1["rows"][0]["_Password"] == password)  {
+                        console.log('yup')
                         res.redirect('/loginResult/'+username)
                     }
                 })
