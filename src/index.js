@@ -151,6 +151,10 @@ app.get("/loginResult/:result", function(req, res) {
     res.render("loginResult", {output: req.params.result})
 })
 
+app.get("/createNewUser", function(req, res) {
+    res.sendFile(views + "createNewUser.html")
+})
+
 app.post("/loginPage/submit", function(req, res) {
     var username = req.body.username
     var password = req.body.password
@@ -170,7 +174,7 @@ app.post("/loginPage/submit", function(req, res) {
     })
 })
 
-app.post("/loginPage/create", function(req, res) {
+app.post("/createNewUser/submit", function(req, res) {
     var username = req.body.username
     var password = req.body.password
     client.query('INSERT INTO "User"("_UserName", "_Password") VALUES('+username+', '+password+');', (error, results) => {
