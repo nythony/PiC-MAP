@@ -137,23 +137,34 @@ app.get("/chatapp",function(req,res){
     res.sendFile(views + "chatApp.html")
 })
 
+app.get("/chatSignIn",function(req,res){
+    res.sendFile(views + "chatSignIn.html")
+})
+
+
 app.get("/loginPage",function(req,res){
     res.sendFile(views + "loginPage.html")
 })
 
-
-app.get("/chatSignIn",function(req,res){
-    res.sendFile(views + "chatSignIn.html")
+app.post("/loginPage/createNewUser", function(req, res) {
+    res.redirect('/createNewUser')
 })
+
+
+app.get("/createNewUser", function(req, res) {
+    res.sendFile(views + "createNewUser.html")
+})
+
+app.post("/createNewUser/login", function(req, res) {
+    res.redirect('/loginPage')
+})
+
 
 
 app.get("/loginResult/:result", function(req, res) {
     res.render("loginResult", {output: req.params.result})
 })
 
-app.get("/createNewUser", function(req, res) {
-    res.sendFile(views + "createNewUser")
-})
 
 app.post("/loginPage/submit", function(req, res) {
     var username = req.body.username
@@ -177,10 +188,10 @@ app.post("/loginPage/submit", function(req, res) {
 app.post("/createNewUser/submit", function(req, res) {
     var username = req.body.username
     var password = req.body.password
-    client.query('INSERT INTO "User"("_UserName", "_Password") VALUES('+username+', '+password+');', (error, results) => {
+    client.query('INSERT INTO "User"("_UserName", "_Password") VALUES(\''+username+'\', \''+password+'\');', (error, results) => {
         if (error) throw error
     })
-    res.redirect()
+    res.redirect('/loginPage')
 })
 
 
