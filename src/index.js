@@ -192,6 +192,7 @@ app.post("/loginPage/submit", function(req, res) {
                 client.query('SELECT "_Password" FROM "User" WHERE "_UserName" = \''+username+'\';', (error1, results1) => {
                     if (error1) throw error1
                     if (results1["rows"][0]["_Password"] == password)  {
+                        console.log('test1')
                         toRedirect = '/loginResult/'+username
                     }
                 })
@@ -199,6 +200,7 @@ app.post("/loginPage/submit", function(req, res) {
         }
     })
     if (toRedirect == '') {
+        console.log('test2')
         toRedirect = '/failedLoginPage'
     }
     res.redirect(toRedirect)
