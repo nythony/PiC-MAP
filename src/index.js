@@ -199,6 +199,7 @@ app.post("/loginPage/submit", function(req, res) {
             }
         }
     })
+    console.log(toRedirect)
     res.redirect(toRedirect)
 })
 
