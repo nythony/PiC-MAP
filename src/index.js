@@ -157,13 +157,18 @@ app.post("/loginPage/submit", function(req, res) {
     client.query('SELECT "_UserName" FROM "User";', (error, results) => {
         if (error) throw error
         for (let row of results.rows) {
-            first = row["_UserName"]
-            console.log(first)
-            console.log(JSON.stringify(row))
+            if (row["_UserName"] == username]) {
+                client.query('SELECT "_Password" FROM "User" WHERE "_UserName" = "'+username+'";', (error1, results1) => {
+                    if (error) throw error
+                    if (results.rows[0]["_Password"] == password) {
+                        res.redirect('/loginResult/'+username)
+                    }
+                })
+            }
         }
     })
     // comparison code
-    res.redirect('/loginResult/'+username)
+    res.redirect('/loginResult/failure')
 })
 
 app.post("/loginPage/create", function(req, res) {
