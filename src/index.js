@@ -167,7 +167,7 @@ app.post("/loginPage/submit", function(req, res) {
 app.post("/loginPage/create", function(req, res) {
     var username = req.body.username
     var password = req.body.password
-    client.query('INSERT INTO "User" ("_UserName", "_Password") VALUES ('+username+', '+password+');', (error, results) => {
+    client.query('INSERT INTO "User"("_UserName", "_Password") VALUES('+username+', '+password+');', (error, results) => {
         if (error) throw error
     })
     res.redirect()
