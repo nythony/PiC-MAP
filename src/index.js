@@ -7,7 +7,19 @@ const socketio = require('socket.io')
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
 const pg = require('pg')
-const db = require('./queries')
+//const db = require('./queries')
+
+
+//Connecting to cloud based database:
+const { Client } = require('pg');
+
+const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+});
+
+client.connect();
+
 
 //Will need when integrate this with database and APIs
 const bodyParser = require ('body-parser')
@@ -144,8 +156,16 @@ app.post("/loginPage/submit", function(req, res) {
     var username = req.body.username
     var password = req.body.password
     toRedirect = '/loginResult/'+username
+
+    client.query('SELECT * FROM "User";', (error, results) => {
+        if (error) throw error
+        for (let row of response.rows) {
+            console.log(JSON.stringify(rows))
+        }
+    })
+
     res.redirect(toRedirect)
-}
+})
 
 
 
