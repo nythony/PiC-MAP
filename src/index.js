@@ -157,6 +157,8 @@ app.post("/loginPage/submit", function(req, res) {
     client.query('SELECT "_UserName" FROM "User";', (error, results) => {
         if (error) throw error
         for (let row of results.rows) {
+            first = row[1]
+            console.log(first)
             console.log(JSON.stringify(row))
         }
     })
