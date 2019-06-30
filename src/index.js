@@ -160,7 +160,7 @@ app.post("/loginPage/submit", function(req, res) {
             if (row["_UserName"] == username) {
                 client.query('SELECT "_Password" FROM "User" WHERE "_UserName" = \''+username+'\';', (error1, results1) => {
                     if (error1) throw error1
-                    console.log(results1["rows"][0])
+                    console.log(results1["rows"][0]["_Password"])
                     /*
                     if (results1["rows"][0]["_Password"] == password) {
                         res.redirect('/loginResult/'+username)
