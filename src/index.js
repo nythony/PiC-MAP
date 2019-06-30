@@ -158,7 +158,7 @@ app.post("/loginPage/submit", function(req, res) {
         if (error) throw error
         for (let row of results.rows) {
             if (row["_UserName"] == username) {
-                client.query('SELECT "_Password" FROM "User" WHERE "_UserName" = '+username+';', (error1, results1) => {
+                client.query('SELECT "_Password" FROM "User" WHERE "_UserName" = \''+username+'\';', (error1, results1) => {
                     if (error1) throw error1
                     for (let row1 of results1) {
                         if (row1["_Password"] == password) {
