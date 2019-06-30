@@ -159,7 +159,7 @@ app.post("/loginPage/submit", function(req, res) {
 
     client.query('SELECT * FROM "User";', (error, results) => {
         if (error) throw error
-        for (let row of response.rows) {
+        for (let row of results.rows) {
             console.log(JSON.stringify(rows))
         }
     })
