@@ -184,6 +184,7 @@ app.get("/loginResult/:result", function(req, res) {
 app.post("/loginPage/submit", function(req, res) {
     var username = req.body.username
     var password = req.body.password
+    var toRedirect = ''
     client.query('SELECT "_UserName" FROM "User";', (error, results) => {
         if (error) throw error
         for (let row of results.rows) {
@@ -191,14 +192,16 @@ app.post("/loginPage/submit", function(req, res) {
                 client.query('SELECT "_Password" FROM "User" WHERE "_UserName" = \''+username+'\';', (error1, results1) => {
                     if (error1) throw error1
                     if (results1["rows"][0]["_Password"] == password)  {
-                        console.log('yup')
-                        res.set
-                        res.redirect('/loginResult/'+username)
+                        toRedirect = '/loginResult/'+userName
                     }
                 })
             }
         }
     })
+    if (toRedirect == '') {
+        toRedirect = '/failedLoginPage'
+    }
+    res.redirect(toRedirect)
 })
 
 
