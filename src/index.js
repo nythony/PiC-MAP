@@ -199,10 +199,9 @@ app.post("/loginPage/submit", function(req, res) {
                 })
             }
         }
+        console.log(toRedirect)
+        res.redirect(toRedirect)
     })
-    callback()
-    console.log(toRedirect)
-    res.redirect(toRedirect)
 })
 
 
