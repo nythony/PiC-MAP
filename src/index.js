@@ -152,7 +152,7 @@ app.get("/loginResult/:result", function(req, res) {
 })
 
 app.get("/createNewUser", function(req, res) {
-    res.sendFile(views + "createNewUser.html")
+    res.sendFile(views + "createNewUser")
 })
 
 app.post("/loginPage/submit", function(req, res) {
