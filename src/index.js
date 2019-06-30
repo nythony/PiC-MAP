@@ -154,7 +154,7 @@ app.get("/loginResult/:result", function(req, res) {
 app.post("/loginPage/submit", function(req, res) {
     var username = req.body.username
     var password = req.body.password
-    client.query('SELECT * FROM User;', (error, results) => {
+    client.query('SELECT "_UserName" FROM "User";', (error, results) => {
         if (error) throw error
         for (let row of results.rows) {
             console.log(JSON.stringify(row))
@@ -167,7 +167,7 @@ app.post("/loginPage/submit", function(req, res) {
 app.post("/loginPage/create", function(req, res) {
     var username = req.body.username
     var password = req.body.password
-    client.query('INSERT INTO User (_UserName, _Password) VALUES ('+username+', '+password+');', (error, results) => {
+    client.query('INSERT INTO "User" ("_UserName", "_Password") VALUES ('+username+', '+password+');', (error, results) => {
         if (error) throw error
     })
     res.redirect()
