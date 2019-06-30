@@ -141,19 +141,24 @@ app.get("/chatSignIn",function(req,res){
 })
 
 
-// When loginPage is loaded (without a parameter) - sends loginPage.html
+// When loginPage is loaded - sends loginPage.html
 app.get("/loginPage",function(req,res){
     res.sendFile(views + "loginPage.html")
 })
 
-// When loginPage is loaded (with a parameter) - sends loginPage.html with loginFaulre parameter
-app.get("/loginPage/:loginFalure", function(req, res) {
-    res.render("loginPage", {output: req.params.loginFailure})
+
+// When user wants to navigate to create new user page - redirects to createNewUser
+app.post("/loginPage/createNewUser", function(req, res) {
+    res.redirect('/createNewUser')
 })
 
+// When user enters incorrect login information - sends failedLoginPage.html
+app.get("/failedLoginPage", function(req,res) {
+    res.sendFile(views + "failedLoginPage.html")
+})
 
-// When user wants to navigate to create new user page
-app.post("/loginPage/createNewUser", function(req, res) {
+// When user wants to navigate to create new user page from failedLoginPage - redirects to createNewUser
+app.post("/failedLoginPage/createNewUser", function(req, res) {
     res.redirect('/createNewUser')
 })
 
@@ -163,7 +168,7 @@ app.get("/createNewUser", function(req, res) {
     res.sendFile(views + "createNewUser.html")
 })
 
-// When user wants to navigate to login page
+// When user wants to navigate to login page from createNewUser - redirects to loginPage
 app.post("/createNewUser/login", function(req, res) {
     res.redirect('/loginPage')
 })
@@ -193,8 +198,30 @@ app.post("/loginPage/submit", function(req, res) {
             }
         }
     })
-    res.redirect('/loginPage/1')
+    res.redirect('/failedLoginPage')
 })
+
+
+app.post("/failedLoginPage/submit", function(req, res) {
+    var username = req.body.username
+    var password = req.body.password
+    client.query('SELECT "_UserName" FROM "User";', (error, results) => {
+        if (error) throw error
+        for (let row of results.rows) {
+            if (row["_UserName"] == username) {
+                client.query('SELECT "_Password" FROM "User" WHERE "_UserName" = \''+username+'\';', (error1, results1) => {
+                    if (error1) throw error1
+                    console.log(results1["rows"][0]["_Password"])
+                    if (results1["rows"][0]["_Password"] == password)  {
+                        res.redirect('/loginResult/'+username)
+                    }
+                })
+            }
+        }
+    })
+    res.redirect('/failedLoginPage')
+})
+
 
 app.post("/createNewUser/submit", function(req, res) {
     var username = req.body.username
