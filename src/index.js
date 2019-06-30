@@ -38,6 +38,7 @@ const publicDirectoryPath = path.join(__dirname, '../public/')
 const views = path.join(__dirname, '../public/views/')
 
 app.use(express.static(publicDirectoryPath))
+app.use(app.router)
 
 // When a user connects
 // Connection event is built in
