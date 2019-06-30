@@ -7,6 +7,7 @@ const socketio = require('socket.io')
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
 const pg = require('pg')
+var popup = require('popups')
 //const db = require('./queries')
 
 
@@ -181,6 +182,9 @@ app.post("/loginPage/submit", function(req, res) {
                 })
             }
         }
+    })
+    popup.alert({
+        content: 'Login failed.'
     })
 })
 
