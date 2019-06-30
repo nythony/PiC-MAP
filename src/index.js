@@ -7,7 +7,6 @@ const socketio = require('socket.io')
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
 const pg = require('pg')
-var popup = require('popups')
 //const db = require('./queries')
 
 
@@ -142,22 +141,33 @@ app.get("/chatSignIn",function(req,res){
 })
 
 
+// When loginPage is loaded (without a parameter) - sends loginPage.html
 app.get("/loginPage",function(req,res){
     res.sendFile(views + "loginPage.html")
 })
 
+// When loginPage is loaded (with a parameter) - sends loginPage.html with loginFaulre parameter
+app.get("/loginPage/:loginFalure", function(req, res) {
+    res.render("loginPage", {output: req.params.loginFailure})
+})
+
+
+// When user wants to navigate to create new user page
 app.post("/loginPage/createNewUser", function(req, res) {
     res.redirect('/createNewUser')
 })
 
 
+// When createNewUser is loaded - sends createNewUser.html
 app.get("/createNewUser", function(req, res) {
     res.sendFile(views + "createNewUser.html")
 })
 
+// When user wants to navigate to login page
 app.post("/createNewUser/login", function(req, res) {
     res.redirect('/loginPage')
 })
+
 
 
 
@@ -183,9 +193,7 @@ app.post("/loginPage/submit", function(req, res) {
             }
         }
     })
-    popup.alert({
-        content: 'Login failed.'
-    })
+    res.redirect('/loginPage/1')
 })
 
 app.post("/createNewUser/submit", function(req, res) {

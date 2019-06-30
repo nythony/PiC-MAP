@@ -26,7 +26,7 @@
     <div id="header">
         <h1>Welcome to PiC-MAP!</h1>
     </div>
-    <div id="content">
+    <div id="content
         <img src="../img/favicon.png" alt="logo" width="200" height="200">
         <h2>Please enter your username and password to sign in.</h2>
         <form action="loginPage/submit" method="post" id="login-form">
@@ -34,6 +34,13 @@
             <input type="password" name="password" placeholder="password">
             <button type="submit">Sign In</button>
         </form>
+        <script type="text/javascript">
+            var failure = <%- JSON.stringify(output) %>;
+            if (failure == "1") {
+                document.write("Login failed.")
+            }
+        </script>
+        <br><br><br>
         <h3>New? Click the button below to create an account.</h3>
         <form action="loginPage/createNewUser" method="post">
             <button type="submit">Create new account</button>
