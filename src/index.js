@@ -184,7 +184,7 @@ app.get("/loginResult/:result", function(req, res) {
 app.post("/loginPage/submit", function(req, res) {
     var username = req.body.username
     var password = req.body.password
-    var toRedirect = ''
+    var toRedirect = '/failedLoginPage'
     client.query('SELECT "_UserName" FROM "User";', (error, results) => {
         if (error) throw error
         for (let row of results.rows) {
@@ -199,10 +199,6 @@ app.post("/loginPage/submit", function(req, res) {
             }
         }
     })
-    if (toRedirect == '') {
-        console.log('test2')
-        toRedirect = '/failedLoginPage'
-    }
     res.redirect(toRedirect)
 })
 
