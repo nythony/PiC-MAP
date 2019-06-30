@@ -140,7 +140,12 @@ app.get("/loginResult/:result", function(req, res) {
     res.render("loginResult", {output: req.params.result})
 })
 
-app.post("/loginPage/submit", db.getUsers)
+app.post("/loginPage/submit", function(req, res) {
+    var username = req.body.username
+    var password = req.body.password
+    toRedirect = '/loginResult/'+username
+    res.redirect(toRedirect)
+}
 
 
 
