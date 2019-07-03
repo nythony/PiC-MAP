@@ -7,6 +7,7 @@ const socketio = require('socket.io')
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
 const pg = require('pg')
+const project = require('./projectForm.js');
 //const db = require('./queries')
 
 
@@ -15,6 +16,7 @@ const { Client } = require('pg');
 
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
+    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 });
 
@@ -22,7 +24,7 @@ client.connect();
 
 
 //Will need when integrate this with database and APIs
-const bodyParser = require ('body-parser')
+const bodyParser = require('body-parser')
 const app = express()
 app.engine('.html', require('ejs').__express);
 app.set('views', path.join(__dirname, '../public/views/'));
@@ -45,7 +47,7 @@ io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
     socket.on('join', ({ username, room }, callback) => {
-        const { error,  user} = addUser({ id: socket.id, username, room })
+        const { error, user} = addUser({ id: socket.id, username, room })
 
         if (error) {
             return callback(error)
@@ -96,29 +98,30 @@ io.on('connection', (socket) => {
 
 
 
-app.get('/', (req,res)=>{
+app.get('/', (req, res) => {
     //use sendFile since this is a simple html apage
     console.log('hello')
-    res.redirect(views +'/loginPage.html');
+    res.redirect(views + '/loginPage.html');
 });
 
-app.get('/login', (req,res)=>{
+app.get('/login', (req, res) => {
     //use sendFile since this is a simple html apage
-    res.sendFile(views +'userForm.html');
+    res.sendFile(views + 'userForm.html');
 });
 
 app.get("/about", function (req, res) {
     res.sendFile(views + "about.html");
 });
 
-app.get("/contact",function(req,res){
+app.get("/contact", function (req, res) {
     res.sendFile(views + "contact.html");
 });
 
-app.get("/userform",function(req,res){
+app.get("/userform", function (req, res) {
     res.sendFile(views + "userForm.html");
 });
 app.get("/projectform", function (req, res) {
+    project.getProject(req, res);
     res.sendFile(views + "projectForm.html");
 
 });
@@ -126,62 +129,62 @@ app.get("/jobstoryform", function (req, res) {
     res.sendFile(views + "jobStoryForm.html");
 
 });
-app.get("/taskform",function(req,res){
+app.get("/taskform", function (req, res) {
     res.sendFile(views + "taskForm.html");
 });
 app.get("/issueform", function (req, res) {
     res.sendFile(views + "issueForm.html");
 });
-app.get("/chatapp",function(req,res){
+app.get("/chatapp", function (req, res) {
     res.sendFile(views + "chatApp.html")
 })
 
-app.get("/chatSignIn",function(req,res){
+app.get("/chatSignIn", function (req, res) {
     res.sendFile(views + "chatSignIn.html")
 })
 
 
 // When loginPage is loaded - sends loginPage.html
-app.get("/loginPage",function(req,res){
+app.get("/loginPage", function (req, res) {
     res.sendFile(views + "loginPage.html")
 })
 
 
 // When user wants to navigate to create new user page - redirects to createNewUser
-app.post("/loginPage/createNewUser", function(req, res) {
+app.post("/loginPage/createNewUser", function (req, res) {
     res.redirect('/createNewUser')
 })
 
 // When user enters incorrect login information - sends failedLoginPage.html
-app.get("/failedLoginPage", function(req,res) {
+app.get("/failedLoginPage", function (req, res) {
     res.sendFile(views + "failedLoginPage.html")
 })
 
 // When user wants to navigate to create new user page from failedLoginPage - redirects to createNewUser
-app.post("/failedLoginPage/createNewUser", function(req, res) {
+app.post("/failedLoginPage/createNewUser", function (req, res) {
     res.redirect('/createNewUser')
 })
 
 
 // When createNewUser is loaded - sends createNewUser.html
-app.get("/createNewUser", function(req, res) {
+app.get("/createNewUser", function (req, res) {
     res.sendFile(views + "createNewUser.html")
 })
 
 // When user wants to navigate to login page from createNewUser - redirects to loginPage
-app.post("/createNewUser/login", function(req, res) {
+app.post("/createNewUser/login", function (req, res) {
     res.redirect('/loginPage')
 })
 
 
 
 
-app.get("/loginResult/:result", function(req, res) {
-    res.render("loginResult", {output: req.params.result})
+app.get("/loginResult/:result", function (req, res) {
+    res.render("loginResult", { output: req.params.result })
 })
 
 
-app.post("/loginPage/submit", function(req, res) {
+app.post("/loginPage/submit", function (req, res) {
     var username = req.body.username
     var password = req.body.password
     var toRedirect = '/failedLoginPage'
@@ -189,11 +192,11 @@ app.post("/loginPage/submit", function(req, res) {
         if (error) throw error
         for (let row of results.rows) {
             if (row["_UserName"] == username) {
-                client.query('SELECT "_Password" FROM "User" WHERE "_UserName" = \''+username+'\';', (error1, results1) => {
+                client.query('SELECT "_Password" FROM "User" WHERE "_UserName" = \'' + username + '\';', (error1, results1) => {
                     if (error1) throw error1
-                    if (results1["rows"][0]["_Password"] == password)  {
+                    if (results1["rows"][0]["_Password"] == password) {
                         console.log('test1')
-                        toRedirect = '/loginResult/'+username
+                        toRedirect = '/loginResult/' + username
                         console.log(toRedirect)
                     }
                     res.redirect(toRedirect)
@@ -204,18 +207,18 @@ app.post("/loginPage/submit", function(req, res) {
 })
 
 
-app.post("/failedLoginPage/submit", function(req, res) {
+app.post("/failedLoginPage/submit", function (req, res) {
     var username = req.body.username
     var password = req.body.password
     client.query('SELECT "_UserName" FROM "User";', (error, results) => {
         if (error) throw error
         for (let row of results.rows) {
             if (row["_UserName"] == username) {
-                client.query('SELECT "_Password" FROM "User" WHERE "_UserName" = \''+username+'\';', (error1, results1) => {
+                client.query('SELECT "_Password" FROM "User" WHERE "_UserName" = \'' + username + '\';', (error1, results1) => {
                     if (error1) throw error1
                     console.log(results1["rows"][0]["_Password"])
-                    if (results1["rows"][0]["_Password"] == password)  {
-                        res.redirect('/loginResult/'+username)
+                    if (results1["rows"][0]["_Password"] == password) {
+                        res.redirect('/loginResult/' + username)
                     }
                 })
             }
@@ -225,10 +228,10 @@ app.post("/failedLoginPage/submit", function(req, res) {
 })
 
 
-app.post("/createNewUser/submit", function(req, res) {
+app.post("/createNewUser/submit", function (req, res) {
     var username = req.body.username
     var password = req.body.password
-    client.query('INSERT INTO "User"("_UserName", "_Password") VALUES(\''+username+'\', \''+password+'\');', (error, results) => {
+    client.query('INSERT INTO "User"("_UserName", "_Password") VALUES(\'' + username + '\', \'' + password + '\');', (error, results) => {
         if (error) throw error
     })
     res.redirect('/loginPage')
@@ -240,7 +243,7 @@ app.post("/createNewUser/submit", function(req, res) {
 
 
 
-app.post("/contact-submitted", function(req,res){
+app.post("/contact-submitted", function (req, res) {
     var cname = req.body.name;
     var cemail = req.body.email;
     var cmessage = req.body.message;
@@ -252,7 +255,7 @@ app.post("/contact-submitted", function(req,res){
     console.log(chuman);
 });
 
-app.post("/userform-submitted", function(req,res){
+app.post("/userform-submitted", function (req, res) {
     var uname = req.body.name;
     var uemail = req.body.email;
     var umessage = req.body.message;
@@ -264,8 +267,8 @@ app.post("/userform-submitted", function(req,res){
     console.log(uhuman);
 });
 
-app.post("/taskform-submitted", function(req,res){
-    var task= req.body.task;
+app.post("/taskform-submitted", function (req, res) {
+    var task = req.body.task;
     var taskOwner = req.body.taskOwner;
     var status = req.body.status;
 
@@ -274,9 +277,11 @@ app.post("/taskform-submitted", function(req,res){
     console.log(status);
 });
 
-
-
-
+app.post("/projectform-submitted", function (req, res) {
+    project.crudProject(req, res);
+    console.log('post method of project form');
+    res.redirect('/');
+});
 
 
 
