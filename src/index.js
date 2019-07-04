@@ -6,25 +6,27 @@ const socketio = require('socket.io')
 const { Client } = require('pg')
 const bodyParser = require('body-parser')
 
-
+// Importing all things from other parts of project
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
 const project = require('./projectForm.js')
 
-
-//Connecting to cloud based database:
+// Initializing imports
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
     ssl: true,
 })
+const app = express()
+
+
+//Connecting to cloud based database:
 client.connect()
 
 
 //Will need when integrate this with database and APIs
-const app = express()
 app.engine('.html', require('ejs').__express);
-app.set('views', path.join(__dirname, '../public/views/'));
-app.set('view engine', 'html');
+// app.set('views', path.join(__dirname, '../public/views/'));
+// app.set('view engine', 'html');
 const server = http.createServer(app)
 const io = socketio(server)
 
