@@ -1,28 +1,26 @@
-console.log('running index.js')
-
+// Importing all things set up by project
 const path = require('path')
 const http = require('http')
 const express = require('express')
 const socketio = require('socket.io')
+const Client = require('pg')
+const bodyParser = require('body-parser')
+
+
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
-const pg = require('pg')
-const project = require('./projectForm.js');
+const project = require('./projectForm.js')
 
 
 //Connecting to cloud based database:
-const { Client } = require('pg');
-
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
     ssl: true,
-});
-
-client.connect();
+})
+client.connect()
 
 
 //Will need when integrate this with database and APIs
-const bodyParser = require('body-parser')
 const app = express()
 app.engine('.html', require('ejs').__express);
 app.set('views', path.join(__dirname, '../public/views/'));
