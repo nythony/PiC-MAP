@@ -11,28 +11,20 @@ const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
 const project = require('./projectForm.js')
 
-// Initializing imports
+//Connecting to cloud based database:
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
     ssl: true,
 })
-const app = express()
-
-
-//Connecting to cloud based database:
 client.connect()
 
-
-//Will need when integrate this with database and APIs
+// Additional setup
+const app = express()
 app.engine('.html', require('ejs').__express);
-// app.set('views', path.join(__dirname, '../public/views/'));
-// app.set('view engine', 'html');
 const server = http.createServer(app)
 const io = socketio(server)
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
 const port = process.env.PORT || 3000; //Talk to browser through this port
 const publicDirectoryPath = path.join(__dirname, '../public/')
 const views = path.join(__dirname, '../public/views/')
