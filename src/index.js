@@ -8,7 +8,6 @@ const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
 const pg = require('pg')
 const project = require('./projectForm.js');
-//const db = require('./queries')
 
 
 //Connecting to cloud based database:
@@ -16,7 +15,6 @@ const { Client } = require('pg');
 
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
-    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 });
 
@@ -35,7 +33,7 @@ const io = socketio(server)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const port = process.env.PORT || 3000; //Talk to browser through this port
+// const port = process.env.PORT || 3000; //Talk to browser through this port
 const publicDirectoryPath = path.join(__dirname, '../public/')
 const views = path.join(__dirname, '../public/views/')
 
