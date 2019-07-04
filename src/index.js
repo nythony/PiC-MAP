@@ -17,7 +17,7 @@ const client = new Client({
 })
 client.connect()
 
-// Additional setup
+// Additional setup and initialization
 const app = express()
 app.engine('.html', require('ejs').__express);
 const server = http.createServer(app)
@@ -89,11 +89,11 @@ io.on('connection', (socket) => {
 // GET
 
 
-app.get('/', (req, res) => {
-    res.redirect(publicDirectoryPath + 'views/loginPage.html');
+app.get('/', function (req, res) {
+    res.sendfile(publicDirectoryPath + 'views/loginPage.html');
 })
 
-app.get('/login', (req, res) => {
+app.get('/login', function (req, res) {
     res.sendFile(publicDirectoryPath + 'views/userForm.html');
 })
 
