@@ -134,13 +134,13 @@ app.get("/chatSignIn", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/chatSignIn.html")
 })
 
-app.get("/loginPage", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/loginPage.html")
+app.get("/login", function (req, res) {
+    res.sendFile(publicDirectoryPath + "views/login.html")
 })
 
 // When user enters incorrect login information - sends failedLoginPage.html
-app.get("/failedLoginPage", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/failedLoginPage.html")
+app.get("/failedLogin", function (req, res) {
+    res.sendFile(publicDirectoryPath + "views/failedLogin.html")
 })
 
 // When NewUser is loaded - sends createNewUser.html
