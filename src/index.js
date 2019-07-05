@@ -4,6 +4,7 @@ const http = require('http')
 const express = require('express')
 const socketio = require('socket.io')
 const { Client } = require('pg')
+const bodyParser = require('body-parser')
 
 // Importing all things from other parts of project
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
@@ -25,6 +26,8 @@ const io = socketio(server)
 const port = process.env.PORT || 3000; //Talk to browser through this port
 const publicDirectoryPath = path.join(__dirname, '../public/')
 app.use(express.static(publicDirectoryPath))
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // IO
