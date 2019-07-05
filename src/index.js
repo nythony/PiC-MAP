@@ -97,25 +97,9 @@ app.get('/login', function (req, res) {
     res.sendFile(publicDirectoryPath + 'views/userForm.html');
 })
 
-app.get("/about", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/about.html");
-})
-
-app.get("/contact", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/contact.html");
-})
-
-app.get("/userform", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/userForm.html");
-})
-
 app.get("/projectform", function (req, res) {
     project.getProject(req, res);
     res.sendFile(publicDirectoryPath + "views/projectForm.html");
-})
-
-app.get("/jobstoryform", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/jobStoryForm.html");
 })
 
 app.get("/taskform", function (req, res) {
@@ -158,8 +142,8 @@ app.get("/loginResult/:result", function (req, res) {
 // POST
 
 // When user wants to navigate to create new user page - redirects to createNewUser
-app.post("/loginPage/createNewUser", function (req, res) {
-    res.redirect('/createNewUser')
+app.post("/login/NewUser", function (req, res) {
+    res.redirect('/NewUser')
 })
 
 // When user wants to navigate to create new user page from failedLoginPage - redirects to createNewUser
