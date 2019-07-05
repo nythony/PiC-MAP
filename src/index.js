@@ -90,7 +90,7 @@ io.on('connection', (socket) => {
 
 
 app.get('/', function (req, res) {
-    res.sendfile(publicDirectoryPath + 'views/loginPage.html');
+    res.sendfile(publicDirectoryPath + 'views/login.html');
 })
 
 app.get('/login', function (req, res) {
@@ -143,9 +143,9 @@ app.get("/failedLoginPage", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/failedLoginPage.html")
 })
 
-// When createNewUser is loaded - sends createNewUser.html
-app.get("/createNewUser", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/createNewUser.html")
+// When NewUser is loaded - sends createNewUser.html
+app.get("/NewUser", function (req, res) {
+    res.sendFile(publicDirectoryPath + "views/NewUser.html")
 })
 
 app.get("/loginResult/:result", function (req, res) {
