@@ -21,6 +21,7 @@ client.connect()
 // Additional setup and initialization
 const app = express()
 app.engine('.html', require('ejs').__express);
+app.set('view engine', 'html');
 const server = http.createServer(app)
 const io = socketio(server)
 const port = process.env.PORT || 3000; //Talk to browser through this port
