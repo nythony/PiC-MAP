@@ -14,20 +14,36 @@
 
         // React code starts here!
 
-        class Hello extends React.Component {  
+        class Hello extends React.Component {
+
+            constructor() {
+                super()
+                this.state = {
+                    message: "PiC-MAP"
+                }
+                this.updateMessage = this.updateMessage.bind(this)
+            }
+
+            updateMessage() {
+                this.setState({
+                    message: "MET-Agile"
+                })
+            }
+
             render() {  
-                return <h1>Hello {this.props.message}!</h1>;  
+                return (
+                    <div>
+                        <h1>Hello {this.state.message}!</h1>
+                        <button onClick={this.updateMessage}\>Press me!</button>
+                    </div>
+                )
+                return <h1>Hello {this.prop.message}!</h1> 
             }
         }
 
         ReactDOM.render(  
-            <Hello message="pic-map" />,   
+            <Hello message="Jalapeno" />,   
             document.getElementById("root")  
-        )
-
-        ReactDOM.render(
-            <Hello message="Jalapeno" />,
-            document.getElementById("root")
         )
 
         // And ends here!
