@@ -89,8 +89,12 @@ io.on('connection', (socket) => {
 // GET
 
 
+// app.get('/', function (req, res) {
+//     res.sendfile(publicDirectoryPath + 'views/loginPage.html');
+// })
+
 app.get('/', function (req, res) {
-    res.sendfile(publicDirectoryPath + 'views/loginPage.html');
+    res.sendfile(publicDirectoryPath + 'views/HelloWorld.html');
 })
 
 app.get('/login', function (req, res) {
