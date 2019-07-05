@@ -86,58 +86,14 @@ io.on('connection', (socket) => {
 
 
 
-// GET
+// App.get stuff
 
-
-// app.get('/', function (req, res) {
-//     res.sendfile(publicDirectoryPath + 'views/loginPage.html');
-// })
-
+// Landing page for the app
 app.get('/', function (req, res) {
-    res.sendfile(publicDirectoryPath + 'views/HelloWorld.html');
+    res.sendfile(publicDirectoryPath + 'views/loginPage.html');
 })
 
-app.get('/login', function (req, res) {
-    res.sendFile(publicDirectoryPath + 'views/userForm.html');
-})
-
-app.get("/about", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/about.html");
-})
-
-app.get("/contact", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/contact.html");
-})
-
-app.get("/userform", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/userForm.html");
-})
-
-app.get("/projectform", function (req, res) {
-    project.getProject(req, res);
-    res.sendFile(publicDirectoryPath + "views/projectForm.html");
-})
-
-app.get("/jobstoryform", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/jobStoryForm.html");
-})
-
-app.get("/taskform", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/taskForm.html");
-})
-
-app.get("/issueform", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/issueForm.html");
-})
-
-app.get("/chatapp", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/chatApp.html")
-})
-
-app.get("/chatSignIn", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/chatSignIn.html")
-})
-
+// Login Page
 app.get("/loginPage", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/loginPage.html")
 })
@@ -152,14 +108,70 @@ app.get("/createNewUser", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/createNewUser.html")
 })
 
+// View results of login
 app.get("/loginResult/:result", function (req, res) {
     res.render("loginResult", { output: req.params.result })
 })
 
+// Was using this to test some react stuff.
+// app.get('/', function (req, res) {
+//     res.sendfile(publicDirectoryPath + 'views/HelloWorld.html');
+// })
+
+// Current version of how to submit projects to db
+app.get("/projectform", function (req, res) {
+    project.getProject(req, res);
+    res.sendFile(publicDirectoryPath + "views/projectForm.html");
+})
+
+// Current version of chatApp (Must be updated)
+app.get("/chatapp", function (req, res) {
+    res.sendFile(publicDirectoryPath + "views/chatApp.html")
+})
+
+// Signin page for chatApp (Must be updated)
+app.get("/chatSignIn", function (req, res) {
+    res.sendFile(publicDirectoryPath + "views/chatSignIn.html")
+})
+
+// This isn't being used
+// app.get('/login', function (req, res) {
+//     res.sendFile(publicDirectoryPath + 'views/userForm.html');
+// })
+
+// This isn't being used
+// app.get("/about", function (req, res) {
+//     res.sendFile(publicDirectoryPath + "views/about.html");
+// })
+
+// This isn't being used
+// app.get("/contact", function (req, res) {
+//     res.sendFile(publicDirectoryPath + "views/contact.html");
+// })
+
+// This isn't being used
+// app.get("/userform", function (req, res) {
+//     res.sendFile(publicDirectoryPath + "views/userForm.html");
+// })
+
+// This isn't being used
+// app.get("/jobstoryform", function (req, res) {
+//     res.sendFile(publicDirectoryPath + "views/jobStoryForm.html");
+// })
+
+// This isn't being used
+// app.get("/taskform", function (req, res) {
+//     res.sendFile(publicDirectoryPath + "views/taskForm.html");
+// })
+
+// This isn't being used
+// app.get("/issueform", function (req, res) {
+//     res.sendFile(publicDirectoryPath + "views/issueForm.html");
+// })
 
 
 
-// POST
+// App.post stuff
 
 // When user wants to navigate to create new user page - redirects to createNewUser
 app.post("/loginPage/createNewUser", function (req, res) {
@@ -266,9 +278,6 @@ app.post("/projectform-submitted", function (req, res) {
     console.log('post method of project form');
     res.redirect('/');
 });
-
-
-
 
 
 
