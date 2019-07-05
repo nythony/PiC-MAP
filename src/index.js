@@ -1,45 +1,34 @@
-console.log('running index.js')
-
+// Importing all things set up by project
 const path = require('path')
 const http = require('http')
 const express = require('express')
 const socketio = require('socket.io')
+const { Client } = require('pg')
+
+// Importing all things from other parts of project
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
-const pg = require('pg')
-const project = require('./projectForm.js');
-//const db = require('./queries')
-
+const project = require('./projectForm.js')
 
 //Connecting to cloud based database:
-const { Client } = require('pg');
-
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
-    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
-});
+})
+client.connect()
 
-client.connect();
-
-
-//Will need when integrate this with database and APIs
-const bodyParser = require('body-parser')
+// Additional setup and initialization
 const app = express()
 app.engine('.html', require('ejs').__express);
-app.set('views', path.join(__dirname, '../public/views/'));
-app.set('view engine', 'html');
 const server = http.createServer(app)
 const io = socketio(server)
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
 const port = process.env.PORT || 3000; //Talk to browser through this port
 const publicDirectoryPath = path.join(__dirname, '../public/')
-const views = path.join(__dirname, '../public/views/')
-
 app.use(express.static(publicDirectoryPath))
+
+
+// IO
+
 
 // When a user connects
 // Connection event is built in
@@ -97,67 +86,96 @@ io.on('connection', (socket) => {
 
 
 
+// App.get stuff
 
-app.get('/', (req, res) => {
-    //use sendFile since this is a simple html apage
-    console.log('hello')
-    res.redirect(views + '/loginPage.html');
-});
-
-app.get('/login', (req, res) => {
-    //use sendFile since this is a simple html apage
-    res.sendFile(views + 'userForm.html');
-});
-
-app.get("/about", function (req, res) {
-    res.sendFile(views + "about.html");
-});
-
-app.get("/contact", function (req, res) {
-    res.sendFile(views + "contact.html");
-});
-
-app.get("/userform", function (req, res) {
-    res.sendFile(views + "userForm.html");
-});
-app.get("/projectform", function (req, res) {
-    project.getProject(req, res);
-    res.sendFile(views + "projectForm.html");
-
-});
-app.get("/jobstoryform", function (req, res) {
-    res.sendFile(views + "jobStoryForm.html");
-
-});
-app.get("/taskform", function (req, res) {
-    res.sendFile(views + "taskForm.html");
-});
-app.get("/issueform", function (req, res) {
-    res.sendFile(views + "issueForm.html");
-});
-app.get("/chatapp", function (req, res) {
-    res.sendFile(views + "chatApp.html")
+// Landing page for the app
+app.get('/', function (req, res) {
+    res.sendfile(publicDirectoryPath + 'views/loginPage.html');
 })
 
-app.get("/chatSignIn", function (req, res) {
-    res.sendFile(views + "chatSignIn.html")
-})
-
-
-// When loginPage is loaded - sends loginPage.html
+// Login Page
 app.get("/loginPage", function (req, res) {
-    res.sendFile(views + "loginPage.html")
-})
-
-
-// When user wants to navigate to create new user page - redirects to createNewUser
-app.post("/loginPage/createNewUser", function (req, res) {
-    res.redirect('/createNewUser')
+    res.sendFile(publicDirectoryPath + "views/loginPage.html")
 })
 
 // When user enters incorrect login information - sends failedLoginPage.html
 app.get("/failedLoginPage", function (req, res) {
-    res.sendFile(views + "failedLoginPage.html")
+    res.sendFile(publicDirectoryPath + "views/failedLoginPage.html")
+})
+
+// When createNewUser is loaded - sends createNewUser.html
+app.get("/createNewUser", function (req, res) {
+    res.sendFile(publicDirectoryPath + "views/createNewUser.html")
+})
+
+// View results of login
+app.get("/loginResult/:result", function (req, res) {
+    res.render("loginResult", { output: req.params.result })
+})
+
+// Was using this to test some react stuff.
+// app.get('/', function (req, res) {
+//     res.sendfile(publicDirectoryPath + 'views/HelloWorld.html');
+// })
+
+// Current version of how to submit projects to db
+app.get("/projectform", function (req, res) {
+    project.getProject(req, res);
+    res.sendFile(publicDirectoryPath + "views/projectForm.html");
+})
+
+// Current version of chatApp (Must be updated)
+app.get("/chatapp", function (req, res) {
+    res.sendFile(publicDirectoryPath + "views/chatApp.html")
+})
+
+// Signin page for chatApp (Must be updated)
+app.get("/chatSignIn", function (req, res) {
+    res.sendFile(publicDirectoryPath + "views/chatSignIn.html")
+})
+
+// This isn't being used
+// app.get('/login', function (req, res) {
+//     res.sendFile(publicDirectoryPath + 'views/userForm.html');
+// })
+
+// This isn't being used
+// app.get("/about", function (req, res) {
+//     res.sendFile(publicDirectoryPath + "views/about.html");
+// })
+
+// This isn't being used
+// app.get("/contact", function (req, res) {
+//     res.sendFile(publicDirectoryPath + "views/contact.html");
+// })
+
+// This isn't being used
+// app.get("/userform", function (req, res) {
+//     res.sendFile(publicDirectoryPath + "views/userForm.html");
+// })
+
+// This isn't being used
+// app.get("/jobstoryform", function (req, res) {
+//     res.sendFile(publicDirectoryPath + "views/jobStoryForm.html");
+// })
+
+// This isn't being used
+// app.get("/taskform", function (req, res) {
+//     res.sendFile(publicDirectoryPath + "views/taskForm.html");
+// })
+
+// This isn't being used
+// app.get("/issueform", function (req, res) {
+//     res.sendFile(publicDirectoryPath + "views/issueForm.html");
+// })
+
+
+
+// App.post stuff
+
+// When user wants to navigate to create new user page - redirects to createNewUser
+app.post("/loginPage/createNewUser", function (req, res) {
+    res.redirect('/createNewUser')
 })
 
 // When user wants to navigate to create new user page from failedLoginPage - redirects to createNewUser
@@ -165,24 +183,10 @@ app.post("/failedLoginPage/createNewUser", function (req, res) {
     res.redirect('/createNewUser')
 })
 
-
-// When createNewUser is loaded - sends createNewUser.html
-app.get("/createNewUser", function (req, res) {
-    res.sendFile(views + "createNewUser.html")
-})
-
 // When user wants to navigate to login page from createNewUser - redirects to loginPage
 app.post("/createNewUser/login", function (req, res) {
     res.redirect('/loginPage')
 })
-
-
-
-
-app.get("/loginResult/:result", function (req, res) {
-    res.render("loginResult", { output: req.params.result })
-})
-
 
 app.post("/loginPage/submit", function (req, res) {
     var username = req.body.username
@@ -206,7 +210,6 @@ app.post("/loginPage/submit", function (req, res) {
     })
 })
 
-
 app.post("/failedLoginPage/submit", function (req, res) {
     var username = req.body.username
     var password = req.body.password
@@ -227,7 +230,6 @@ app.post("/failedLoginPage/submit", function (req, res) {
     res.redirect('/failedLoginPage')
 })
 
-
 app.post("/createNewUser/submit", function (req, res) {
     var username = req.body.username
     var password = req.body.password
@@ -236,12 +238,6 @@ app.post("/createNewUser/submit", function (req, res) {
     })
     res.redirect('/loginPage')
 })
-
-
-
-
-
-
 
 app.post("/contact-submitted", function (req, res) {
     var cname = req.body.name;
@@ -282,6 +278,7 @@ app.post("/projectform-submitted", function (req, res) {
     console.log('post method of project form');
     res.redirect('/');
 });
+
 
 
 
