@@ -29,7 +29,9 @@ const publicDirectoryPath = path.join(__dirname, '../public/')
 app.use(express.static(publicDirectoryPath))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-var views = path.join(__dirname, '../public/views')
+const views = path.join(__dirname, '../public/views')
+app.set('views', views)
+console.log(views)
 
 
 // IO
