@@ -51,6 +51,7 @@ const getProject = (req, res) => {
         }
     });
 };
+
 // to insert , update and delete project
 const crudProject = (req, res) => {
     var btnSubmit = req.body.submit;
