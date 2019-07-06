@@ -113,10 +113,14 @@ app.get("/createNewUser", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/createNewUser.html")
 })
 
-// View results of login
-app.get("/loginResult/:result", function (req, res) {
-    res.render("loginResult", { output: req.params.result })
+app.get("/UserHomePage/:username", function (req, res) {
+    res.render("UserHomePage", { output: req.params.username})
 })
+
+// View results of login
+// app.get("/loginResult/:result", function (req, res) {
+//     res.render("loginResult", { output: req.params.result })
+// })
 
 // Was using this to test some react stuff.
 // app.get('/', function (req, res) {
@@ -205,7 +209,7 @@ app.post("/loginPage/submit", function (req, res) {
                     if (error1) throw error1
                     if (results1["rows"][0]["Password"] == password) {
                         console.log('test1')
-                        toRedirect = '/loginResult/' + username
+                        toRedirect = '/UserHomePage/' + username
                         console.log(toRedirect)
                     }
                     res.redirect(toRedirect)
