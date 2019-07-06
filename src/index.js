@@ -216,7 +216,7 @@ app.post("/loginPage/submit", function (req, res) {
                     res.redirect(url.format({
                         pathname: toRedirect,
                         query:req.query
-                    })
+                    }))
                 })
             }
         }
