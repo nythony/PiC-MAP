@@ -23,17 +23,13 @@
 </head>
 
 <body>
-    <div id="header">
         <h1>
-            <script type="text/javascript">
-                var username = <%- JSON.stringify(output.username) %>;
-                document.write(username)
-            </script>
+        <script type="text/javascript">
+            var username = <%- JSON.stringify(output.username) %>;
+            document.write(username)
+        </script>
         </h1>
-        <h1>
-            <button type="button" onclick="loginPage">Log Out</button> 
-        </h1>
-    </div>
+        <button type="button" onclick="loginPage">Log Out</button>
     <div id="maincontent">
         <h1>Nice Login mate!</h1>
     </div>
