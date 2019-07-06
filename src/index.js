@@ -123,8 +123,8 @@ app.get("/createNewUser", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/createNewUser.html")
 })
 
-app.get("/UserHomePage/:username", function (req, res) {
-    res.render("UserHomePage", {user: req.params.username})
+app.get("/UserHomePage/:result", function (req, res) {
+    res.render("UserHomePage", {user: req.params.result})
 })
 
 // View results of login
