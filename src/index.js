@@ -114,7 +114,7 @@ app.get("/createNewUser", function (req, res) {
 })
 
 app.get("/UserHomePage", function (req, res) {
-    res.render("UserHomePage", { output: req.params.username})
+    res.render("UserHomePage", { user: req.username})
 })
 
 // View results of login
@@ -209,7 +209,7 @@ app.post("/loginPage/submit", function (req, res) {
                     if (error1) throw error1
                     if (results1["rows"][0]["Password"] == password) {
                         console.log('test1')
-                        toRedirect = '/UserHomePage/'
+                        toRedirect = '/UserHomePage'
                         console.log(toRedirect)
                     }
                     res.redirect(toRedirect)

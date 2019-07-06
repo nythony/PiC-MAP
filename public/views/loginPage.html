@@ -29,7 +29,7 @@
         <img src="../img/favicon.png" alt="logo" width="200" height="200">
         <h2>Please enter your username and password to sign in.</h2>
         <form action="loginPage/submit" method="post" id="login-form">
-            <input type="text" name="username" placeholder="username">
+            <input type="text" name="username" placeholder="username" value = "<%= user.username %>">
             <input type="password" name="password" placeholder="password">
             <button type="submit">Sign In</button>
         </form>
