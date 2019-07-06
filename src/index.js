@@ -32,6 +32,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('views', path.join(__dirname, '../public/views'))
 
+// Trying to mask some user authentication
+class Passer {
+    constructor(username, project, task){
+        this.username = username
+        this.project = project
+        this.task = task
+    }
+}
+
 
 // IO
 
@@ -115,7 +124,7 @@ app.get("/createNewUser", function (req, res) {
 })
 
 app.get("/UserHomePage/:username", function (req, res) {
-    res.render("UserHomePage", {user: req.query.username})
+    res.render("UserHomePage", {user: req.params.username})
 })
 
 // View results of login
@@ -210,13 +219,11 @@ app.post("/loginPage/submit", function (req, res) {
                     if (error1) throw error1
                     if (results1["rows"][0]["Password"] == password) {
                         console.log('test1')
-                        toRedirect = '/UserHomePage'
+                        const AuthUser = new Passer(username,)
+                        toRedirect = '/UserHomePage/' + AuthUser
                         console.log(toRedirect)
                     }
-                    res.redirect(url.format({
-                        pathname: toRedirect,
-                        query:req.query.username
-                    }))
+                    res.redirect(toRedirect)
                 })
             }
         }
