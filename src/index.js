@@ -114,7 +114,7 @@ app.get("/createNewUser", function (req, res) {
 })
 
 app.get("/UserHomePage", function (req, res) {
-    res.render("UserHomePage", { user: req.username})
+    res.render("UserHomePage", { user: req.body.username})
 })
 
 // View results of login
