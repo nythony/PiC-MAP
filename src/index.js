@@ -115,6 +115,7 @@ app.get("/createNewUser", function (req, res) {
 
 app.get("/UserHomePage", function (req, res) {
     var username = req.body.username
+    console.log(username)
     res.render("UserHomePage", {user: username})
 })
 
