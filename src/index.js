@@ -5,6 +5,7 @@ const express = require('express')
 const socketio = require('socket.io')
 const { Client } = require('pg')
 const bodyParser = require('body-parser')
+const url = require('url')
 
 // Importing all things from other parts of project
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
@@ -114,9 +115,7 @@ app.get("/createNewUser", function (req, res) {
 })
 
 app.get("/UserHomePage", function (req, res) {
-    var username = req.body.username
-    console.log(username)
-    res.render("UserHomePage", {user: req.body.username})
+    res.render("UserHomePage", {user: req.query.username})
 })
 
 // View results of login
@@ -214,7 +213,10 @@ app.post("/loginPage/submit", function (req, res) {
                         toRedirect = '/UserHomePage'
                         console.log(toRedirect)
                     }
-                    res.redirect(toRedirect)
+                    res.redirect(url.format({
+                        pathname: toRedirect,
+                        query:req.query
+                    })
                 })
             }
         }
