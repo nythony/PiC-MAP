@@ -114,7 +114,7 @@ app.get("/createNewUser", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/createNewUser.html")
 })
 
-app.get("/UserHomePage", function (req, res) {
+app.get("/UserHomePage/:username", function (req, res) {
     res.render("UserHomePage", {user: req.query.username})
 })
 
@@ -215,7 +215,7 @@ app.post("/loginPage/submit", function (req, res) {
                     }
                     res.redirect(url.format({
                         pathname: toRedirect,
-                        query:req.query
+                        query:req.query.username
                     }))
                 })
             }
