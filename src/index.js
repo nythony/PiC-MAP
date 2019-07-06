@@ -115,8 +115,7 @@ app.get("/createNewUser", function (req, res) {
 })
 
 app.get("/UserHomePage", function (req, res) {
-    var username = req.body.username
-    res.render("UserHomePage", {user: username})
+    res.render("UserHomePage", {user: req.query.username})
 })
 
 // View results of login
@@ -216,7 +215,7 @@ app.post("/loginPage/submit", function (req, res) {
                     }
                     res.redirect(url.format({
                         pathname: toRedirect,
-                        query: req.body
+                        query:req.query
                     }))
                 })
             }
