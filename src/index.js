@@ -128,7 +128,7 @@ app.get("/createNewUser", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/createNewUser.html")
 })
 
-app.get("/UserHomePage/:result", function (req, res) {
+app.get("/UserHomePage/", function (req, res) {
    // var user = AuthUser --deleting AuthUser
     console.log("Cookie: ", req.cookies.userInfo);
 
