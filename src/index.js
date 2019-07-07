@@ -114,10 +114,8 @@ app.get('/', function (req, res) {
 })
 
 // Login Page
-app.get("/loginPage", function (req, res) {
-    console.log("1", req.cookies.userInfo);
+app.get("/loginPage", function (req, res) { //Redirect to home page/login page, but only when specifically log out.
     res.clearCookie("userInfo");
-    console.log("2", req.cookies.userInfo);
     res.sendFile(publicDirectoryPath + "views/loginPage.html")
 })
 
@@ -134,6 +132,8 @@ app.get("/createNewUser", function (req, res) {
 app.get("/UserHomePage/", function (req, res) {
    // var user = AuthUser --deleting AuthUser
     console.log("Cookie: ", req.cookies.userInfo);
+
+    //res.cookie("userProject", {userName:req.cookie.userInfo.name, projName:an item from ^ object})
 
     res.render("UserHomePage", { user:req.cookies.userInfo})
 })
@@ -228,7 +228,7 @@ app.post("/loginPage/submit", function (req, res) {
     var password = req.body.password
     var toRedirect = '/failedLoginPage'
 
-    res.cookie("userInfo",{name:username, pass:password}) //cookie(cookienmae, {object})
+    res.cookie("userInfo",{name:username, pass:password}) //cookie(cookienmae, {object}) //NEED TO ADD OBJECT OF PROJECTS
 
     client.query('SELECT "UserName" FROM "User";', (error, results) => {
         if (error) throw error
@@ -237,16 +237,17 @@ app.post("/loginPage/submit", function (req, res) {
                 client.query('SELECT "Password" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results1) => {
                     if (error1) throw error1
                     if (results1["rows"][0]["Password"] == password) {
-                        client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results2) => {
+                        //client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results2) => {
                            // AuthUser = new Passer(results2["rows"][0]["User_ID"], null, null) --removing passer, and authuser
                             toRedirect = '/UserHomePage/' // + AuthUser
                             res.redirect(toRedirect)
-                        })
+                        //})
                     }
                 })
             }
         }
     })
+
 })
 
 app.post("/failedLoginPage/submit", function (req, res) {
