@@ -220,10 +220,10 @@ app.post("/loginPage/submit", function (req, res) {
                     if (error1) throw error1
                     if (results1["rows"][0]["Password"] == password) {
                         console.log('test1')
-                        client.query('SELECT "User_ID" FROM "USER" WHERE "UserName" = \'' + username + '\';', (error1, results2) => {
-                            var userid = results2["rows"][0]["User_ID"]
-                        }
-                        AuthUser = new Passer(userid, null, null)
+                        client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error2, results2) => {
+                            if (error2) throw error2
+                            AuthUser = new Passer(results2["rows"][0]["User_ID"], null, null)
+                        })
                         toRedirect = '/UserHomePage/' + AuthUser
                         console.log(toRedirect)
                     }
