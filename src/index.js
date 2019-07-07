@@ -240,7 +240,7 @@ app.post("/loginPage/submit", function (req, res) {
                             if (error2) throw error2 //Should never happen, if anything it returns and stores null
                             var storage = []
                             for (var obj in results.rows){
-                                storage.append(obj["Project_ID"])
+                                storage.push(obj["Project_ID"])
                             }
                             res.cookie("userInfo",{name:username, pass:password, projects: storage});
                             toRedirect = '/UserHomePage/' // + AuthUser
