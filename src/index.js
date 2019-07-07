@@ -124,7 +124,8 @@ app.get("/createNewUser", function (req, res) {
 })
 
 app.get("/UserHomePage/:result", function (req, res) {
-    res.render("UserHomePage", { output: req.params.result })
+    var user = AuthUser
+    res.render("UserHomePage", { user:user })
 })
 
 // View results of login
