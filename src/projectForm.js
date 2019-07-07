@@ -63,7 +63,7 @@ const crudProject = (req, res) => {
     toRedirect = '/userform';
 
 
-    if (btnCreate) {
+    if (btnSubmit) {
         const text = 'INSERT INTO "Project"( "ProjectName", "ProjectDesc") VALUES($1, $2) RETURNING *'
         const values = [project, projectDesc]
 
