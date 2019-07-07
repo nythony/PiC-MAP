@@ -37,10 +37,14 @@
     <div id="projects">
         <h1>Your Projects: </h1> &nbsp
             <script type="text/javascript">
-                for (var obj in user.projects){
-                    console.log(obj)
-                    document.write(obj)
+                var hrefToBe = "";
+                var projectList = JSON.stringify(user.projects);
+                console.log("In JS: ", projectList);
+
+                for (i = 0; i < projectList.length; i++){
+                    hrefToBe += "   " + projectList[i];
                 }
+                document.write(hrefToBE);
             </script>
 
     </div>
