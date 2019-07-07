@@ -5,6 +5,7 @@ const express = require('express')
 const socketio = require('socket.io')
 const { Client } = require('pg')
 const bodyParser = require('body-parser')
+var cookieParser = require('cookie-parser');
 const url = require('url')
 
 // Importing all things from other parts of project
@@ -32,7 +33,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('views', path.join(__dirname, '../public/views'))
 
+
+app.use(cookieParser());
+
 // Trying to mask some user authentication
+/* Getting rid of global variable and changing to cookie
 class Passer {
     constructor(userid, projectid, taskid){
         this.userid = userid
@@ -40,7 +45,7 @@ class Passer {
         this.taskid = taskid
     }
 }
-
+*/
 
 // IO
 
@@ -105,11 +110,12 @@ io.on('connection', (socket) => {
 
 // Landing page for the app
 app.get('/', function (req, res) {
-    res.sendfile(publicDirectoryPath + 'views/loginPage.html');
+    res.sendFile(publicDirectoryPath + 'views/loginPage.html');
 })
 
 // Login Page
-app.get("/loginPage", function (req, res) {
+app.get("/loginPage", function (req, res) { //Redirect to home page/login page, but only when specifically log out.
+    res.clearCookie("userInfo");
     res.sendFile(publicDirectoryPath + "views/loginPage.html")
 })
 
@@ -123,9 +129,13 @@ app.get("/createNewUser", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/createNewUser.html")
 })
 
-app.get("/UserHomePage/:result", function (req, res) {
-    var user = AuthUser
-    res.render("UserHomePage", { user:user })
+app.get("/UserHomePage/", function (req, res) {
+   // var user = AuthUser --deleting AuthUser
+    console.log("Cookie: ", req.cookies.userInfo);
+
+    //res.cookie("userProject", {userName:req.cookie.userInfo.name, projName:an item from ^ object})
+
+    res.render("UserHomePage", { user:req.cookies.userInfo})
 })
 
 // View results of login
@@ -217,6 +227,7 @@ app.post("/loginPage/submit", function (req, res) {
     var username = req.body.username
     var password = req.body.password
     var toRedirect = '/failedLoginPage'
+
     client.query('SELECT "UserName" FROM "User";', (error, results) => {
         if (error) throw error
         for (let row of results.rows) {
@@ -224,9 +235,15 @@ app.post("/loginPage/submit", function (req, res) {
                 client.query('SELECT "Password" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results1) => {
                     if (error1) throw error1
                     if (results1["rows"][0]["Password"] == password) {
-                        client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results2) => {
-                            AuthUser = new Passer(results2["rows"][0]["User_ID"], null, null)
-                            toRedirect = '/UserHomePage/' + AuthUser
+
+                        client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
+                            if (error2) throw error2 //Should never happen, if anything it returns and stores null
+                            var storage = []
+                            for (let obj of results2.rows){
+                                storage.push(obj["Project_ID"])
+                            }
+                            res.cookie("userInfo",{name:username, pass:password, projects: storage});
+                            toRedirect = '/UserHomePage/' // + AuthUser
                             res.redirect(toRedirect)
                         })
                     }
@@ -234,6 +251,7 @@ app.post("/loginPage/submit", function (req, res) {
             }
         }
     })
+
 })
 
 app.post("/failedLoginPage/submit", function (req, res) {
