@@ -128,19 +128,14 @@ app.get("/UserHomePage/:result", function (req, res) {
     res.render("UserHomePage", { user:user })
 })
 
-// View results of login
-// app.get("/loginResult/:result", function (req, res) {
-//     res.render("loginResult", { output: req.params.result })
-// })
-
 // Was using this to test some react stuff.
 // app.get('/', function (req, res) {
 //     res.sendfile(publicDirectoryPath + 'views/HelloWorld.html');
 // })
 
+
 // Current version of how to submit projects to db
 app.get("/projectForm", function (req, res) {
-    console.log("test11")
     project.getProject(req, res);
     res.sendFile(publicDirectoryPath + "views/projectForm.html");
 })
@@ -220,6 +215,11 @@ app.post("/createNewUser/login", function (req, res) {
 // When user wants to navigate to projectForm page from UserHomePage
 app.post("/UserHomePage/createProject", function (req, res) {
     res.redirect('/projectForm')
+})
+
+// When user wants to navigate to UserHomePage from projectForm
+app.post("/projectForm/returnToHomePage", function (req, res) {
+    res.redirect('UserHomePage')
 })
 
 
