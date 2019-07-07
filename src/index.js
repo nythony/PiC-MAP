@@ -228,7 +228,7 @@ app.post("/loginPage/submit", function (req, res) {
                             AuthUser = new Passer(results["rows"][0]["User_ID"], null, null)
                             toRedirect = '/UserHomePage/' + AuthUser
                             res.redirect(toRedirect)
-                        }
+                        })
                     }
                 })
             }
