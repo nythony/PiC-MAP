@@ -239,7 +239,7 @@ app.post("/loginPage/submit", function (req, res) {
                         client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
                             if (error2) throw error2 //Should never happen, if anything it returns and stores null
                             var storage = []
-                            for (var obj in results2.rows){
+                            for (let obj of results2.rows){
                                 storage.push(obj["Project_ID"])
                             }
                             res.cookie("userInfo",{name:username, pass:password, projects: storage});
