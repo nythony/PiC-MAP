@@ -5,6 +5,7 @@ const express = require('express')
 const socketio = require('socket.io')
 const { Client } = require('pg')
 const bodyParser = require('body-parser')
+var cookieParser = require('cookie-parser');
 const url = require('url')
 
 // Importing all things from other parts of project
@@ -31,6 +32,9 @@ app.use(express.static(publicDirectoryPath))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('views', path.join(__dirname, '../public/views'))
+
+
+app.use(cookieParser());
 
 // Trying to mask some user authentication
 class Passer {
@@ -125,6 +129,7 @@ app.get("/createNewUser", function (req, res) {
 
 app.get("/UserHomePage/:result", function (req, res) {
     var user = AuthUser
+    console.log("hi")
     console.log(req.cookies)
     res.render("UserHomePage", { user:user })
 })
@@ -218,7 +223,9 @@ app.post("/loginPage/submit", function (req, res) {
     var username = req.body.username
     var password = req.body.password
     var toRedirect = '/failedLoginPage'
+
     res.cookie("hi",{name:username})
+
     client.query('SELECT "UserName" FROM "User";', (error, results) => {
         if (error) throw error
         for (let row of results.rows) {
