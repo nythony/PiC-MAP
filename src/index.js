@@ -139,10 +139,14 @@ app.get("/UserHomePage/:result", function (req, res) {
 // })
 
 // Current version of how to submit projects to db
-app.get("/projectform", function (req, res) {
+app.get("/projectForm", function (req, res) {
+    console.log("test11")
     project.getProject(req, res);
     res.sendFile(publicDirectoryPath + "views/projectForm.html");
 })
+
+app.post("/projectForm/createNewForm", function (req, res) {
+}
 
 // Current version of chatApp (Must be updated)
 app.get("/chatapp", function (req, res) {
