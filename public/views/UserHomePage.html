@@ -37,11 +37,7 @@
     <div id="projects">
         <h1>Your Projects: </h1> &nbsp
             <script type="text/javascript">
-                var hrefToBe = "";
-
-                for (var i = 0; i < user.projects.length; i++){
-                    hrefToBe += "NAME:   " + JSON.stringify(user.projects[i]);
-                }
+                var hrefToBe =  <%- JSON.stringify(user.projects[0]) %>;
                 document.write(hrefToBE)
             </script>
 
