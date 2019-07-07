@@ -34,10 +34,10 @@ app.set('views', path.join(__dirname, '../public/views'))
 
 // Trying to mask some user authentication
 class Passer {
-    constructor(username, project, task){
-        this.username = username
-        this.project = project
-        this.task = task
+    constructor(userid, projectid, taskid){
+        this.userid = userid
+        this.projectid = projectid
+        this.taskid = taskid
     }
 }
 
