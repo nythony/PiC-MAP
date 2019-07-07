@@ -37,6 +37,7 @@ app.set('views', path.join(__dirname, '../public/views'))
 app.use(cookieParser());
 
 // Trying to mask some user authentication
+/* Getting rid of global variable and changing to cookie
 class Passer {
     constructor(userid, projectid, taskid){
         this.userid = userid
@@ -44,7 +45,7 @@ class Passer {
         this.taskid = taskid
     }
 }
-
+*/
 
 // IO
 
@@ -128,7 +129,7 @@ app.get("/createNewUser", function (req, res) {
 })
 
 app.get("/UserHomePage/:result", function (req, res) {
-    var user = AuthUser
+   // var user = AuthUser --deleting AuthUser
     console.log("Cookie: ", req.cookies.userInfo);
 
     res.render("UserHomePage", { user:req.cookies.userInfo})
@@ -234,8 +235,8 @@ app.post("/loginPage/submit", function (req, res) {
                     if (error1) throw error1
                     if (results1["rows"][0]["Password"] == password) {
                         client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results2) => {
-                            AuthUser = new Passer(results2["rows"][0]["User_ID"], null, null)
-                            toRedirect = '/UserHomePage/' + AuthUser
+                           // AuthUser = new Passer(results2["rows"][0]["User_ID"], null, null) --removing passer, and authuser
+                            toRedirect = '/UserHomePage/' // + AuthUser
                             res.redirect(toRedirect)
                         })
                     }
