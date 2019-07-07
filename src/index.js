@@ -224,11 +224,12 @@ app.post("/loginPage/submit", function (req, res) {
                 client.query('SELECT "Password" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results1) => {
                     if (error1) throw error1
                     if (results1["rows"][0]["Password"] == password) {
-                        client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results2))
-                        AuthUser = new Passer(results2["rows"][0]["User_ID"], null, null)
-                        toRedirect = '/UserHomePage/' + AuthUser
+                        client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results2) => {
+                            AuthUser = new Passer(results["rows"][0]["User_ID"], null, null)
+                            toRedirect = '/UserHomePage/' + AuthUser
+                            res.redirect(toRedirect)
+                        }
                     }
-                    res.redirect(toRedirect)
                 })
             }
         }
