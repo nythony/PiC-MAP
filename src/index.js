@@ -213,6 +213,16 @@ app.post("/createNewUser/login", function (req, res) {
     res.redirect('/loginPage')
 })
 
+// When user wants to navigate to projectForm page from UserHomePage
+app.post("/UserHomePage/createProject", function (req, res) {
+    res.redirect('/projectForm')
+})
+
+
+
+// When user attempts to sign in
+// If successful, redirects to UserHomePage
+// If unsuccessful, redirects to failedLoginPage
 app.post("/loginPage/submit", function (req, res) {
     var username = req.body.username
     var password = req.body.password

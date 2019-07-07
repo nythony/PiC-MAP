@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <head>
     <meta charset="utf-8" />
@@ -9,6 +9,7 @@
         #header {
             text-align: right;
             margin-top: 50px;
+            margin-right: 10px;
             font-size: 100%;
             font-family: arial;
         }
@@ -16,6 +17,14 @@
         #projects {
             text-align: center;
             margin-top: 50px;
+            font-size: 100%;
+            font-family: arial;
+        }
+
+        #newItems {
+            text-align: left;
+            margin-top: 50px;
+            margin-left: 50px;
             font-size: 100%;
             font-family: arial;
         }
@@ -39,6 +48,11 @@
     <div id="projects">
         <h1>A list of your projects goes here</h1>
 
+    </div>
+    <div id="newItems">
+        <form action="projectform-submitted" method="post">
+            <button type="submit">Create new project</button>
+        </form>
     </div>
     <script src="/js/UserHomePage.js"></script>
 </body>
