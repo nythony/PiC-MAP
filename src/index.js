@@ -237,9 +237,9 @@ app.post("/loginPage/submit", function (req, res) {
                     if (results1["rows"][0]["Password"] == password) {
 
                         client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
-                            console.log("1",results2.rows["Project_ID"])
+                            console.log("1",results2.rows)
                             console.log(error2)
-                            res.cookie("userInfo",{name:username, pass:password, projects: JSON.stringify(results2).row["Project_ID"]});
+                            res.cookie("userInfo",{name:username, pass:password, projects: results2.rows});
                             toRedirect = '/UserHomePage/' // + AuthUser
                             res.redirect(toRedirect)
                         })
