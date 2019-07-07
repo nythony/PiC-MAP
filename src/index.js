@@ -140,8 +140,7 @@ app.get("/projectForm", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/projectForm.html");
 })
 
-app.post("/projectForm/createNewForm", function (req, res) {
-})
+
 
 // Current version of chatApp (Must be updated)
 app.get("/chatapp", function (req, res) {
@@ -220,8 +219,11 @@ app.post("/UserHomePage/createProject", function (req, res) {
 // When user wants to navigate to UserHomePage from projectForm
 app.post("/projectForm/backToUserHomePage", function (req, res) {
     pass = new Passer(null, null, null)
+    // fill in pass object, or this may get changed with cookies
     res.redirect('/UserHomePage/'+pass)
 })
+
+
 
 
 
@@ -314,10 +316,12 @@ app.post("/taskform-submitted", function (req, res) {
     console.log(status);
 });
 
+
+// When user clicks button to create new project (could be create, update, or delete)
 app.post("/projectform-submitted", function (req, res) {
     project.crudProject(req, res);
     console.log('post method of project form');
-    res.redirect('/');
+    res.redirect('/projectForm');
 });
 
 
