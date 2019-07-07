@@ -13,7 +13,7 @@
             font-family: arial;
         }
 
-        #projects {
+        #maincontent {
             text-align: center;
             margin-top: 50px;
             font-size: 100%;
@@ -26,18 +26,13 @@
     <div id="header">
         <h1>
             <script type="text/javascript">
-<<<<<<< HEAD
-                document.write(userid)
-=======
-                var username = <%- JSON.stringify(user.username) %>;
                 document.write(username)
->>>>>>> parent of 98c0f52... succ pass uname, project, task and logout
             </script>
         </h1>
-        <button type="button" onclick="loginPage">Log Out</button>
+        <button type="button" action="loginPage">Log Out</button>
     </div>
-    <div id="projects">
-        <h1>Here are a list of projects</h1>
+    <div id="maincontent">
+        <h1>Nice Login mate!</h1>
     </div>
     <script src=/js/UserHomePage.js></script>
 </body>
