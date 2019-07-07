@@ -123,7 +123,7 @@ app.get("/createNewUser", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/createNewUser.html")
 })
 
-app.get("/UserHomePage/", function (req, res) {
+app.get("/UserHomePage/:result", function (req, res) {
     var user = AuthUser
     res.render("UserHomePage", { user:user })
 })
