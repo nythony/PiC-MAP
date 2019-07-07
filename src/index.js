@@ -129,12 +129,9 @@ app.get("/createNewUser", function (req, res) {
 
 app.get("/UserHomePage/:result", function (req, res) {
     var user = AuthUser
-    console.log("Username", req.cookies.hi.name)
-    console.log("Password", req.cookies.hi.pass)
-    console.log("All cookies: Name and Defined Variables", req.cookies)
+    console.log("Cookie: ", req.cookies.userInfo);
 
-
-    res.render("UserHomePage", { user:user })
+    res.render("UserHomePage", { user:req.cookies.userInfo})
 })
 
 // View results of login
@@ -227,7 +224,7 @@ app.post("/loginPage/submit", function (req, res) {
     var password = req.body.password
     var toRedirect = '/failedLoginPage'
 
-    res.cookie("hi",{name:username, pass:password}) //cookie(cookienmae, {object})
+    res.cookie("userInfo",{name:username, pass:password}) //cookie(cookienmae, {object})
 
     client.query('SELECT "UserName" FROM "User";', (error, results) => {
         if (error) throw error
