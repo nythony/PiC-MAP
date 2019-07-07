@@ -123,7 +123,7 @@ app.get("/createNewUser", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/createNewUser.html")
 })
 
-app.get("/UserHomePage/:result", function (req, res) {
+app.get("/UserHomePage/", function (req, res) {
     var user = AuthUser
     res.render("UserHomePage", { user:user })
 })
@@ -221,7 +221,8 @@ app.post("/loginPage/submit", function (req, res) {
                     if (results1["rows"][0]["Password"] == password) {
                         client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error2, results2) => {
                             if (error2) throw error2
-                            AuthUser = new Passer(results2["rows"][0]["User_ID"], null, null)
+                            var userid = results2["rows"][0]["User_ID"]
+                            AuthUser = new Passer(userid, null, null)
                             toRedirect = '/UserHomePage/' + AuthUser
                             res.redirect(toRedirect)
                         })
