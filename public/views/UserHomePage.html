@@ -26,8 +26,9 @@
     <div id="header">
         <h1>
             <script type="text/javascript">
-                user = <%- user %>;
-                
+                var userid = <%- JSON.stringify(user.userid) %>;
+                var projectid = <%- JSON.stringify(user.projectid) %>;
+                var taskid = <%- JSON.stringify(user.taskid) %>;
                 document.write(userid)
             </script>
         </h1>
