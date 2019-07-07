@@ -220,7 +220,7 @@ app.post("/loginPage/submit", function (req, res) {
                     if (error1) throw error1
                     if (results1["rows"][0]["Password"] == password) {
                         console.log('test1')
-                        AuthUser = new Passer(username)
+                        AuthUser = new Passer(username, null, null)
                         toRedirect = '/UserHomePage/' + AuthUser
                         console.log(toRedirect)
                     }
