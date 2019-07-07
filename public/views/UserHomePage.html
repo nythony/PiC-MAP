@@ -3,14 +3,30 @@
 <head>
     <meta charset="utf-8" />
     <title>PiC-MAP - User Home Page</title>
+    <link rel="icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        #header {
+            text-align: right;
+            margin-top: 50px;
+            font-size: 100%;
+            font-family: arial;
+        }
 
+        #maincontent {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 100%;
+            font-family: arial;
+        }
+    </style>
 </head>
 
 <body>
     <div id="header">
         <h1>
             <script type="text/javascript">
-                var username = <%- JSON.stringify(output.username) %>;
+                var username = <%- JSON.stringify(output.username) %>
                 document.write(username)
             </script>
         </h1>
