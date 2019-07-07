@@ -125,7 +125,7 @@ app.get("/createNewUser", function (req, res) {
 
 app.get("/UserHomePage/:result", function (req, res) {
     var user = AuthUser
-
+    console.log(req.cookies)
     res.render("UserHomePage", { user:user })
 })
 
