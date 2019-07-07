@@ -27,10 +27,12 @@
         <h1>
             <script type="text/javascript">
                 var username = <%- JSON.stringify(user.username) %>;
+                var project = <%- JSON.stringify(user.project) %>;
+                var task = <%- JSON.stringify(user.task) %>;
                 document.write(username)
             </script>
         </h1>
-        <button type="button" onclick="loginPage">Log Out</button>
+        <button type="button" action="loginPage">Log Out</button>
     </div>
     <div id="maincontent">
         <h1>Nice Login mate!</h1>
