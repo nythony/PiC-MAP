@@ -37,7 +37,7 @@
     <div id="projects">
         <h1>Your Projects: </h1> &nbsp
             <script type="text/javascript">
-                var userP = <%- JSON.stringify(user.projects) %>;
+                var userP = <%- JSON.stringify(user.projects[0]) %>;
                 document.write(userP)
             </script>
 
