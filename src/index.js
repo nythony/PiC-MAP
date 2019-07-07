@@ -218,7 +218,7 @@ app.post("/UserHomePage/createProject", function (req, res) {
 })
 
 // When user wants to navigate to UserHomePage from projectForm
-app.post("/projectForm/returnToHomePage", function (req, res) {
+app.post("/projectForm/backToUserHomePage", function (req, res) {
     res.redirect('UserHomePage')
 })
 
