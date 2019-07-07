@@ -198,6 +198,11 @@ app.post("/loginPage/createNewUser", function (req, res) {
     res.redirect('/createNewUser')
 })
 
+// For use when logging out
+app.post("/loginPage", function (req, res) {
+    res.redirect('/loginPage')
+})
+
 // When user wants to navigate to create new user page from failedLoginPage - redirects to createNewUser
 app.post("/failedLoginPage/createNewUser", function (req, res) {
     res.redirect('/createNewUser')
