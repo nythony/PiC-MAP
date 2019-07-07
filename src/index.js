@@ -5,6 +5,7 @@ const express = require('express')
 const socketio = require('socket.io')
 const { Client } = require('pg')
 const bodyParser = require('body-parser')
+const url = require('url')
 
 // Importing all things from other parts of project
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
@@ -30,6 +31,15 @@ app.use(express.static(publicDirectoryPath))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('views', path.join(__dirname, '../public/views'))
+
+// Trying to mask some user authentication
+class Passer {
+    constructor(userid, projectid, taskid){
+        this.userid = userid
+        this.projectid = projectid
+        this.taskid = taskid
+    }
+}
 
 
 // IO
@@ -113,10 +123,15 @@ app.get("/createNewUser", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/createNewUser.html")
 })
 
-// View results of login
-app.get("/loginResult/:result", function (req, res) {
-    res.render("loginResult", { output: req.params.result })
+app.get("/UserHomePage/:result", function (req, res) {
+    var user = AuthUser
+    res.render("UserHomePage", { user:user })
 })
+
+// View results of login
+// app.get("/loginResult/:result", function (req, res) {
+//     res.render("loginResult", { output: req.params.result })
+// })
 
 // Was using this to test some react stuff.
 // app.get('/', function (req, res) {
@@ -183,6 +198,11 @@ app.post("/loginPage/createNewUser", function (req, res) {
     res.redirect('/createNewUser')
 })
 
+// For use when logging out
+app.post("/loginPage", function (req, res) {
+    res.redirect('/loginPage')
+})
+
 // When user wants to navigate to create new user page from failedLoginPage - redirects to createNewUser
 app.post("/failedLoginPage/createNewUser", function (req, res) {
     res.redirect('/createNewUser')
@@ -205,7 +225,8 @@ app.post("/loginPage/submit", function (req, res) {
                     if (error1) throw error1
                     if (results1["rows"][0]["Password"] == password) {
                         console.log('test1')
-                        toRedirect = '/loginResult/' + username
+                        AuthUser = new Passer(username, null, null)
+                        toRedirect = '/UserHomePage/' + AuthUser
                         console.log(toRedirect)
                     }
                     res.redirect(toRedirect)

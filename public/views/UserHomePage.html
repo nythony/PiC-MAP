@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>PiC-MAP - User Home Page</title>
+    <link rel="icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        #header {
+            text-align: right;
+            margin-top: 50px;
+            font-size: 100%;
+            font-family: arial;
+        }
+
+        #projects {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 100%;
+            font-family: arial;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <h1>
+            <script type="text/javascript">
+                var userid = <%- JSON.stringify(user.userid) %>;
+                var projectid = <%- JSON.stringify(user.projectid) %>;
+                var taskid = <%- JSON.stringify(user.taskid) %>;
+                document.write(userid)
+            </script>
+        </h1>
+        <form action="/loginPage" method="post">
+            <button type="submit">Log Out</button>
+        </form>
+    </div>
+    <div id="projects">
+        <h1>A list of your projects goes here</h1>
+    </div>
+</body>
+</html>
