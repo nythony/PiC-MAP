@@ -105,7 +105,7 @@ io.on('connection', (socket) => {
 
 // Landing page for the app
 app.get('/', function (req, res) {
-    res.sendfile(publicDirectoryPath + 'views/loginPage.html');
+    res.sendFile(publicDirectoryPath + 'views/loginPage.html');
 })
 
 // Login Page
@@ -125,6 +125,7 @@ app.get("/createNewUser", function (req, res) {
 
 app.get("/UserHomePage/:result", function (req, res) {
     var user = AuthUser
+
     res.render("UserHomePage", { user:user })
 })
 
@@ -217,6 +218,7 @@ app.post("/loginPage/submit", function (req, res) {
     var username = req.body.username
     var password = req.body.password
     var toRedirect = '/failedLoginPage'
+    res.cookie("hi",{name:username})
     client.query('SELECT "UserName" FROM "User";', (error, results) => {
         if (error) throw error
         for (let row of results.rows) {
