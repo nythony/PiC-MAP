@@ -35,7 +35,12 @@
         </form>
     </div>
     <div id="projects">
-        <h1>A list of your projects goes here</h1>
+        <h1>Your Projects: </h1> &nbsp
+            <script type="text/javascript">
+                for (var obj in user.projects){
+                    document.write(obj)
+                }
+            </script>
 
     </div>
     <script src="/js/UserHomePage.js"></script>
