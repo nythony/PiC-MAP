@@ -26,7 +26,12 @@
     <div id="header">
         <h1>
             <script type="text/javascript">
+<<<<<<< HEAD
                 document.write(userid)
+=======
+                var username = <%- JSON.stringify(user.username) %>;
+                document.write(username)
+>>>>>>> parent of 98c0f52... succ pass uname, project, task and logout
             </script>
         </h1>
         <button type="button" onclick="loginPage">Log Out</button>
