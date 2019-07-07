@@ -146,7 +146,7 @@ app.get("/projectForm", function (req, res) {
 })
 
 app.post("/projectForm/createNewForm", function (req, res) {
-}
+})
 
 // Current version of chatApp (Must be updated)
 app.get("/chatapp", function (req, res) {
