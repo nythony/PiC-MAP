@@ -35,7 +35,7 @@ app.set('views', path.join(__dirname, '../public/views'))
 // Trying to mask some user authentication
 class Passer {
     constructor(userid, project, task){
-        this.username = userid
+        this.userid = userid
         this.project = project
         this.task = task
     }
@@ -222,7 +222,7 @@ app.post("/loginPage/submit", function (req, res) {
                         console.log('test1')
                         client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error2, results2) => {
                             if (error2) throw error2
-                            var AuthUser = new Passer(results2["rows"][0]["User_ID"], null, null)
+                            const AuthUser = new Passer(results2["rows"][0]["User_ID"], null, null)
                         })
                         toRedirect = '/UserHomePage/' + AuthUser
                         console.log(toRedirect)

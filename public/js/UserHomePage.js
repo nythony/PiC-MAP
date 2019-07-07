@@ -1,4 +1,4 @@
-var username = JSON.stringify(user.username)
+var username = JSON.stringify(user.userid)
 var project = JSON.stringify(user.project)
 var task = JSON.stringify(user.task)
 
