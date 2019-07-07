@@ -228,8 +228,6 @@ app.post("/loginPage/submit", function (req, res) {
     var password = req.body.password
     var toRedirect = '/failedLoginPage'
 
-    res.cookie("userInfo",{name:username, pass:password}) //cookie(cookienmae, {object}) //NEED TO ADD OBJECT OF PROJECTS
-
     client.query('SELECT "UserName" FROM "User";', (error, results) => {
         if (error) throw error
         for (let row of results.rows) {
@@ -237,11 +235,14 @@ app.post("/loginPage/submit", function (req, res) {
                 client.query('SELECT "Password" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results1) => {
                     if (error1) throw error1
                     if (results1["rows"][0]["Password"] == password) {
-                        //client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results2) => {
-                           // AuthUser = new Passer(results2["rows"][0]["User_ID"], null, null) --removing passer, and authuser
+
+                        client.query(
+                            'SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = "UserName" = \'' + 
+                            username + '\';', (error1, results2) => {
+                            res.cookie("userInfo",{name:username, pass:password, projects: JSON.stringify(row)});
                             toRedirect = '/UserHomePage/' // + AuthUser
                             res.redirect(toRedirect)
-                        //})
+                        })
                     }
                 })
             }
