@@ -115,6 +115,9 @@ app.get('/', function (req, res) {
 
 // Login Page
 app.get("/loginPage", function (req, res) {
+    console.log(req.cookies.userInfo);
+    res.clearCookie("userInfo");
+    console.log(req.cookies.userInfo);
     res.sendFile(publicDirectoryPath + "views/loginPage.html")
 })
 
