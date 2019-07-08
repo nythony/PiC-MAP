@@ -33,12 +33,10 @@
 
 <body>
     <div id="header">
-        <h1>Your user_id is 
+        <h1>Your username is 
             <script type="text/javascript">
-                var userid = <%- JSON.stringify(user.userid) %>;
-                var projectid = <%- JSON.stringify(user.projectid) %>;
-                var taskid = <%- JSON.stringify(user.taskid) %>;
-                document.write(userid)
+                var userN = <%- JSON.stringify(user.name) %>;
+                document.write(userN)
             </script>
         </h1>
         <form action="/loginPage" method="post">
@@ -46,7 +44,11 @@
         </form>
     </div>
     <div id="projects">
-        <h1>A list of your projects goes here</h1>
+        <h1>Your Projects: </h1> &nbsp
+            <script type="text/javascript">
+                var userP = <%- JSON.stringify(user.projects[0]) %>;
+                document.write(userP)
+            </script>
 
     </div>
     <div id="newItems">
