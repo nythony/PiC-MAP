@@ -79,6 +79,17 @@ io.on('connection', (socket) => {
     // Display to everyone
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id)
+        const text = 'INSERT INTO "ChatMessage"( "TimeStamp", "Message" ) VALUES($1, $2) RETURNING *'
+        const values = [moment(message.createdAt).format('HH:mm:ss'), message.text]
+        client.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            } else {
+                console.log(res.rows[0])
+
+            }
+            console.log('----------------------------------record is created--------------------------------')
+        })
         io.to(user.room).emit('message', generateMessage(user.username, message))
         callback()
     })
