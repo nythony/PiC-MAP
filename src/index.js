@@ -80,7 +80,7 @@ io.on('connection', (socket) => {
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id)
         const text = 'INSERT INTO "ChatMessage"( "User_ID", "ChatRoom_ID", "Message" ) VALUES($1, $2, $3) RETURNING *'
-        const values = [6, 1, message.text]
+        const values = [6, 1, message]
         client.query(text, values, (err, res) => {
             if (err) {
                 console.log(err.stack)
