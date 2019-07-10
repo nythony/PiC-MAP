@@ -176,9 +176,8 @@ app.get("/chatSignIn", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/chatSignIn.html")
 })
 
-// Landing page for the app
-app.get('/index', function (req, res) {
-    res.sendFile(publicDirectoryPath + 'views/index.html');
+app.post("/UserHomePage/chatApp", function (req, res) {
+    res.redirect('/chatapp')
 })
 
 // This isn't being used
