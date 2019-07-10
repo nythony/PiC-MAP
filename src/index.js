@@ -268,6 +268,7 @@ app.post("/UserHomePage/joinProject", function (req, res) {
         client.query(attachText, attachValues, (err2, res2) => {
             if (err2) {console.log(err2.stack)}
         })
+    })
 })
 
 
