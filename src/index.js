@@ -305,7 +305,7 @@ app.post("/loginPage/submit", function (req, res) {
             }
         }
     })
-}
+})
 
 app.post("/failedLoginPage/submit", function (req, res) {
     var username = req.body.username
