@@ -165,7 +165,7 @@ app.get("/UserHomePage/", function (req, res) {
 // Current version of how to submit projects to db
 app.get("/projectForm", function (req, res) {
     project.getProject(req, res);
-    res.sendFile(publicDirectoryPath + "views/projectForm.html");
+    res.render("projectForm", { user: req.cookies.userInfo })
 })
 
 app.get("/requirementform", function (req, res) {

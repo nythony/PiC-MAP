@@ -61,7 +61,7 @@ const crudProject = (req, res) => {
 
     var project = req.body.project;
     var projectDesc = req.body.projectDetails;
-    var userCreate = JSON.stringify(user.userid)
+    var userCreate = JSON.stringify(req.cookies.userInfo.userid)
     console.log(userCreate)
     var projectMembers = req.body.projectMembers
     var startDate = req.body.startDate;
