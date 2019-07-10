@@ -176,8 +176,10 @@ app.get("/chatSignIn", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/chatSignIn.html")
 })
 
-app.post("/UserHomePage/chatApp", function (req, res) {
-    res.redirect('/chatapp')
+app.post("/UserHomePage/chatapp", function (req, res) {
+    res.redirect(url.FormData({
+        pathname: "/chatapp",
+        query:req.query})
 })
 
 // This isn't being used
