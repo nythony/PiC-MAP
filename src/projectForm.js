@@ -61,11 +61,13 @@ const crudProject = (req, res) => {
 
     var project = req.body.project;
     var projectDesc = req.body.projectDetails;
+    var userCreate = JSON.stringify(user.userid)
+    var projectMembers = req.body.projectMembers
     var startDate = req.body.startDate;
     var dueDate = req.body.dueDate;
     var projectStatus = req.body.projectStatus;
     var status = 0;
-    if (projectStatus = 'active')
+    if (projectStatus == 'active')
         status = 1;
 
 
@@ -75,8 +77,8 @@ const crudProject = (req, res) => {
     if (btnSubmit) {
         console.log('----------------------------------create project button is clicked--------------------------------')
 
-        const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "StartDate", "DueDate", "Status") VALUES($1, $2,$3,$4,$5) RETURNING *';
-        const values = [project, projectDesc, startDate, dueDate, status];
+        const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate", "Status") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
+        const values = [project, projectDesc, userCreate, startDate, dueDate, status];
 
         // callback
         client.query(text, values, (err, res) => {
