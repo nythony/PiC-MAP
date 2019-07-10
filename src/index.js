@@ -257,6 +257,20 @@ app.post("/projectForm/backToUserHomePage", function (req, res) {
     res.redirect('/UserHomePage')
 })
 
+// When user clicks button to join an existing project
+app.post("/UserHomePage/joinProject", function (req, res) {
+    var userid = JSON.stringify(req.cookies.userInfo.userid)
+    var projectName = req.body.projectName
+    client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err1, projectidresult) => {
+        if (err1) {console.log(err1.stack)}
+        const attachValues = [userid, projectidresult["rows"][0]["Project_ID"]]
+        const attachText = 'INSERT INTO "AttachUserP"("User_ID", "Project_ID") VALUES($1,$2) RETURNING *'
+        client.query(attachText, attachValues, (err2, res2) => {
+            if (err2) {console.log(err2.stack)}
+        })
+})
+
+
 
 
 
@@ -356,7 +370,6 @@ app.post("/userform-submitted", function (req, res) {
     console.log(umessage);
     console.log(uhuman);
 });
-
 
 // When user clicks button to create new project (could be create, update, or delete)
 app.post("/projectform-submitted", function (req, res) {

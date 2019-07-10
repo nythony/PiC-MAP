@@ -28,6 +28,13 @@
             font-size: 100%;
             font-family: arial;
         }
+        #joinExisting {
+            text-align: right;
+            margin-top: 50px;
+            margin-right: 50px;
+            font-size: 100%;
+            font-family: arial;
+        }
         #chatApp {
             text-align: left;
             margin-top: 50px;
@@ -40,11 +47,12 @@
 
 <body>
     <div id="header">
-        <h1>Your username is 
+        <h1>Welcome 
             <script type="text/javascript">
                 var userN = <%- JSON.stringify(user.name) %>;
                 document.write(userN)
             </script>
+            !
         </h1>
         <form action="/loginPage" method="post">
             <button type="submit">Log Out</button>
@@ -62,6 +70,12 @@
         <form action="createProject" method="post">
             <button type="submit">Create new project</button>
         </form><br>
+    </div>
+    <div id="joinExisting">
+        <form action="joinProject" method="post">
+            <input type="text" name="projectName" placeholder="Project Name"><br>
+            <button type="submit">Join Existing Project</button>
+        </form>
     </div>
     <div id="chatApp">
         <form action="/chatapp">
