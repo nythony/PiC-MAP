@@ -269,6 +269,7 @@ app.post("/UserHomePage/joinProject", function (req, res) {
             if (err2) {console.log(err2.stack)}
         })
     })
+    res.redirect('/');
 })
 
 
