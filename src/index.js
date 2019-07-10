@@ -281,7 +281,7 @@ app.post("/loginPage/submit", function (req, res) {
                 }
                 res.cookie("userInfo", { name: username, pass: password, projects: storage });
                 toRedirect = '/UserHomePage/' // + AuthUser
-                res.redirect(toRedirect)
+                //res.redirect(toRedirect)
                 client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
                     client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
                         if (error2) throw error2 //Should never happen, if anything it returns and stores null
