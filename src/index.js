@@ -268,7 +268,7 @@ app.post("/UserHomePage/joinProject", function (req, res) {
         const attachText = 'INSERT INTO "AttachUserP"("User_ID", "Project_ID") VALUES($1,$2) RETURNING *'
         client.query(attachText, attachValues, (err2, res2) => {
             if (err2) {console.log(err2.stack)}
-            req.cookies.userInfo.projects.push(projectid)
+            res.cookies.userInfo.projects.push(projectid)
             console.log(req.cookies.userInfo.projects)
         })
     })
