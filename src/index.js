@@ -166,6 +166,8 @@ app.get("/projectForm", function (req, res) {
 // Current version of chatApp (Must be updated)
 app.get("/chatapp", function (req, res) {
     console.log(req)
+    req.query.username = "Jalapeno"
+    req.query.room = "Test"
     res.sendFile(publicDirectoryPath + "views/chatApp.html")
 })
 
