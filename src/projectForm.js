@@ -78,7 +78,6 @@ const crudProject = (req, res) => {
 
         const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate", "Status") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
         const values = [project, projectDesc, userCreate, startDate, dueDate, status];
-        console.log(values)
         // callback
         client.query(text, values, (err, res) => {
             if (err) {
@@ -89,7 +88,15 @@ const crudProject = (req, res) => {
             }
             console.log('----------------------------------record is created--------------------------------');
         })
-
+        // add user-project connection to AttachUserP table
+        client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+project+'\';', (err1, projectidresult) => {
+            if (err1) {console.log(err1.stack)}
+            const attachValues = [userCreate, projectidresult["rows"][0]["Project_ID"]]
+            const attachText = 'INSERT INTO "AttachUserP"("User_ID", "Project_ID") VALUES($1,$2) RETURNING *'
+            client.query(attachText, attachValues, (err2, res2) => {
+                if (err2) {console.log(err2.stack)}
+            })
+        })
     }
 
     if (btnUpdate) {
