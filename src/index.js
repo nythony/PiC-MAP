@@ -268,11 +268,11 @@ app.post("/UserHomePage/joinProject", function (req, res) {
         const attachText = 'INSERT INTO "AttachUserP"("User_ID", "Project_ID") VALUES($1,$2) RETURNING *'
         client.query(attachText, attachValues, (err2, res2) => {
             if (err2) {console.log(err2.stack)}
-            res.cookie("userInfo", req.cookies.userInfo) // copy req cookie into res cookie
-            console.log("req.cookies.userInfo: ", req.cookies.userInfo)
-            console.log("res.cookies: ", res.cookies)
-            console.log("res.cookies.userInfo: ", res.cookies.userInfo)
-            res.cookies.userInfo.projects.push(projectid) // add new project to res cookie
+            var newCookie = req.cookies.userInfo
+            console.log("newCookie: ", newCookie)
+            newCookie.projects.push(projectid)
+            console.log("newCookie: ", newCookie)
+            res.cookie("userInfo", newCookie) // copy req cookie into res cookie
             res.redirect('/UserHomePage');
         })
     })
