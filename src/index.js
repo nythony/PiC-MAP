@@ -263,10 +263,12 @@ app.post("/UserHomePage/joinProject", function (req, res) {
     var projectName = req.body.projectName
     client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err1, projectidresult) => {
         if (err1) {console.log(err1.stack)}
-        const attachValues = [userid, projectidresult["rows"][0]["Project_ID"]]
+        const projectid = projectidresult["rows"][0]["Project_ID"]
+        const attachValues = [userid, projectid]
         const attachText = 'INSERT INTO "AttachUserP"("User_ID", "Project_ID") VALUES($1,$2) RETURNING *'
         client.query(attachText, attachValues, (err2, res2) => {
             if (err2) {console.log(err2.stack)}
+            req.cookies.userInfo.storage.push(projectid)
         })
     })
     res.redirect('/UserHomePage');
