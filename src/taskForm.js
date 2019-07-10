@@ -1,4 +1,4 @@
-console.log('running projectForm.js')
+console.log('running taskForm.js')
 
 const path = require('path')
 const http = require('http')
@@ -42,9 +42,9 @@ const publicDirectoryPath = path.join(__dirname, '../public/')
 const views = path.join(__dirname, '../public/views/')
 
 app.use(express.static(publicDirectoryPath))
-const getProject = (req, res) => {
+const getTask = (req, res) => {
 
-    client.query('SELECT * FROM "Project";', (err, res) => {
+    client.query('SELECT * FROM "Task";', (err, res) => {
         if (err) throw err;
         for (let row of res.rows) {
             // console.log(JSON.stringify(row));
@@ -53,31 +53,30 @@ const getProject = (req, res) => {
     });
 };
 
-// to insert , update and delete project
-const crudProject = (req, res) => {
+// to insert , update and delete task
+const crudTask = (req, res) => {
     var btnSubmit = req.body.submit;
     var btnUpdate = req.body.update;
     var btnDelete = req.body.delete;
 
-    var project = req.body.project;
-    var projectDesc = req.body.projectDetails;
-    var startDate = req.body.startDate;
-    var dueDate = req.body.dueDate;
-    var projectStatus = req.body.projectStatus;
-    var status = 0;
-    if (projectStatus = 'active')
-        status = 1;
+    var task = req.body.task;
+    var taskDesc = req.body.taskDesc;
+    var taskCat = req.body.taskCat;
+    var tasklbl = req.body.tasklbl;
 
+    var dueDate = req.body.dueDate;
+
+    var priority = req.body.priority;
+    var taskToolId = req.body.taskToolId;
 
     toRedirect = '/';
 
 
     if (btnSubmit) {
-        console.log('----------------------------------create project button is clicked--------------------------------')
+        console.log('----------------------------------create task button is clicked--------------------------------')
 
-        const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "StartDate", "DueDate", "Status") VALUES($1, $2,$3,$4,$5) RETURNING *';
-        const values = [project, projectDesc, startDate, dueDate, status];
-
+        const text = 'INSERT INTO "Task" ("TaskName", "TaskDesc", "TaskCategory", "TasksLabel", "DueDate","Priority","TaskTool_ID") VALUES($1, $2,$3,$4,$5,$6,$7) RETURNING *';
+        const values = [task, taskDesc, taskCat, tasklbl, dueDate, priority, taskToolId];
         // callback
         client.query(text, values, (err, res) => {
             if (err) {
@@ -92,10 +91,10 @@ const crudProject = (req, res) => {
     }
 
     if (btnUpdate) {
-        console.log('----------------------------------update project button is clicked--------------------------------')
+        console.log('----------------------------------update task button is clicked--------------------------------')
 
-        const updateOneQuery = `UPDATE "Project" SET "ProjectName"=$1,"ProjectDesc"=$2,"UserCreate"=$3, "StartDate"=$4, "DueDate"=$5, "Status"=$6 WHERE "Project_ID"=$7 returning *`;
-        const values = [project, projectDesc, '5', startDate, dueDate, status,'6'];
+        const updateOneQuery = `UPDATE "Task" SET "TaskName"=$1, "TaskDesc"=$2, "TaskCategory"=$3, "TasksLabel"=$4, "DueDate"=$5 ,"Priority"=$6 ,"TaskTool_ID"=$7 WHERE "Task_ID"=$8 returning *`;
+        const values = [task, taskDesc, taskCat, tasklbl, dueDate, priority, taskToolId, '10'];
 
 
         // callback
@@ -112,10 +111,10 @@ const crudProject = (req, res) => {
     }
 
     if (btnDelete) {
-        console.log('----------------------------------delete project button is clicked--------------------------------')
+        console.log('----------------------------------delete task button is clicked--------------------------------')
 
-        const deleteOneQuery = `DELETE FROM "Project" WHERE  "Project_ID"=$1 returning *`;
-        const values = ['28'];
+        const deleteOneQuery = `DELETE FROM "Task" WHERE  "Task_ID"=$1 returning *`;
+        const values = ['12'];
 
 
         // callback
@@ -133,6 +132,6 @@ const crudProject = (req, res) => {
 };
 
 module.exports = {
-    getProject,
-    crudProject,
+    getTask,
+    crudTask,
 }

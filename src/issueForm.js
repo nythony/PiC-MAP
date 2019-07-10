@@ -1,4 +1,4 @@
-console.log('running projectForm.js')
+console.log('running issueForm.js')
 
 const path = require('path')
 const http = require('http')
@@ -42,9 +42,9 @@ const publicDirectoryPath = path.join(__dirname, '../public/')
 const views = path.join(__dirname, '../public/views/')
 
 app.use(express.static(publicDirectoryPath))
-const getProject = (req, res) => {
+const getIssue = (req, res) => {
 
-    client.query('SELECT * FROM "Project";', (err, res) => {
+    client.query('SELECT * FROM "Issue";', (err, res) => {
         if (err) throw err;
         for (let row of res.rows) {
             // console.log(JSON.stringify(row));
@@ -53,31 +53,33 @@ const getProject = (req, res) => {
     });
 };
 
-// to insert , update and delete project
-const crudProject = (req, res) => {
+// to insert , update and delete issue
+const crudIssue = (req, res) => {
     var btnSubmit = req.body.submit;
     var btnUpdate = req.body.update;
     var btnDelete = req.body.delete;
 
-    var project = req.body.project;
-    var projectDesc = req.body.projectDetails;
-    var startDate = req.body.startDate;
+    var projectID = req.body.projectID;
+    var issue = req.body.issue;
+    var issueDesc = req.body.issueDesc;
+    var issueCat = req.body.issueCat;
+    var issuelbl = req.body.issuelbl;
+
     var dueDate = req.body.dueDate;
-    var projectStatus = req.body.projectStatus;
-    var status = 0;
-    if (projectStatus = 'active')
-        status = 1;
+    var priority = req.body.priority;
+    var rootCause = req.body.rootCause;
+    var resolution = req.body.resolution;
+    var createDate = req.body.createDate;
 
 
     toRedirect = '/';
 
 
     if (btnSubmit) {
-        console.log('----------------------------------create project button is clicked--------------------------------')
+        console.log('----------------------------------create issue button is clicked--------------------------------')
 
-        const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "StartDate", "DueDate", "Status") VALUES($1, $2,$3,$4,$5) RETURNING *';
-        const values = [project, projectDesc, startDate, dueDate, status];
-
+        const text = 'INSERT INTO "Issue" ("Project_ID", "Priority", "IssueName", "IssueDesc", "DueDate", "IssueLabel", "IssueCategory", "RootCause", "Resolution", "CreateDate") VALUES($1, $2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *';
+        const values = [projectID, priority, issue, issueDesc, dueDate, issuelbl, issueCat, rootCause, resolution, createDate];
         // callback
         client.query(text, values, (err, res) => {
             if (err) {
@@ -92,10 +94,10 @@ const crudProject = (req, res) => {
     }
 
     if (btnUpdate) {
-        console.log('----------------------------------update project button is clicked--------------------------------')
+        console.log('----------------------------------update issue button is clicked--------------------------------')
 
-        const updateOneQuery = `UPDATE "Project" SET "ProjectName"=$1,"ProjectDesc"=$2,"UserCreate"=$3, "StartDate"=$4, "DueDate"=$5, "Status"=$6 WHERE "Project_ID"=$7 returning *`;
-        const values = [project, projectDesc, '5', startDate, dueDate, status,'6'];
+        const updateOneQuery = `UPDATE "Issue" SET "Project_ID"=$1, "Priority"=$2, "IssueName"=$3, "IssueDesc"=$4, "DueDate"=$5, "IssueLabel"=$6, "IssueCategory"=$7, "RootCause"=$8, "Resolution"=$9, "CreateDate"=$10 WHERE "Issue_ID"=$11 returning *`;
+        const values = [projectID, priority, issue, issueDesc, dueDate, issuelbl, issueCat, rootCause, resolution, createDate, '6'];
 
 
         // callback
@@ -112,10 +114,10 @@ const crudProject = (req, res) => {
     }
 
     if (btnDelete) {
-        console.log('----------------------------------delete project button is clicked--------------------------------')
+        console.log('----------------------------------delete issue button is clicked--------------------------------')
 
-        const deleteOneQuery = `DELETE FROM "Project" WHERE  "Project_ID"=$1 returning *`;
-        const values = ['28'];
+        const deleteOneQuery = `DELETE FROM "Issue" WHERE  "Issue_ID"=$1 returning *`;
+        const values = ['6'];
 
 
         // callback
@@ -133,6 +135,6 @@ const crudProject = (req, res) => {
 };
 
 module.exports = {
-    getProject,
-    crudProject,
+    getIssue,
+    crudIssue,
 }

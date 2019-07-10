@@ -11,65 +11,57 @@
     <div>
 
         <br />
-        <form class="form-horizontal" role="form" style="width: 50%;" action="/taskform-submitted" method="POST">
+        <form class="form-horizontal" role="form" style="width: 50%;" action="/requirementform-submitted" method="POST">
             <div class="form-group">
-                <label for="task" class="col-sm-2 control-label">Task : </label>
+                <label for="projectID" class="col-sm-2 control-label">Project ID :</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="task" name="task" placeholder="define task" value=""
+                    <input type="integer" class="form-control" id="projectID" name="projectID" placeholder="1" value=""
                         required>
                 </div>
             </div>
             <div class="form-group">
-                <label for="taskDesc" class="col-sm-2 control-label">Task Description: </label>
+                <label for="requirement" class="col-sm-2 control-label">Requirement : </label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="taskDesc" name="taskDesc" placeholder="describe task"
-                        value="" required>
+                    <input type="text" class="form-control" id="requirement" name="requirement"
+                        placeholder="define requirement" value="" required>
                 </div>
             </div>
             <div class="form-group">
-                <label for="taskCat" class="col-sm-2 control-label">Task Category: </label>
+                <label for="requirementDesc" class="col-sm-2 control-label">Requirement Description: </label>
                 <div class="col-sm-10">
-                    <input type="number" class="form-control" id="taskCat" name="taskCat"
-                        placeholder="enter task Category" value="">
+                    <input type="text" class="form-control" id="requirementDesc" name="requirementDesc"
+                        placeholder="describe requirement" value="" required>
                 </div>
             </div>
             <div class="form-group">
-                <label for="tasklbl" class="col-sm-2 control-label">Task Lable: </label>
+                <label for="requirementCat" class="col-sm-2 control-label">Requirement Category: </label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="tasklbl" name="tasklbl" placeholder="enter task lable"
-                        value="">
+                    <input type="number" class="form-control" id="requirementCat" name="requirementCat"
+                        placeholder="enter requirement Category" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="requirementlbl" class="col-sm-2 control-label">Requirement Lable: </label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="requirementlbl" name="requirementlbl"
+                        placeholder="enter requirement lable" value="">
                 </div>
             </div>
             <div class="form-group">
                 <label for="members" class="col-sm-2 control-label">Members:</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="members" name="members"
-                        placeholder="add members to task" value="" required>
+                        placeholder="add members to requirement" value="" required>
 
                     <input onclick="" id="add" name="add" type="submit" value="Add Members" class="btn btn-primary">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="dueDate" class="col-sm-2 control-label">Due Date:</label>
+                <label for="endDateDate" class="col-sm-2 control-label">Due Date:</label>
                 <div class="col-sm-10">
                     <input type="date" class="form-control" id="dueDate" name="dueDate"
-                        placeholder="add members to task" value="" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="priority" class="col-sm-2 control-label">Priority :</label>
-                <div class="col-sm-10">
-                    <input type="integer" class="form-control" id="priority" name="priority" placeholder="1" value=""
-                        required>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="taskToolId" class="col-sm-2 control-label">Task Tool Id :</label>
-                <div class="col-sm-10">
-                    <input type="integer" class="form-control" id="taskToolId" name="taskToolId" placeholder="1"
-                        value="" required>
+                        placeholder="select due date" value="" required>
                 </div>
             </div>
 

@@ -4,6 +4,7 @@ const http = require('http')
 const express = require('express')
 const socketio = require('socket.io')
 const { Client } = require('pg')
+
 const bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser');
 const url = require('url')
@@ -12,10 +13,15 @@ const url = require('url')
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
 const project = require('./projectForm.js')
+const requirement = require('./requirementForm.js')
+const task = require('./taskForm.js')
+const taskTool = require('./taskToolForm.js')
+const issue = require('./issueForm.js')
 
 //Connecting to cloud based database:
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
+    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 })
 client.connect()
@@ -56,7 +62,7 @@ io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
     socket.on('join', ({ username, room }, callback) => {
-        const { error, user} = addUser({ id: socket.id, username, room })
+        const { error, user } = addUser({ id: socket.id, username, room })
 
         if (error) {
             return callback(error)
@@ -130,12 +136,12 @@ app.get("/createNewUser", function (req, res) {
 })
 
 app.get("/UserHomePage/", function (req, res) {
-   // var user = AuthUser --deleting AuthUser
+    // var user = AuthUser --deleting AuthUser
     console.log("Cookie: ", req.cookies.userInfo);
 
     //res.cookie("userProject", {userName:req.cookie.userInfo.name, projName:an item from ^ object})
 
-    res.render("UserHomePage", { user:req.cookies.userInfo})
+    res.render("UserHomePage", { user: req.cookies.userInfo })
 })
 
 // Was using this to test some react stuff.
@@ -150,7 +156,23 @@ app.get("/projectForm", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/projectForm.html");
 })
 
+app.get("/requirementform", function (req, res) {
+    requirement.getRequirement(req, res);
+    res.sendFile(publicDirectoryPath + "views/requirementForm.html");
+});
+app.get("/taskform", function (req, res) {
+    task.getTask(req, res);
+    res.sendFile(publicDirectoryPath + "views/taskForm.html");
+});
+app.get("/taskToolform", function (req, res) {
+    taskTool.getTaskTool(req, res);
+    res.sendFile(publicDirectoryPath + "views/taskToolForm.html");
+});
 
+app.get("/issueform", function (req, res) {
+    issue.getIssue(req, res);
+    res.sendFile(publicDirectoryPath + "views/issueForm.html");
+});
 
 // Current version of chatApp (Must be updated)
 app.get("/chatapp", function (req, res) {
@@ -181,22 +203,6 @@ app.get("/chatSignIn", function (req, res) {
 // app.get("/userform", function (req, res) {
 //     res.sendFile(publicDirectoryPath + "views/userForm.html");
 // })
-
-// This isn't being used
-// app.get("/jobstoryform", function (req, res) {
-//     res.sendFile(publicDirectoryPath + "views/jobStoryForm.html");
-// })
-
-// This isn't being used
-// app.get("/taskform", function (req, res) {
-//     res.sendFile(publicDirectoryPath + "views/taskForm.html");
-// })
-
-// This isn't being used
-// app.get("/issueform", function (req, res) {
-//     res.sendFile(publicDirectoryPath + "views/issueForm.html");
-// })
-
 
 
 // App.post stuff
@@ -230,7 +236,7 @@ app.post("/UserHomePage/createProject", function (req, res) {
 app.post("/projectForm/backToUserHomePage", function (req, res) {
     pass = new Passer(null, null, null)
     // fill in pass object, or this may get changed with cookies
-    res.redirect('/UserHomePage/'+pass)
+    res.redirect('/UserHomePage/' + pass)
 })
 
 
@@ -256,10 +262,10 @@ app.post("/loginPage/submit", function (req, res) {
                         client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
                             if (error2) throw error2 //Should never happen, if anything it returns and stores null
                             var storage = []
-                            for (let obj of results2.rows){
+                            for (let obj of results2.rows) {
                                 storage.push(obj["Project_ID"])
                             }
-                            res.cookie("userInfo",{name:username, pass:password, projects: storage});
+                            res.cookie("userInfo", { name: username, pass: password, projects: storage });
                             toRedirect = '/UserHomePage/' // + AuthUser
                             res.redirect(toRedirect)
                         })
@@ -324,16 +330,6 @@ app.post("/userform-submitted", function (req, res) {
     console.log(uhuman);
 });
 
-app.post("/taskform-submitted", function (req, res) {
-    var task = req.body.task;
-    var taskOwner = req.body.taskOwner;
-    var status = req.body.status;
-
-    console.log(task);
-    console.log(taskOwner);
-    console.log(status);
-});
-
 
 // When user clicks button to create new project (could be create, update, or delete)
 app.post("/projectform-submitted", function (req, res) {
@@ -343,7 +339,28 @@ app.post("/projectform-submitted", function (req, res) {
 });
 
 
+app.post("/requirementform-submitted", function (req, res) {
+    requirement.crudRequirement(req, res);
+    console.log('post method of requirement form');
+    res.redirect('/');
+});
 
+app.post("/taskform-submitted", function (req, res) {
+    task.crudTask(req, res);
+    console.log('post method of task form');
+    res.redirect('/');
+});
+app.post("/taskToolform-submitted", function (req, res) {
+    taskTool.crudTaskTool(req, res);
+    console.log('post method of taskTool form');
+    res.redirect('/');
+});
+
+app.post("/issueform-submitted", function (req, res) {
+    issue.crudIssue(req, res);
+    console.log('post method of issue form');
+    res.redirect('/');
+});
 
 //This server is running through the port 3000
 server.listen(port, () => {

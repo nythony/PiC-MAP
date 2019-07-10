@@ -1,4 +1,4 @@
-console.log('running projectForm.js')
+console.log('running requirementForm.js')
 
 const path = require('path')
 const http = require('http')
@@ -15,8 +15,8 @@ const { Client } = require('pg');
 
 const client = new Client({
 
-    connectionString: process.env.DATABASE_URL,
-    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+    //connectionString: process.env.DATABASE_URL,
+    connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 });
 
@@ -42,9 +42,9 @@ const publicDirectoryPath = path.join(__dirname, '../public/')
 const views = path.join(__dirname, '../public/views/')
 
 app.use(express.static(publicDirectoryPath))
-const getProject = (req, res) => {
+const getRequirement = (req, res) => {
 
-    client.query('SELECT * FROM "Project";', (err, res) => {
+    client.query('SELECT * FROM "Requirement";', (err, res) => {
         if (err) throw err;
         for (let row of res.rows) {
             // console.log(JSON.stringify(row));
@@ -53,31 +53,28 @@ const getProject = (req, res) => {
     });
 };
 
-// to insert , update and delete project
-const crudProject = (req, res) => {
+// to insert , update and delete requirement
+const crudRequirement = (req, res) => {
     var btnSubmit = req.body.submit;
     var btnUpdate = req.body.update;
     var btnDelete = req.body.delete;
+    var projectID = req.body.projectID;
+    var requirement = req.body.requirement;
+    var requirementDesc = req.body.requirementDesc;
+    var requirementCat = req.body.requirementCat;
+    var requirementlbl = req.body.requirementlbl;
 
-    var project = req.body.project;
-    var projectDesc = req.body.projectDetails;
-    var startDate = req.body.startDate;
     var dueDate = req.body.dueDate;
-    var projectStatus = req.body.projectStatus;
-    var status = 0;
-    if (projectStatus = 'active')
-        status = 1;
 
 
     toRedirect = '/';
 
 
     if (btnSubmit) {
-        console.log('----------------------------------create project button is clicked--------------------------------')
+        console.log('----------------------------------create requirement button is clicked--------------------------------')
 
-        const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "StartDate", "DueDate", "Status") VALUES($1, $2,$3,$4,$5) RETURNING *';
-        const values = [project, projectDesc, startDate, dueDate, status];
-
+        const text = 'INSERT INTO "Requirement" ("Project_ID","RequirementName", "RequirementDesc", "RequirementCategrory", "RequirementLabel", "DueDate") VALUES($1, $2,$3,$4,$5,$6) RETURNING *';
+        const values = [projectID, requirement, requirementDesc, requirementCat, requirementlbl, dueDate];
         // callback
         client.query(text, values, (err, res) => {
             if (err) {
@@ -92,10 +89,10 @@ const crudProject = (req, res) => {
     }
 
     if (btnUpdate) {
-        console.log('----------------------------------update project button is clicked--------------------------------')
+        console.log('----------------------------------update requirement button is clicked--------------------------------')
 
-        const updateOneQuery = `UPDATE "Project" SET "ProjectName"=$1,"ProjectDesc"=$2,"UserCreate"=$3, "StartDate"=$4, "DueDate"=$5, "Status"=$6 WHERE "Project_ID"=$7 returning *`;
-        const values = [project, projectDesc, '5', startDate, dueDate, status,'6'];
+        const updateOneQuery = `UPDATE "Requirement" SET "Project_ID"=$1, "RequirementName"=$2, "RequirementDesc"=$3, "RequirementCategrory"=$4, "RequirementLabel"=$5, "DueDate"=$6 WHERE "Req_ID"=$7 returning *`;
+        const values = ['1', requirement, requirementDesc, '5', '1', dueDate, '6'];
 
 
         // callback
@@ -112,10 +109,10 @@ const crudProject = (req, res) => {
     }
 
     if (btnDelete) {
-        console.log('----------------------------------delete project button is clicked--------------------------------')
+        console.log('----------------------------------delete requirement button is clicked--------------------------------')
 
-        const deleteOneQuery = `DELETE FROM "Project" WHERE  "Project_ID"=$1 returning *`;
-        const values = ['28'];
+        const deleteOneQuery = `DELETE FROM "Requirement" WHERE  "Req_ID"=$1 returning *`;
+        const values = ['6'];
 
 
         // callback
@@ -133,6 +130,6 @@ const crudProject = (req, res) => {
 };
 
 module.exports = {
-    getProject,
-    crudProject,
+    getRequirement,
+    crudRequirement,
 }
