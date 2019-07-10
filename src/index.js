@@ -273,7 +273,7 @@ app.post("/UserHomePage/joinProject", function (req, res) {
             newCookie.projects.push(projectid)
             console.log("newCookie: ", newCookie)
             res.cookie("userInfo", newCookie) // copy req cookie into res cookie
-            res.redirect('/UserHomePage');
+            res.redirect('/UserHomePage/');
         })
     })
 })
