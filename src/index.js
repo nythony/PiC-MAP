@@ -168,12 +168,17 @@ app.get("/chatapp", function (req, res) {
     console.log(req)
     // req.query.username = "Jalapeno"
     // req.query.room = "Test"
-    res.sendFile(url.parse(publicDirectoryPath + "views/chatApp.html").pathname)
+    res.sendFile(publicDirectoryPath + "views/chatApp.html")
 })
 
 // Signin page for chatApp (Must be updated)
 app.get("/chatSignIn", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/chatSignIn.html")
+})
+
+// Landing page for the app
+app.get('/index', function (req, res) {
+    res.sendFile(publicDirectoryPath + 'views/index.html');
 })
 
 // This isn't being used
