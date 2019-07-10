@@ -58,7 +58,7 @@
     </div>
     <div id="chatApp">
         <form action="/chatapp">
-            <input type="hidden" name="username" placeholder="Display name" required value=userN>
+            <input type="hidden" name="username" placeholder="Display name" required value=req.cookies.userInfo.name>
             <input type="hidden" name="room" placeholder="Room" required value="Test">
             <button>ChatApp</button>
         </form>
