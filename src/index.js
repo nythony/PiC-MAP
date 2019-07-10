@@ -272,7 +272,6 @@ app.post("/loginPage/submit", function (req, res) {
     var toRedirect = '/failedLoginPage'
     client.query('SELECT "Password" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results1) => {
         if (error1) throw error1
-        console.log(results1["rows"][0]["Password"])
         if (results1["rows"][0]["Password"] == password) {
             client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
                 if (error2) throw error2 //Should never happen, if anything it returns and stores null
@@ -296,6 +295,10 @@ app.post("/loginPage/submit", function (req, res) {
                     })
                 })
             })
+        }
+        else { // if the password doesn't match (or if the retrieved password is NULL)
+            console.log('failed login')
+            res.redirect(toRedirect)
         }
     })
             
