@@ -62,6 +62,7 @@ const crudProject = (req, res) => {
     var project = req.body.project;
     var projectDesc = req.body.projectDetails;
     var userCreate = JSON.stringify(user.userid)
+    console.log(userCreate)
     var projectMembers = req.body.projectMembers
     var startDate = req.body.startDate;
     var dueDate = req.body.dueDate;
@@ -79,7 +80,7 @@ const crudProject = (req, res) => {
 
         const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate", "Status") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
         const values = [project, projectDesc, userCreate, startDate, dueDate, status];
-
+        console.log(values)
         // callback
         client.query(text, values, (err, res) => {
             if (err) {
