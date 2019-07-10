@@ -301,12 +301,11 @@ app.post("/loginPage/submit", function (req, res) {
                                 res.redirect(toRedirect)
                             })
                         })
+                        })
                     }
                 })
             }
         }
-    })
-
 })
 
 app.post("/failedLoginPage/submit", function (req, res) {
