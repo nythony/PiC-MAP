@@ -269,6 +269,7 @@ app.post("/UserHomePage/joinProject", function (req, res) {
         client.query(attachText, attachValues, (err2, res2) => {
             if (err2) {console.log(err2.stack)}
             req.cookies.userInfo.projects.push(projectid)
+            console.log(req.cookies.userInfo.projects)
         })
     })
     res.redirect('/UserHomePage');
