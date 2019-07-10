@@ -177,7 +177,7 @@ app.get("/chatSignIn", function (req, res) {
 })
 
 app.post("/UserHomePage/chatapp", function (req, res) {
-    res.redirect(url.FormData({
+    res.redirect(url.format({
         pathname: "/chatapp",
         query:req.query}))
 })
