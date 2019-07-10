@@ -270,9 +270,9 @@ app.post("/UserHomePage/joinProject", function (req, res) {
             if (err2) {console.log(err2.stack)}
             res.cookie(req.cookies.userinfo) // copy req cookie into res cookie
             res.cookies.userInfo.projects.push(projectid) // add new project to res cookie
+            res.redirect('/UserHomePage');
         })
     })
-    res.redirect('/UserHomePage');
 })
 
 
