@@ -56,6 +56,16 @@
             <button type="submit">Create new project</button>
         </form>
     </div>
+    <div id="chatApp">
+        <form action="/chatapp">
+            <input type="hidden" id="username" name="username" placeholder="Display name" required />
+            <script type="text/javascript">
+                document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
+            </script>
+            <input type="hidden" name="room" placeholder="Room" required value="Test">
+            <button>ChatApp</button>
+        </form>
+    </div>
     <script src="/js/UserHomePage.js"></script>
 </body>
 </html>

@@ -84,7 +84,19 @@ io.on('connection', (socket) => {
 
     // Display to everyone
     socket.on('sendMessage', (message, callback) => {
+        const userid = user.userid
         const user = getUser(socket.id)
+        const text = 'INSERT INTO "ChatMessage"( "User_ID", "ChatRoom_ID", "Message" ) VALUES($1, $2, $3) RETURNING *'
+        const values = [userid, 1, message]
+        client.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            } else {
+                console.log(res.rows[0])
+
+            }
+            console.log('----------------------------------record is created--------------------------------')
+        })
         io.to(user.room).emit('message', generateMessage(user.username, message))
         callback()
     })
@@ -176,12 +188,20 @@ app.get("/issueform", function (req, res) {
 
 // Current version of chatApp (Must be updated)
 app.get("/chatapp", function (req, res) {
+    console.log(req)
+    // req.query.username = "Jalapeno"
+    // req.query.room = "Test"
     res.sendFile(publicDirectoryPath + "views/chatApp.html")
 })
 
 // Signin page for chatApp (Must be updated)
 app.get("/chatSignIn", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/chatSignIn.html")
+})
+
+app.post("/UserHomePage/chatapp", function (req, res) {
+    console.log(req)
+    res.sendFile(publicDirectoryPath + "views/chatApp.html")
 })
 
 // This isn't being used
@@ -259,6 +279,7 @@ app.post("/loginPage/submit", function (req, res) {
                     if (error1) throw error1
                     if (results1["rows"][0]["Password"] == password) {
 
+
                         client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
                             if (error2) throw error2 //Should never happen, if anything it returns and stores null
                             var storage = []
@@ -268,6 +289,17 @@ app.post("/loginPage/submit", function (req, res) {
                             res.cookie("userInfo", { name: username, pass: password, projects: storage });
                             toRedirect = '/UserHomePage/' // + AuthUser
                             res.redirect(toRedirect)
+                        client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
+                            client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
+                                if (error2) throw error2 //Should never happen, if anything it returns and stores null
+                                var storage = []
+                                for (let obj of results2.rows){
+                                    storage.push(obj["Project_ID"])
+                                }
+                                res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, projects: storage});
+                                toRedirect = '/UserHomePage/' // + AuthUser
+                                res.redirect(toRedirect)
+                            })
                         })
                     }
                 })
