@@ -177,6 +177,7 @@ app.get("/chatSignIn", function (req, res) {
 })
 
 app.post("/UserHomePage/chatapp", function (req, res) {
+    console.log(req)
     res.sendFile(publicDirectoryPath + "views/chatApp.html")
 })
 
