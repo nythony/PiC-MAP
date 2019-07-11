@@ -58,16 +58,12 @@
             <button type="submit">Return to Home Screen</button>
         </form>
     </div>
-    <h2>
+    <div id="taskTools">
         <center>
             <script type="text/javascript">
                 var projectName = <%- JSON.stringify(user.currProjectName) %>;
                 document.write(projectName)
             </script>
-        </center>
-    </h2>
-    <div id="taskTools">
-        <center>
             <script type="text/javascript">
                 var taskFormNames = <%- JSON.stringify(user.taskTools) %>;
                 for (let i in taskFormNames) {
