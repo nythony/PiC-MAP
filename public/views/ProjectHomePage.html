@@ -17,6 +17,19 @@
             text-align: right;
             margin-top: 50px;
             margin-right: 50px;
+            font-size: 120%;
+            font-family: arial;
+        }
+        #taskTools {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 120%;
+            font-family: arial;
+        }
+        #newItems {
+            text-align: left;
+            margin-top: 50px;
+            margin-left: 50px;
             font-size: 100%;
             font-family: arial;
         }
@@ -45,14 +58,22 @@
             <button type="submit">Return to Home Screen</button>
         </form>
     </div>
-    <h2>
+    <div id="taskTools">
         <center>
+            <h1>
             <script type="text/javascript">
                 var projectName = <%- JSON.stringify(user.currProjectName) %>;
                 document.write(projectName)
             </script>
+            </h1>&nbsp
+            <script type="text/javascript">
+                var taskFormNames = <%- JSON.stringify(user.taskTools) %>;
+                for (let i in taskFormNames) {
+                    document.write("<br>"+taskFormNames[i])
+                }
+            </script>
         </center>
-    </h2>
+    </div>
     <div id="team">
         <b><u>Team</u></b>
         <script type="text/javascript">
@@ -62,7 +83,11 @@
             }
         </script>
     </div>
-
+    <div id="newItems">
+        <form action="createTaskTool" method="post">
+            <button type="submit">Create new Task Tool</button>
+        </form><br>
+    </div>
     <div id="chatApp">
         <form action="/chatapp">
             <input type="hidden" id="username" name="username" placeholder="Display name" required />

@@ -259,20 +259,38 @@ app.post("/returnToUserHomePage", function (req, res) {
     res.redirect('/UserHomePage/')
 })
 
+// When user wants to navigate to taskToolForm from ProjectHomePage
+app.post("/createTaskTool", function (req, res) {
+    res.redirect('/taskToolForm/')
+})
 
-// When user clicks button to join an existing project
+// When user wants to navigate to ProjectHomePage from taskToolForm
+app.post("/taskToolForm/backToProjectHomePage", function (req, res) {
+    res.redirect('/ProjectHomePage/')
+})
+
+// When user returns to ProjectHomePage (added this because of an error when trying to navigate back to ProjectHomePage after creating a taskTool)
+app.post("/backToProjectHomePage", function (req, res) {
+    res.redirect('/ProjectHomePage/')
+})
+
+
+    // When user clicks button to join an existing project
 app.post("/UserHomePage/joinProject", function (req, res) {
     var userid = JSON.stringify(req.cookies.userInfo.userid)
     var projectName = req.body.projectName
-    client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err1, projectidresult) => { // get project ID of input project
+    client.query('SELECT "Project_ID", "ProjectDesc" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err1, projectresult) => { // get project ID of input project
         if (err1) {console.log(err1.stack)}
-        const projectid = projectidresult["rows"][0]["Project_ID"]
+        const projectid = projectresult["rows"][0]["Project_ID"]
+        const projectDesc = projectresult["rows"][0]["ProjectDesc"]
         const attachValues = [userid, projectid]
         const attachText = 'INSERT INTO "AttachUserP"("User_ID", "Project_ID") VALUES($1,$2) RETURNING *'
         client.query(attachText, attachValues, (err2, res2) => { // add new link to AttachUserP table
-            if (err2) {console.log(err2.stack)}
+            if (err2) {console.log(err2.stack)}     // THIS NEEDS TO BE PUT INTO A refreshCookie() function
             var newCookie = req.cookies.userInfo
             newCookie.projects.push(projectid) // update cookie from req -> res to add the new project that the user is assigned to
+            newCookie.projectNames.push(projectName)
+            newCookie.projectDescs.push(projectDesc)
             res.cookie("userInfo", newCookie)
             res.redirect('/UserHomePage/');
         })
@@ -311,8 +329,15 @@ app.post("/UserHomePage/viewProject", function (req, res) {
                 }
                 newCookie["teamIDs"] = teamIDs
                 newCookie["teamNames"] = teamNames
-                res.cookie("userInfo", newCookie)
-                res.redirect('/ProjectHomePage')
+                client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectid+';', (err3, tasktoolresult) => {
+                    var taskToolNames = []
+                    for (let tTool of tasktoolresult["rows"]) {
+                        taskToolNames.push(tTool["TaskToolName"])
+                    }
+                    newCookie["taskTools"] = taskToolNames
+                    res.cookie("userInfo", newCookie)
+                    res.redirect('/ProjectHomePage')
+                })
             })
         })
     })
@@ -358,13 +383,15 @@ app.post("/loginPage/submit", function (req, res) {
                                         }
                                     }
                                     IDstring += ')'
-                                    client.query('SELECT "ProjectName" FROM "Project" WHERE "Project_ID" IN '+IDstring+';', (error3, projectnameresult) => {
+                                    client.query('SELECT "ProjectName", "ProjectDesc" FROM "Project" WHERE "Project_ID" IN '+IDstring+';', (error3, projectnameresult) => {
                                         var pNames = []
+                                        var pDescs = []
                                         for (let project of projectnameresult["rows"]){ // get the names of all users whose IDs we have
                                             pNames.push(project["ProjectName"])
+                                            pDescs.push(project["ProjectDesc"])
                                         }
-                                        res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, 
-                                            projects: storage, projectNames: pNames, chatname: "TestingChatroom", chatroomid: 1, currProjectID: 0, currProjectName: null});
+                                        res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, projects: storage, projectNames: pNames, 
+                                            projectDescs: pDescs, chatname: "TestingChatroom", chatroomid: 1, currProjectID: 0, currProjectName: null, taskTools: []});
                                         toRedirect = '/UserHomePage/'
                                         res.redirect(toRedirect)
                                     })
@@ -434,8 +461,6 @@ app.post("/userform-submitted", function (req, res) {
 // When user clicks button to create new project (could be create, update, or delete)
 app.post("/projectform-submitted", function (req, res) {
     project.crudProject(req, res);
-    console.log('post method of project form');
-    res.redirect('/projectForm');
 });
 
 
@@ -450,10 +475,10 @@ app.post("/taskform-submitted", function (req, res) {
     console.log('post method of task form');
     res.redirect('/');
 });
+
+// When user clicks button to create new task tool (could be create, update, or delete)
 app.post("/taskToolform-submitted", function (req, res) {
     taskTool.crudTaskTool(req, res);
-    console.log('post method of taskTool form');
-    res.redirect('/');
 });
 
 app.post("/issueform-submitted", function (req, res) {
