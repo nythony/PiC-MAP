@@ -82,10 +82,10 @@ io.on('connection', (socket) => {
         // socket.emit('message', generateMessage('Admin', `Welcome to ${room}!`))
         // Display to everyone but the connection
         // socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined ${room}`))
-        // io.to(user.room).emit('roomData', {
-        //     room: user.room,
-        //     users: getUsersInRoom(user.room)
-        // })
+        io.to(user.room).emit('roomData', {
+            room: user.room,
+            users: getUsersInRoom(user.room)
+        })
 
         callback()
     })
@@ -120,7 +120,7 @@ io.on('connection', (socket) => {
         const user = removeUser(socket.id)
 
         if (user) {
-            io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
+            // io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
             io.to(user.room).emit('roomData', {
                 room: user.room,
                 users: getUsersInRoom(user.room)
