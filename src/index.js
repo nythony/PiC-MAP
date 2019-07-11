@@ -293,50 +293,50 @@ app.post("/UserHomePage/joinProject", function (req, res) {
 })
 
 
-    // TEMPORARY
-    // When user clicks button to view a project
-    app.post("/UserHomePage/viewProject", function (req, res) {
-        var projectName = req.body.projectName
-        client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
-            var newCookie = req.cookies.userInfo
-            const projectid = projectidresult["rows"][0]["Project_ID"]
-            newCookie.currProjectID = projectid // update cookie for the input project
-            newCookie.currProjectName = projectName
-            console.log('projectid: ', projectid)
-            client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
-                var teamIDs = []
-                for (let teammate of teamIDresult["rows"]){
-                    teamIDs.push(teammate["User_ID"]) // get the IDs of the users associated with this project
+// TEMPORARY
+// When user clicks button to view a project
+app.post("/UserHomePage/viewProject", function (req, res) {
+    var projectName = req.body.projectName
+    client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
+        var newCookie = req.cookies.userInfo
+        const projectid = projectidresult["rows"][0]["Project_ID"]
+        newCookie.currProjectID = projectid // update cookie for the input project
+        newCookie.currProjectName = projectName
+        console.log('projectid: ', projectid)
+        client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
+            var teamIDs = []
+            for (let teammate of teamIDresult["rows"]){
+                teamIDs.push(teammate["User_ID"]) // get the IDs of the users associated with this project
+            }
+            var IDstring = '('
+            var i;
+            for (i = 0; i < teamIDs.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
+                IDstring += (teamIDs[i]).toString()
+                if (i != teamIDs.length-1) {
+                    IDstring += ','
                 }
-                var IDstring = '('
-                var i;
-                for (i = 0; i < teamIDs.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
-                    IDstring += (teamIDs[i]).toString()
-                    if (i != teamIDs.length-1) {
-                        IDstring += ','
-                    }
+            }
+            IDstring += ')'
+            client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN '+IDstring+';', (err2, teamnameresult) => {
+                var teamNames = []
+                for (let teammate of teamnameresult["rows"]){ // get the names of all users whose IDs we have
+                    teamNames.push(teammate["UserName"])
                 }
-                IDstring += ')'
-                client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN '+IDstring+';', (err2, teamnameresult) => {
-                    var teamNames = []
-                    for (let teammate of teamnameresult["rows"]){ // get the names of all users whose IDs we have
-                        teamNames.push(teammate["UserName"])
+                newCookie["teamIDs"] = teamIDs
+                newCookie["teamNames"] = teamNames
+                client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = 'projectid+';', (err3, tasktoolresult) => {
+                    var taskToolNames = []
+                    for (let tTool of tasktoolresult["rows"]) {
+                        taskToolNames.push(tTool["TaskToolName"])
                     }
-                    newCookie["teamIDs"] = teamIDs
-                    newCookie["teamNames"] = teamNames
-                    client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = 'projectid+';', (err3, tasktoolresult) => {
-                        var taskToolNames = []
-                        for (let tTool of tasktoolresult["rows"]) {
-                            taskToolNames.push(tTool["TaskToolName"])
-                        }
-                        newCookie["taskTools"] = taskToolNames
-                        res.cookie("userInfo", newCookie)
-                        res.redirect('/ProjectHomePage')
-                    }
+                    newCookie["taskTools"] = taskToolNames
+                    res.cookie("userInfo", newCookie)
+                    res.redirect('/ProjectHomePage')
                 })
             })
         })
     })
+})
 
 
     // When user attempts to sign in
