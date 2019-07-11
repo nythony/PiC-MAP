@@ -358,7 +358,7 @@ app.post("/loginPage/submit", function (req, res) {
                                         }
                                     }
                                     IDstring += ')'
-                                    client.query('SELECT "ProjectName" FROM "User" WHERE "Project_ID" IN '+IDstring+';', (error3, projectnameresult) => {
+                                    client.query('SELECT "ProjectName" FROM "Project" WHERE "Project_ID" IN '+IDstring+';', (error3, projectnameresult) => {
                                         var pNames = []
                                         for (let project of projectnameresult["rows"]){ // get the names of all users whose IDs we have
                                             pNames.push(project["ProjectName"])
