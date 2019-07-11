@@ -271,23 +271,23 @@ app.post("/UserHomePage/joinProject", function (req, res) {
 // When user clicks button to view a project
 app.post("/UserHomePage/viewProject", function (req, res) {
     var projectName = req.body.projectName
-    client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, results) => { // get project ID of input project
+    client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
         var newCookie = req.cookies.userInfo
-        const projectid = results["rows"][0]["Project_ID"]
+        const projectid = projectidresult["rows"][0]["Project_ID"]
         newCookie.currProjectID = projectid // update cookie for the input project
         newCookie.currProjectName = projectName
         console.log('projectid: ', projectid)
-        client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID = '+projectid+';', (err1, results1) => {
+        client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
             var teamIDs = []
-            console.log('teamIDresults: ', results1)
+            console.log('teamIDresults: ', teamIDresult)
             for (let teammate of teamIDresult["rows"]){
                 teamIDs.push(teammate["User_ID"])
             }
             console.log('teamIDs: ', teamIDs)
             console.log('JSON ^: ', JSON.stringify(teamIDs))
-            client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN ('+JSON.stringify(teamIDs)+');', (err2, results2) => {
+            client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN ('+JSON.stringify(teamIDs)+');', (err2, teamnameresult) => {
                 var teamNames = []
-                for (let teammate of results2["rows"]){
+                for (let teammate of teamnameresult["rows"]){
                     teamNames.push(teammate["UserName"])
                 }
                 newCookie["teamIDs"] = teamIDs
