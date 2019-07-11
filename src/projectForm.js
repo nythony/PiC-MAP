@@ -96,6 +96,7 @@ const crudProject = (req, res) => {
             newCookie.projects.push(projectidresult["rows"][0]["Project_ID"]) // update cookie from req -> res to add the new project that the user is assigned to
             newCookie.projectNames.push(projectName)
             newCookie.projectDescs.push(projectDesc)
+            res.cookie("userInfo", newCookie)
             client.query(attachText, attachValues, (err2, res2) => {
                 if (err2) {console.log(err2.stack)}
             })
