@@ -297,7 +297,6 @@ app.post("/UserHomePage/viewProject", function (req, res) {
             }
             var IDstring = '('
             var i;
-            console.log(teamIDs.length)
             for (i = 0; i < teamIDs.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
                 IDstring += (teamIDs[i]).toString()
                 if (i != teamIDs.length-1) {
@@ -350,10 +349,25 @@ app.post("/loginPage/submit", function (req, res) {
                                     for (let obj of results2.rows){
                                         storage.push(obj["Project_ID"])
                                     }
-                                    res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, 
-                                        projects: storage, chatname: "TestingChatroom", chatroomid: 1, currProjectID: 0, currProjectName: null});
-                                    toRedirect = '/UserHomePage/' // + AuthUser
-                                    res.redirect(toRedirect)
+                                    var IDstring = '('
+                                    var i;
+                                    for (i = 0; i < storage.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
+                                        IDstring += (storage[i]).toString()
+                                        if (i != storage.length-1) {
+                                            IDstring += ','
+                                        }
+                                    }
+                                    IDstring += ')'
+                                    client.query('SELECT "ProjectName" FROM "User" WHERE "Project_ID" IN '+IDstring+';', (error3, projectnameresult) => {
+                                        var pNames = []
+                                        for (let project of projectnameresult["rows"]){ // get the names of all users whose IDs we have
+                                            pNames.push(project["ProjectName"])
+                                        }
+                                        res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, 
+                                            projects: storage, projectNames: pNames, chatname: "TestingChatroom", chatroomid: 1, currProjectID: 0, currProjectName: null});
+                                        toRedirect = '/UserHomePage/'
+                                        res.redirect(toRedirect)
+                                    })
                                 })
                             })
                         })
