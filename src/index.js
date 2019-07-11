@@ -61,8 +61,8 @@ class Passer {
 io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
-    socket.on('join', ({ username, room }, callback) => {
-        const { error, user } = addUser({ id: socket.id, username, room })
+    socket.on('join', ({ username, userid, room, chatroomid }, callback) => {
+        const { error, user} = addUser({ id: socket.id, username, userid, room, chatroomid })
 
         if (error) {
             return callback(error)
@@ -71,9 +71,17 @@ io.on('connection', (socket) => {
         socket.join(user.room)
 
         // Display only to connection
-        socket.emit('message', generateMessage('Admin', `Welcome to ${room}!`))
+        client.query('SELECT * FROM "ChatMessage" AS t1 RIGHT JOIN "User" AS t2 ON t1."User_ID" = t2."User_ID" LEFT JOIN "ChatRoom" AS t3 ON t1."ChatRoom_ID" = t3."ChatRoom_ID" WHERE t3."ChatRoom_ID" = \'' + user.chatroomid + '\';', (error, results) => {
+            for (let foo of results.rows) {
+                //console.log(foo["Message"])
+                //console.log("we're here")
+                socket.emit('message', generateMessage(foo["UserName"], foo["Message"]))
+            }
+        })
+
+        // socket.emit('message', generateMessage('Admin', `Welcome to ${room}!`))
         // Display to everyone but the connection
-        socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined ${room}`))
+        // socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined ${room}`))
         io.to(user.room).emit('roomData', {
             room: user.room,
             users: getUsersInRoom(user.room)
@@ -84,10 +92,9 @@ io.on('connection', (socket) => {
 
     // Display to everyone
     socket.on('sendMessage', (message, callback) => {
-        const userid = user.userid
         const user = getUser(socket.id)
         const text = 'INSERT INTO "ChatMessage"( "User_ID", "ChatRoom_ID", "Message" ) VALUES($1, $2, $3) RETURNING *'
-        const values = [userid, 1, message]
+        const values = [user.userid, user.chatroomid, message]
         client.query(text, values, (err, res) => {
             if (err) {
                 console.log(err.stack)
@@ -113,7 +120,7 @@ io.on('connection', (socket) => {
         const user = removeUser(socket.id)
 
         if (user) {
-            io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
+            // io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
             io.to(user.room).emit('roomData', {
                 room: user.room,
                 users: getUsersInRoom(user.room)
@@ -290,7 +297,6 @@ app.post("/UserHomePage/viewProject", function (req, res) {
             }
             var IDstring = '('
             var i;
-            console.log(teamIDs.length)
             for (i = 0; i < teamIDs.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
                 IDstring += (teamIDs[i]).toString()
                 if (i != teamIDs.length-1) {
@@ -343,9 +349,27 @@ app.post("/loginPage/submit", function (req, res) {
                                     for (let obj of results2.rows){
                                         storage.push(obj["Project_ID"])
                                     }
-                                    res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, projects: storage, currProjectID: 0, currProjectName: null});
-                                    toRedirect = '/UserHomePage/' // + AuthUser
-                                    res.redirect(toRedirect)
+                                    var IDstring = '('
+                                    var i;
+                                    for (i = 0; i < storage.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
+                                        IDstring += (storage[i]).toString()
+                                        if (i != storage.length-1) {
+                                            IDstring += ','
+                                        }
+                                    }
+                                    IDstring += ')'
+                                    client.query('SELECT "ProjectName", "ProjectDesc" FROM "Project" WHERE "Project_ID" IN '+IDstring+';', (error3, projectnameresult) => {
+                                        var pNames = []
+                                        var pDescs = []
+                                        for (let project of projectnameresult["rows"]){ // get the names of all users whose IDs we have
+                                            pNames.push(project["ProjectName"])
+                                            pDescs.push(project["ProjectDesc"])
+                                        }
+                                        res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, projects: storage, projectNames: pNames, 
+                                            projectDescs: pDescs, chatname: "TestingChatroom", chatroomid: 1, currProjectID: 0, currProjectName: null});
+                                        toRedirect = '/UserHomePage/'
+                                        res.redirect(toRedirect)
+                                    })
                                 })
                             })
                         })

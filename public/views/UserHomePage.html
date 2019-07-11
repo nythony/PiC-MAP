@@ -61,8 +61,11 @@
     <div id="projects">
         <h1>Your Projects: </h1> &nbsp
             <script type="text/javascript">
-                var userP = <%- JSON.stringify(user.projects) %>;
-                document.write(userP)
+                var pNames = <%- JSON.stringify(user.projectNames) %>;
+                var pDescs = <%- JSON.stringify(user.projectDescs) %>;
+                for (let i in pNames) {
+                    document.write("<br>"+pNames[i]+" - "+pDescs[i])
+                }
             </script>
 
     </div>
