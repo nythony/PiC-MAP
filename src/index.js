@@ -279,6 +279,7 @@ app.post("/UserHomePage/viewProject", function (req, res) {
         console.log('projectid: ', projectid)
         client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID = '+projectid+';', (err1, teamIDresult) => {
             var teamIDs = []
+            console.log('teamIDresults: ', teamIDresult)
             for (let teammate of teamIDresult.rows){
                 teamIDs.push(teammate["User_ID"])
             }
