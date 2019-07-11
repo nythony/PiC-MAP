@@ -275,8 +275,8 @@ app.post("/UserHomePage/joinProject", function (req, res) {
             var newCookie = req.cookies.userInfo
             newCookie.projects.push(projectid) // update cookie from req -> res to add the new project that the user is assigned to
             newCookie.projectDescs.push(projectDesc)
+            console.log(newCookie)
             res.cookie("userInfo", newCookie)
-            console.log(res.cookies.userInfo)
             res.redirect('/UserHomePage/');
         })
     })
