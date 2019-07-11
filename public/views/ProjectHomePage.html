@@ -60,10 +60,12 @@
     </div>
     <div id="taskTools">
         <center>
+            <h1>
             <script type="text/javascript">
                 var projectName = <%- JSON.stringify(user.currProjectName) %>;
                 document.write(projectName)
             </script>
+            </h1>&nbsp
             <script type="text/javascript">
                 var taskFormNames = <%- JSON.stringify(user.taskTools) %>;
                 for (let i in taskFormNames) {
