@@ -273,10 +273,9 @@ app.post("/UserHomePage/joinProject", function (req, res) {
         client.query(attachText, attachValues, (err2, res2) => { // add new link to AttachUserP table
             if (err2) {console.log(err2.stack)}     // THIS NEEDS TO BE PUT INTO A refreshCookie() function
             var newCookie = req.cookies.userInfo
-            console.log('second: ',projectid)
             newCookie.projects.push(projectid) // update cookie from req -> res to add the new project that the user is assigned to
+            newCookie.project.push(projectName)
             newCookie.projectDescs.push(projectDesc)
-            console.log(newCookie)
             res.cookie("userInfo", newCookie)
             res.redirect('/UserHomePage/');
         })
