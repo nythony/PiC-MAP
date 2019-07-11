@@ -154,14 +154,18 @@ app.get("/createNewUser", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/createNewUser.html")
 })
 
+// User Home Page GET request
 app.get("/UserHomePage/", function (req, res) {
-    // var user = AuthUser --deleting AuthUser
     console.log("Cookie: ", req.cookies.userInfo);
-
-    //res.cookie("userProject", {userName:req.cookie.userInfo.name, projName:an item from ^ object})
-
     res.render("UserHomePage", { user: req.cookies.userInfo })
 })
+
+// Project Home Page GET request
+app.get("/ProjectHomePage/", function (req, res) {
+    console.log("Cookie: ", req.cookies.userInfo);
+    res.render("ProjectHomePage", { user: req.cookies.userInfo})
+})
+
 
 // Was using this to test some react stuff.
 // app.get('/', function (req, res) {
@@ -211,25 +215,6 @@ app.post("/UserHomePage/chatapp", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/chatApp.html")
 })
 
-// This isn't being used
-// app.get('/login', function (req, res) {
-//     res.sendFile(publicDirectoryPath + 'views/userForm.html');
-// })
-
-// This isn't being used
-// app.get("/about", function (req, res) {
-//     res.sendFile(publicDirectoryPath + "views/about.html");
-// })
-
-// This isn't being used
-// app.get("/contact", function (req, res) {
-//     res.sendFile(publicDirectoryPath + "views/contact.html");
-// })
-
-// This isn't being used
-// app.get("/userform", function (req, res) {
-//     res.sendFile(publicDirectoryPath + "views/userForm.html");
-// })
 
 
 // App.post stuff
@@ -261,33 +246,78 @@ app.post("/UserHomePage/createProject", function (req, res) {
 
 // When user wants to navigate to UserHomePage from projectForm
 app.post("/projectForm/backToUserHomePage", function (req, res) {
-    res.redirect('/UserHomePage')
+    res.redirect('/UserHomePage/')
 })
+
+// When user wants to navigate to UserHomePage from ProjectHomePage (I actually don't think this is being used)
+app.post("/ProjectHomePage/returnToUserHomePage", function (req, res) {
+    res.redirect('/UserHomePage/')
+})
+
+// When user wants to navigate to UserHomePage from ProjectHomePage
+app.post("/returnToUserHomePage", function (req, res) {
+    res.redirect('/UserHomePage/')
+})
+
 
 // When user clicks button to join an existing project
 app.post("/UserHomePage/joinProject", function (req, res) {
     var userid = JSON.stringify(req.cookies.userInfo.userid)
     var projectName = req.body.projectName
-    client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err1, projectidresult) => {
+    client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err1, projectidresult) => { // get project ID of input project
         if (err1) {console.log(err1.stack)}
         const projectid = projectidresult["rows"][0]["Project_ID"]
         const attachValues = [userid, projectid]
         const attachText = 'INSERT INTO "AttachUserP"("User_ID", "Project_ID") VALUES($1,$2) RETURNING *'
-        client.query(attachText, attachValues, (err2, res2) => {
+        client.query(attachText, attachValues, (err2, res2) => { // add new link to AttachUserP table
             if (err2) {console.log(err2.stack)}
             var newCookie = req.cookies.userInfo
-            console.log("newCookie: ", newCookie)
-            newCookie.projects.push(projectid)
-            console.log("newCookie: ", newCookie)
-            res.cookie("userInfo", newCookie) // copy req cookie into res cookie
+            newCookie.projects.push(projectid) // update cookie from req -> res to add the new project that the user is assigned to
+            res.cookie("userInfo", newCookie)
             res.redirect('/UserHomePage/');
         })
     })
 })
 
 
-
-
+// TEMPORARY
+// When user clicks button to view a project
+app.post("/UserHomePage/viewProject", function (req, res) {
+    var projectName = req.body.projectName
+    client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
+        var newCookie = req.cookies.userInfo
+        const projectid = projectidresult["rows"][0]["Project_ID"]
+        newCookie.currProjectID = projectid // update cookie for the input project
+        newCookie.currProjectName = projectName
+        console.log('projectid: ', projectid)
+        client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
+            var teamIDs = []
+            for (let teammate of teamIDresult["rows"]){
+                teamIDs.push(teammate["User_ID"]) // get the IDs of the users associated with this project
+            }
+            var IDstring = '('
+            var i;
+            console.log(teamIDs.length)
+            for (i = 0; i < teamIDs.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
+                IDstring += (teamIDs[i]).toString()
+                if (i != teamIDs.length-1) {
+                    IDstring += ','
+                }
+            }
+            IDstring += ')'
+            client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN '+IDstring+';', (err2, teamnameresult) => {
+                var teamNames = []
+                for (let teammate of teamnameresult["rows"]){ // get the names of all users whose IDs we have
+                    teamNames.push(teammate["UserName"])
+                }
+                newCookie["teamIDs"] = teamIDs
+                newCookie["teamNames"] = teamNames
+                res.cookie("userInfo", newCookie)
+                res.redirect('/ProjectHomePage')
+            })
+        })
+    })
+})
 
 
 // When user attempts to sign in
@@ -320,7 +350,8 @@ app.post("/loginPage/submit", function (req, res) {
                                     for (let obj of results2.rows){
                                         storage.push(obj["Project_ID"])
                                     }
-                                    res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, projects: storage, chatname: "TestingChatroom", chatroomid: 1});
+                                    res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, 
+                                        projects: storage, chatname: "TestingChatroom", chatroomid: 1, currProjectID: 0, currProjectName: null});
                                     toRedirect = '/UserHomePage/' // + AuthUser
                                     res.redirect(toRedirect)
                                 })
