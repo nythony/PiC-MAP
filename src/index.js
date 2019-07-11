@@ -155,6 +155,7 @@ app.get("/UserHomePage/", function (req, res) {
 
 // Project Home Page GET request
 app.get("/ProjectHomePage/", function (req, res) {
+    console.log("Cookie: ", req.cookies.userInfo);
     res.render("ProjectHomePage", { user: req.cookies.userInfo})
 })
 
@@ -300,7 +301,6 @@ app.post("/UserHomePage/viewProject", function (req, res) {
                 newCookie["teamIDs"] = teamIDs
                 newCookie["teamNames"] = teamNames
                 res.cookie("userInfo", newCookie)
-                console.log("Cookie: ", res.cookies.userInfo);
                 res.redirect('/ProjectHomePage')
             })
         })
