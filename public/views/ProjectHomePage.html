@@ -17,7 +17,13 @@
             text-align: right;
             margin-top: 50px;
             margin-right: 50px;
-            font-size: 100%;
+            font-size: 120%;
+            font-family: arial;
+        }
+        #taskTools {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 120%;
             font-family: arial;
         }
         #newItems {
@@ -60,7 +66,7 @@
             </script>
         </center>
     </h2>
-    <h3>
+    <div id="taskTools">
         <center>
             <script type="text/javascript">
                 var taskFormNames = <%- JSON.stringify(user.taskTools) %>;
@@ -69,7 +75,7 @@
                 }
             </script>
         </center>
-    </h3>
+    </div>
     <div id="team">
         <b><u>Team</u></b>
         <script type="text/javascript">
