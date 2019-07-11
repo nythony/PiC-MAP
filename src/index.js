@@ -239,17 +239,17 @@ app.post("/UserHomePage/createProject", function (req, res) {
 
 // When user wants to navigate to UserHomePage from projectForm
 app.post("/projectForm/backToUserHomePage", function (req, res) {
-    res.redirect('/UserHomePage')
+    res.redirect('/UserHomePage/')
 })
 
 // When user wants to navigate to UserHomePage from ProjectHomePage (I actually don't think this is being used)
 app.post("/ProjectHomePage/returnToUserHomePage", function (req, res) {
-    res.redirect('/UserHomePage')
+    res.redirect('/UserHomePage/')
 })
 
 // When user wants to navigate to UserHomePage from ProjectHomePage
 app.post("/returnToUserHomePage", function (req, res) {
-    res.redirect('/UserHomePage')
+    res.redirect('/UserHomePage/')
 })
 
 
