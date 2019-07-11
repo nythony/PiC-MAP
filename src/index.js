@@ -265,8 +265,8 @@ app.post("/createTaskTool", function (req, res) {
 })
 
 // When user wants to navigate to ProjectHomePage from taskToolForm
-app.post("/backToUserHomePage", function (req, res) {
-    res.redirect('/ProjectHomePage/')
+app.post("/taskToolForm/backToUserHomePage", function (req, res) {
+    res.redirect('/ProjectHomePage')
 })
 
 
