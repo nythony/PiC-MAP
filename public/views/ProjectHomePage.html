@@ -44,19 +44,21 @@
         <form action="/returnToUserHomePage" method="post">
             <button type="submit">Return to Home Screen</button>
         </form>
-        <h2>
+    </div>
+    <h2>
+        <center>
             <script type="text/javascript">
                 var projectName = <%- JSON.stringify(user.currProjectName) %>;
                 document.write(projectName)
             </script>
-        </h2>
-    </div>
+        </center>
+    </h2>
     <div id="team">
         <script type="text/javascript">
-            
+
         </script>
     </div>
-    
+
     <div id="chatApp">
         <form action="/chatapp">
             <input type="hidden" id="username" name="username" placeholder="Display name" required />

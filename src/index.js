@@ -271,13 +271,29 @@ app.post("/UserHomePage/joinProject", function (req, res) {
 // When user clicks button to view a project
 app.post("/UserHomePage/viewProject", function (req, res) {
     var projectName = req.body.projectName
-    client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err1, projectidresult) => { // get project ID of input project
+    client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
         var newCookie = req.cookies.userInfo
         const projectid = projectidresult["rows"][0]["Project_ID"]
         newCookie.currProjectID = projectid // update cookie for the input project
         newCookie.currProjectName = projectName
-        res.cookie("userInfo", newCookie)
-        res.redirect('/ProjectHomePage')
+        client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID = \''+projectid+'\';', (err1, teamIDresult) => {
+            var teamIDs = []
+            for (let teammate of teamIDresult.rows){
+                teamIDs.push(teammate["User_ID"])
+            }
+            console.log(teamIDs)
+            console.log(JSON.stringify(teamIDs))
+            client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN ('+JSON.stringify(teamIDs)+');', (err2, teamnameresult) => {
+                var teamNames = []
+                for (let teammate of teamnameresult.rows){
+                    teamNames.push(teammate["UserName"])
+                }
+                newCookie["teamIDs"] = teamIDs
+                newCookie["teamNames"] = teamNames
+                res.cookie("userInfo", newCookie)
+                res.redirect('/ProjectHomePage')
+            })
+        })
     })
 })
 
