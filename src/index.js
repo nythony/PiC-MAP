@@ -324,8 +324,15 @@ app.post("/UserHomePage/joinProject", function (req, res) {
                     }
                     newCookie["teamIDs"] = teamIDs
                     newCookie["teamNames"] = teamNames
-                    res.cookie("userInfo", newCookie)
-                    res.redirect('/ProjectHomePage')
+                    client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = 'projectid+';', (err3, tasktoolresult) => {
+                        var taskToolNames = []
+                        for (let tTool of tasktoolresult["rows"]) {
+                            taskToolNames.push(tTool["TaskToolName"])
+                        }
+                        newCookie["taskTools"] = taskToolNames
+                        res.cookie("userInfo", newCookie)
+                        res.redirect('/ProjectHomePage')
+                    }
                 })
             })
         })
@@ -379,7 +386,7 @@ app.post("/UserHomePage/joinProject", function (req, res) {
                                                 pDescs.push(project["ProjectDesc"])
                                             }
                                             res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, projects: storage, projectNames: pNames, 
-                                                projectDescs: pDescs, chatname: "TestingChatroom", chatroomid: 1, currProjectID: 0, currProjectName: null, taskForms: []});
+                                                projectDescs: pDescs, chatname: "TestingChatroom", chatroomid: 1, currProjectID: 0, currProjectName: null, taskTools: []});
                                             toRedirect = '/UserHomePage/'
                                             res.redirect(toRedirect)
                                         })
