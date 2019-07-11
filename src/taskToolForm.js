@@ -63,8 +63,6 @@ const crudTaskTool = (req, res) => {
 
     var projectID = req.body.projectID;
 
-    toRedirect = '/';
-
 
     if (btnSubmit) {
         console.log('----------------------------------create taskTool button is clicked--------------------------------')
@@ -80,8 +78,11 @@ const crudTaskTool = (req, res) => {
 
             }
             console.log('----------------------------------record is created--------------------------------');
+            var newCookie = req.cookies.userInfo
+            newCookie.taskForms.push(taskTool) // update cookie from req -> res to add the new task to the cookie
+            res.cookie("userInfo", newCookie)
+            res.redirect('/taskToolForm')
         })
-
     }
 
     if (btnUpdate) {

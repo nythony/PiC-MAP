@@ -70,7 +70,6 @@ const crudProject = (req, res) => {
     var status = 0;
     if (projectStatus == 'active')
         status = 1;
-    toRedirect = '/';
 
 
     if (btnSubmit) {
