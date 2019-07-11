@@ -279,12 +279,17 @@ app.post("/UserHomePage/viewProject", function (req, res) {
         console.log('projectid: ', projectid)
         client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
             var teamIDs = []
-            console.log('teamIDresults: ', teamIDresult)
             for (let teammate of teamIDresult["rows"]){
                 teamIDs.push(teammate["User_ID"])
             }
-            console.log('teamIDs: ', teamIDs)
-            console.log('JSON ^: ', JSON.stringify(teamIDs))
+            var IDstring = '('
+            var i;
+            for (i = 0; i < teamIDs.length-1; i++) {
+                IDstring += ','
+                IDstring += toString(teamIDs[i])
+            }
+            IDstring += ')'
+            console.log(IDstring)
             client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN ('+JSON.stringify(teamIDs)+');', (err2, teamnameresult) => {
                 var teamNames = []
                 for (let teammate of teamnameresult["rows"]){
