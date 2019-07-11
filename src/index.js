@@ -276,13 +276,14 @@ app.post("/UserHomePage/viewProject", function (req, res) {
         const projectid = projectidresult["rows"][0]["Project_ID"]
         newCookie.currProjectID = projectid // update cookie for the input project
         newCookie.currProjectName = projectName
-        client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID = \''+projectid+'\';', (err1, teamIDresult) => {
+        console.log('projectid: ', projectid)
+        client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID = '+projectid+';', (err1, teamIDresult) => {
             var teamIDs = []
             for (let teammate of teamIDresult.rows){
                 teamIDs.push(teammate["User_ID"])
             }
-            console.log(teamIDs)
-            console.log(JSON.stringify(teamIDs))
+            console.log('teamIDs: ', teamIDs)
+            console.log('JSON ^: ', JSON.stringify(teamIDs))
             client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN ('+JSON.stringify(teamIDs)+');', (err2, teamnameresult) => {
                 var teamNames = []
                 for (let teammate of teamnameresult.rows){
