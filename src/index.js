@@ -264,15 +264,17 @@ app.post("/returnToUserHomePage", function (req, res) {
 app.post("/UserHomePage/joinProject", function (req, res) {
     var userid = JSON.stringify(req.cookies.userInfo.userid)
     var projectName = req.body.projectName
-    client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err1, projectidresult) => { // get project ID of input project
+    client.query('SELECT "Project_ID", "ProjectDesc" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err1, projectidresult) => { // get project ID of input project
         if (err1) {console.log(err1.stack)}
         const projectid = projectidresult["rows"][0]["Project_ID"]
+        const projectDesc = projectidresult["rows"][0]["ProjecDesc"]
         const attachValues = [userid, projectid]
         const attachText = 'INSERT INTO "AttachUserP"("User_ID", "Project_ID") VALUES($1,$2) RETURNING *'
         client.query(attachText, attachValues, (err2, res2) => { // add new link to AttachUserP table
-            if (err2) {console.log(err2.stack)}
+            if (err2) {console.log(err2.stack)}     // THIS NEEDS TO BE PUT INTO A refreshCookie() function
             var newCookie = req.cookies.userInfo
             newCookie.projects.push(projectid) // update cookie from req -> res to add the new project that the user is assigned to
+            newCookie.projectDescs.push(projectDesc)
             res.cookie("userInfo", newCookie)
             res.redirect('/UserHomePage/');
         })
