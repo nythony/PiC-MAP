@@ -54,11 +54,13 @@
         </center>
     </h2>
     <div id="team">
-        <b>Team</b>
+        <b><u>Team</u></b>
         <script type="text/javascript">
             var team = <%- JSON.stringify(user.teamNames) %>;
+            console.log(team)
             var teamNames = team.replace(",", "\n")
-            document.write(team)
+            console.log(teamNames)
+            document.write(teamNames)
         </script>
     </div>
 
