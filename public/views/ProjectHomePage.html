@@ -13,22 +13,7 @@
             font-size: 100%;
             font-family: arial;
         }
-
-        #projects {
-            text-align: center;
-            margin-top: 50px;
-            font-size: 100%;
-            font-family: arial;
-        }
-
-        #newItems {
-            text-align: left;
-            margin-top: 50px;
-            margin-left: 50px;
-            font-size: 100%;
-            font-family: arial;
-        }
-        #joinExisting {
+        #team {
             text-align: right;
             margin-top: 50px;
             margin-right: 50px;
@@ -47,46 +32,25 @@
 
 <body>
     <div id="header">
-        <h1>Welcome 
+        <h1>
             <script type="text/javascript">
                 var userN = <%- JSON.stringify(user.name) %>;
                 document.write(userN)
             </script>
-            !
         </h1>
         <form action="/loginPage" method="post">
             <button type="submit">Log Out</button>
         </form>
-    </div>
-    <div id="projects">
-        <h1>Your Projects: </h1> &nbsp
-            <script type="text/javascript">
-                var userP = <%- JSON.stringify(user.projects) %>;
-                document.write(userP)
-            </script>
-
-    </div>
-    <div id="newItems">
-        <form action="createProject" method="post">
-            <button type="submit">Create new project</button>
-        </form><br>
-    </div>
-    <div id="joinExisting">
-        <form action="joinProject" method="post">
-            <input type="text" name="projectName" placeholder="Project Name"><br>
-            <button type="submit">Join Existing Project</button>
+        <form action="/returnToUserHomePage" method="post">
+            <button type="submit">Return to Home Screen</button>
         </form>
     </div>
-
-    <div id="viewProject">
-        <form action="viewProject" method="post">
-            <input type="text" name="projectName" placeholder="Project Name"><br>
-            <button type="submit">View Project</button>
-        </form>
+    <div id="team">
+        <script type="text/javascript">
+            
+        </script>
     </div>
-
-
-
+    
     <div id="chatApp">
         <form action="/chatapp">
             <input type="hidden" id="username" name="username" placeholder="Display name" required />
