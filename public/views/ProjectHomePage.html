@@ -44,6 +44,12 @@
         <form action="/returnToUserHomePage" method="post">
             <button type="submit">Return to Home Screen</button>
         </form>
+        <h2>
+            <script type="text/javascript">
+                var projectName = <%- JSON.stringify(user.currProjectName) %>;
+                document.write(projectName)
+            </script>
+        </h2>
     </div>
     <div id="team">
         <script type="text/javascript">

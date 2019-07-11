@@ -243,7 +243,7 @@ app.post("/projectForm/backToUserHomePage", function (req, res) {
 
 // When user wants to navigate to UserHomePage from ProjectHomePage
 app.post("/ProjectHomePage/returnToUserHomePage", function (req, res) {
-    res.redirect('/')
+    res.redirect('/UserHomePage')
 })
 
 
@@ -274,7 +274,8 @@ app.post("/UserHomePage/viewProject", function (req, res) {
     client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err1, projectidresult) => { // get project ID of input project
         var newCookie = req.cookies.userInfo
         const projectid = projectidresult["rows"][0]["Project_ID"]
-        newCookie.currProject = projectid // update cookie for the input project
+        newCookie.currProjectID = projectid // update cookie for the input project
+        newCookie.currProjectName = projectName
         res.cookie("userInfo", newCookie)
         res.redirect('/ProjectHomePage')
     })
@@ -311,7 +312,7 @@ app.post("/loginPage/submit", function (req, res) {
                                     for (let obj of results2.rows){
                                         storage.push(obj["Project_ID"])
                                     }
-                                    res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, projects: storage, currProject: 0}); // 0 means no currProject
+                                    res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, projects: storage, currProjectID: 0, currProjectName: null});
                                     toRedirect = '/UserHomePage/' // + AuthUser
                                     res.redirect(toRedirect)
                                 })
