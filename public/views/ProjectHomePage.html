@@ -57,10 +57,9 @@
         <b><u>Team</u></b>
         <script type="text/javascript">
             var team = <%- JSON.stringify(user.teamNames) %>;
-            console.log(team)
-            var teamNames = team.replace(",", "\n")
-            console.log(teamNames)
-            document.write(teamNames)
+            for (let name in team) {
+                document.write(name+"<br>")
+            }
         </script>
     </div>
 
