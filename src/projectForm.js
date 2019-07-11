@@ -92,13 +92,13 @@ const crudProject = (req, res) => {
             if (err1) {console.log(err1.stack)}
             const attachValues = [userCreate, projectidresult["rows"][0]["Project_ID"]]
             const attachText = 'INSERT INTO "AttachUserP"("User_ID", "Project_ID") VALUES($1,$2) RETURNING *'
-            var newCookie = req.cookies.userInfo
-            newCookie.projects.push(projectidresult["rows"][0]["Project_ID"]) // update cookie from req -> res to add the new project that the user is assigned to
-            newCookie.projectNames.push(projectName)
-            newCookie.projectDescs.push(projectDesc)
-            res.cookie("userInfo", newCookie)
             client.query(attachText, attachValues, (err2, res2) => {
                 if (err2) {console.log(err2.stack)}
+                var newCookie = req.cookies.userInfo
+                newCookie.projects.push(projectidresult["rows"][0]["Project_ID"]) // update cookie from req -> res to add the new project that the user is assigned to
+                newCookie.projectNames.push(projectName)
+                newCookie.projectDescs.push(projectDesc)
+                res.cookie("userInfo", newCookie)
             })
         })
     }
