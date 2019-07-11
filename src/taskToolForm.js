@@ -70,11 +70,11 @@ const crudTaskTool = (req, res) => {
         const text = 'INSERT INTO "TaskTool" ("Project_ID", "TaskToolName") VALUES($1, $2) RETURNING *';
         const values = [projectID, taskTool];
         // callback
-        client.query(text, values, (err, res) => {
+        client.query(text, values, (err, results) => {
             if (err) {
                 console.log(err.stack)
             } else {
-                console.log(res.rows[0])
+                console.log(results.rows[0])
 
             }
             console.log('----------------------------------record is created--------------------------------');
