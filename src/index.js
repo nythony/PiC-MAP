@@ -280,12 +280,12 @@ app.post("/UserHomePage/viewProject", function (req, res) {
         client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
             var teamIDs = []
             for (let teammate of teamIDresult["rows"]){
-                teamIDs.push(teammate["User_ID"])
+                teamIDs.push(teammate["User_ID"]) // get the IDs of the users associated with this project
             }
             var IDstring = '('
             var i;
             console.log(teamIDs.length)
-            for (i = 0; i < teamIDs.length; i++) {
+            for (i = 0; i < teamIDs.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
                 IDstring += (teamIDs[i]).toString()
                 if (i != teamIDs.length-1) {
                     IDstring += ','
@@ -294,7 +294,7 @@ app.post("/UserHomePage/viewProject", function (req, res) {
             IDstring += ')'
             client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN '+IDstring+';', (err2, teamnameresult) => {
                 var teamNames = []
-                for (let teammate of teamnameresult["rows"]){
+                for (let teammate of teamnameresult["rows"]){ // get the names of all users whose IDs we have
                     teamNames.push(teammate["UserName"])
                 }
                 newCookie["teamIDs"] = teamIDs
