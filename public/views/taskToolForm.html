@@ -16,7 +16,7 @@
                 <label for="taskTool" class="col-sm-2 control-label">Task Tool Name: </label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="taskTool" name="taskTool" placeholder="define taskTool"
-                        value="" required>
+                           value="" required>
                 </div>
             </div>
 
@@ -25,7 +25,7 @@
                 <label for="projectID" class="col-sm-2 control-label">Project Id :</label>
                 <div class="col-sm-10">
                     <input type="integer" class="form-control" id="projectID" name="projectID" placeholder="1" value=""
-                        required>
+                           required>
                 </div>
             </div>
 
@@ -43,7 +43,9 @@
             </div>
         </form>
     </div>
-
+    <form action="taskToolForm/backToProjectHomePage" method="post">
+        <button type="submit">Return to project homepage</button>
+    </form>
 </body>
 
 </html>

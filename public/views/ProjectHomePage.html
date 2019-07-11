@@ -20,6 +20,13 @@
             font-size: 100%;
             font-family: arial;
         }
+        #newItems {
+            text-align: left;
+            margin-top: 50px;
+            margin-left: 50px;
+            font-size: 100%;
+            font-family: arial;
+        }
         #chatApp {
             text-align: left;
             margin-top: 50px;
@@ -62,7 +69,11 @@
             }
         </script>
     </div>
-
+    <div id="newItems">
+        <form action="createTask" method="post">
+            <button type="submit">Create new task</button>
+        </form><br>
+    </div>
     <div id="chatApp">
         <form action="/chatapp">
             <input type="hidden" id="username" name="username" placeholder="Display name" required />

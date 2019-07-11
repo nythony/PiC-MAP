@@ -259,8 +259,18 @@ app.post("/returnToUserHomePage", function (req, res) {
     res.redirect('/UserHomePage/')
 })
 
+// When user wants to navigate to taskToolForm from ProjectHomePage
+app.post("/ProjectHomePage/createTastkTool", function (req, res) {
+    res.redirect('/taskToolForm/')
+})
 
-// When user clicks button to join an existing project
+// When user wants to navigate to ProjectHomePage from taskToolForm
+app.post("/taskToolForm/backToUserHomePage", function (req, res) {
+    res.redirect('/ProjectHomePage')
+})
+
+
+    // When user clicks button to join an existing project
 app.post("/UserHomePage/joinProject", function (req, res) {
     var userid = JSON.stringify(req.cookies.userInfo.userid)
     var projectName = req.body.projectName
@@ -283,189 +293,189 @@ app.post("/UserHomePage/joinProject", function (req, res) {
 })
 
 
-// TEMPORARY
-// When user clicks button to view a project
-app.post("/UserHomePage/viewProject", function (req, res) {
-    var projectName = req.body.projectName
-    client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
-        var newCookie = req.cookies.userInfo
-        const projectid = projectidresult["rows"][0]["Project_ID"]
-        newCookie.currProjectID = projectid // update cookie for the input project
-        newCookie.currProjectName = projectName
-        console.log('projectid: ', projectid)
-        client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
-            var teamIDs = []
-            for (let teammate of teamIDresult["rows"]){
-                teamIDs.push(teammate["User_ID"]) // get the IDs of the users associated with this project
-            }
-            var IDstring = '('
-            var i;
-            for (i = 0; i < teamIDs.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
-                IDstring += (teamIDs[i]).toString()
-                if (i != teamIDs.length-1) {
-                    IDstring += ','
+    // TEMPORARY
+    // When user clicks button to view a project
+    app.post("/UserHomePage/viewProject", function (req, res) {
+        var projectName = req.body.projectName
+        client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
+            var newCookie = req.cookies.userInfo
+            const projectid = projectidresult["rows"][0]["Project_ID"]
+            newCookie.currProjectID = projectid // update cookie for the input project
+            newCookie.currProjectName = projectName
+            console.log('projectid: ', projectid)
+            client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
+                var teamIDs = []
+                for (let teammate of teamIDresult["rows"]){
+                    teamIDs.push(teammate["User_ID"]) // get the IDs of the users associated with this project
                 }
-            }
-            IDstring += ')'
-            client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN '+IDstring+';', (err2, teamnameresult) => {
-                var teamNames = []
-                for (let teammate of teamnameresult["rows"]){ // get the names of all users whose IDs we have
-                    teamNames.push(teammate["UserName"])
+                var IDstring = '('
+                var i;
+                for (i = 0; i < teamIDs.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
+                    IDstring += (teamIDs[i]).toString()
+                    if (i != teamIDs.length-1) {
+                        IDstring += ','
+                    }
                 }
-                newCookie["teamIDs"] = teamIDs
-                newCookie["teamNames"] = teamNames
-                res.cookie("userInfo", newCookie)
-                res.redirect('/ProjectHomePage')
+                IDstring += ')'
+                client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN '+IDstring+';', (err2, teamnameresult) => {
+                    var teamNames = []
+                    for (let teammate of teamnameresult["rows"]){ // get the names of all users whose IDs we have
+                        teamNames.push(teammate["UserName"])
+                    }
+                    newCookie["teamIDs"] = teamIDs
+                    newCookie["teamNames"] = teamNames
+                    res.cookie("userInfo", newCookie)
+                    res.redirect('/ProjectHomePage')
+                })
             })
         })
     })
-})
 
 
-// When user attempts to sign in
-// If successful, redirects to UserHomePage
-// If unsuccessful, redirects to failedLoginPage
-app.post("/loginPage/submit", function (req, res) {
-    var username = req.body.username
-    var password = req.body.password
-    var toRedirect = '/failedLoginPage'
+    // When user attempts to sign in
+    // If successful, redirects to UserHomePage
+    // If unsuccessful, redirects to failedLoginPage
+    app.post("/loginPage/submit", function (req, res) {
+        var username = req.body.username
+        var password = req.body.password
+        var toRedirect = '/failedLoginPage'
 
-    client.query('SELECT "UserName" FROM "User";', (error, results) => {
-        if (error) throw error
-        for (let row of results.rows) {
-            if (row["UserName"] == username) {
-                client.query('SELECT "Password" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results1) => {
-                    if (error1) throw error1
-                    if (results1["rows"][0]["Password"] == password) {
-                        client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
-                            if (error2) throw error2 //Should never happen, if anything it returns and stores null
-                            var storage = []
-                            for (let obj of results2.rows) {
-                                storage.push(obj["Project_ID"])
-                            }
-                            res.cookie("userInfo", { name: username, pass: password, projects: storage });
-                            toRedirect = '/UserHomePage/' // + AuthUser
-                            client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
-                                client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
-                                    if (error2) throw error2 //Should never happen, if anything it returns and stores null
-                                    var storage = []
-                                    for (let obj of results2.rows){
-                                        storage.push(obj["Project_ID"])
-                                    }
-                                    var IDstring = '('
-                                    var i;
-                                    for (i = 0; i < storage.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
-                                        IDstring += (storage[i]).toString()
-                                        if (i != storage.length-1) {
-                                            IDstring += ','
+        client.query('SELECT "UserName" FROM "User";', (error, results) => {
+            if (error) throw error
+            for (let row of results.rows) {
+                if (row["UserName"] == username) {
+                    client.query('SELECT "Password" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results1) => {
+                        if (error1) throw error1
+                        if (results1["rows"][0]["Password"] == password) {
+                            client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
+                                if (error2) throw error2 //Should never happen, if anything it returns and stores null
+                                var storage = []
+                                for (let obj of results2.rows) {
+                                    storage.push(obj["Project_ID"])
+                                }
+                                res.cookie("userInfo", { name: username, pass: password, projects: storage });
+                                toRedirect = '/UserHomePage/' // + AuthUser
+                                client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
+                                    client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
+                                        if (error2) throw error2 //Should never happen, if anything it returns and stores null
+                                        var storage = []
+                                        for (let obj of results2.rows){
+                                            storage.push(obj["Project_ID"])
                                         }
-                                    }
-                                    IDstring += ')'
-                                    client.query('SELECT "ProjectName", "ProjectDesc" FROM "Project" WHERE "Project_ID" IN '+IDstring+';', (error3, projectnameresult) => {
-                                        var pNames = []
-                                        var pDescs = []
-                                        for (let project of projectnameresult["rows"]){ // get the names of all users whose IDs we have
-                                            pNames.push(project["ProjectName"])
-                                            pDescs.push(project["ProjectDesc"])
+                                        var IDstring = '('
+                                        var i;
+                                        for (i = 0; i < storage.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
+                                            IDstring += (storage[i]).toString()
+                                            if (i != storage.length-1) {
+                                                IDstring += ','
+                                            }
                                         }
-                                        res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, projects: storage, projectNames: pNames, 
-                                            projectDescs: pDescs, chatname: "TestingChatroom", chatroomid: 1, currProjectID: 0, currProjectName: null});
-                                        toRedirect = '/UserHomePage/'
-                                        res.redirect(toRedirect)
+                                        IDstring += ')'
+                                        client.query('SELECT "ProjectName", "ProjectDesc" FROM "Project" WHERE "Project_ID" IN '+IDstring+';', (error3, projectnameresult) => {
+                                            var pNames = []
+                                            var pDescs = []
+                                            for (let project of projectnameresult["rows"]){ // get the names of all users whose IDs we have
+                                                pNames.push(project["ProjectName"])
+                                                pDescs.push(project["ProjectDesc"])
+                                            }
+                                            res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, projects: storage, projectNames: pNames, 
+                                                projectDescs: pDescs, chatname: "TestingChatroom", chatroomid: 1, currProjectID: 0, currProjectName: null});
+                                            toRedirect = '/UserHomePage/'
+                                            res.redirect(toRedirect)
+                                        })
                                     })
                                 })
                             })
-                        })
-                    }
-                })
+                        }
+                    })
+                }
             }
-        }
+        })
     })
-})
 
-app.post("/failedLoginPage/submit", function (req, res) {
-    var username = req.body.username
-    var password = req.body.password
-    client.query('SELECT "UserName" FROM "User";', (error, results) => {
-        if (error) throw error
-        for (let row of results.rows) {
-            if (row["UserName"] == username) {
-                client.query('SELECT "Password" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results1) => {
-                    if (error1) throw error1
-                    console.log(results1["rows"][0]["Password"])
-                    if (results1["rows"][0]["Password"] == password) {
-                        res.redirect('/loginResult/' + username)
-                    }
-                })
+    app.post("/failedLoginPage/submit", function (req, res) {
+        var username = req.body.username
+        var password = req.body.password
+        client.query('SELECT "UserName" FROM "User";', (error, results) => {
+            if (error) throw error
+            for (let row of results.rows) {
+                if (row["UserName"] == username) {
+                    client.query('SELECT "Password" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results1) => {
+                        if (error1) throw error1
+                        console.log(results1["rows"][0]["Password"])
+                        if (results1["rows"][0]["Password"] == password) {
+                            res.redirect('/loginResult/' + username)
+                        }
+                    })
+                }
             }
-        }
-    })
-    res.redirect('/failedLoginPage')
-});
+        })
+        res.redirect('/failedLoginPage')
+    });
 
-app.post("/createNewUser/submit", function (req, res) {
-    var username = req.body.username
-    var password = req.body.password
-    client.query('INSERT INTO "User"("UserName", "Password") VALUES(\'' + username + '\', \'' + password + '\');', (error, results) => {
-        if (error) throw error
-    })
-    res.redirect('/loginPage')
-});
+    app.post("/createNewUser/submit", function (req, res) {
+        var username = req.body.username
+        var password = req.body.password
+        client.query('INSERT INTO "User"("UserName", "Password") VALUES(\'' + username + '\', \'' + password + '\');', (error, results) => {
+            if (error) throw error
+        })
+        res.redirect('/loginPage')
+    });
 
-app.post("/contact-submitted", function (req, res) {
-    var cname = req.body.name;
-    var cemail = req.body.email;
-    var cmessage = req.body.message;
-    var chuman = req.body.human;
+    app.post("/contact-submitted", function (req, res) {
+        var cname = req.body.name;
+        var cemail = req.body.email;
+        var cmessage = req.body.message;
+        var chuman = req.body.human;
 
-    console.log(cname);
-    console.log(cemail);
-    console.log(cmessage);
-    console.log(chuman);
-});
+        console.log(cname);
+        console.log(cemail);
+        console.log(cmessage);
+        console.log(chuman);
+    });
 
-app.post("/userform-submitted", function (req, res) {
-    var uname = req.body.name;
-    var uemail = req.body.email;
-    var umessage = req.body.message;
-    var uhuman = req.body.human;
+    app.post("/userform-submitted", function (req, res) {
+        var uname = req.body.name;
+        var uemail = req.body.email;
+        var umessage = req.body.message;
+        var uhuman = req.body.human;
 
-    console.log(uname);
-    console.log(uemail);
-    console.log(umessage);
-    console.log(uhuman);
-});
+        console.log(uname);
+        console.log(uemail);
+        console.log(umessage);
+        console.log(uhuman);
+    });
 
-// When user clicks button to create new project (could be create, update, or delete)
-app.post("/projectform-submitted", function (req, res) {
-    project.crudProject(req, res);
-});
+    // When user clicks button to create new project (could be create, update, or delete)
+    app.post("/projectform-submitted", function (req, res) {
+        project.crudProject(req, res);
+    });
 
 
-app.post("/requirementform-submitted", function (req, res) {
-    requirement.crudRequirement(req, res);
-    console.log('post method of requirement form');
-    res.redirect('/');
-});
+    app.post("/requirementform-submitted", function (req, res) {
+        requirement.crudRequirement(req, res);
+        console.log('post method of requirement form');
+        res.redirect('/');
+    });
 
-app.post("/taskform-submitted", function (req, res) {
-    task.crudTask(req, res);
-    console.log('post method of task form');
-    res.redirect('/');
-});
-app.post("/taskToolform-submitted", function (req, res) {
-    taskTool.crudTaskTool(req, res);
-    console.log('post method of taskTool form');
-    res.redirect('/');
-});
+    app.post("/taskform-submitted", function (req, res) {
+        task.crudTask(req, res);
+        console.log('post method of task form');
+        res.redirect('/');
+    });
+    app.post("/taskToolform-submitted", function (req, res) {
+        taskTool.crudTaskTool(req, res);
+        console.log('post method of taskTool form');
+        res.redirect('/');
+    });
 
-app.post("/issueform-submitted", function (req, res) {
-    issue.crudIssue(req, res);
-    console.log('post method of issue form');
-    res.redirect('/');
-});
+    app.post("/issueform-submitted", function (req, res) {
+        issue.crudIssue(req, res);
+        console.log('post method of issue form');
+        res.redirect('/');
+    });
 
-//This server is running through the port 3000
-server.listen(port, () => {
-    console.log(`Server is up on port ${port}!`)
-});
+    //This server is running through the port 3000
+    server.listen(port, () => {
+        console.log(`Server is up on port ${port}!`)
+    });
