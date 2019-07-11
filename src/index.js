@@ -324,7 +324,7 @@ app.post("/UserHomePage/viewProject", function (req, res) {
                 }
                 newCookie["teamIDs"] = teamIDs
                 newCookie["teamNames"] = teamNames
-                client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = 'projectid+';', (err3, tasktoolresult) => {
+                client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectid+';', (err3, tasktoolresult) => {
                     var taskToolNames = []
                     for (let tTool of tasktoolresult["rows"]) {
                         taskToolNames.push(tTool["TaskToolName"])
