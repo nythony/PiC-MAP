@@ -274,7 +274,7 @@ app.post("/UserHomePage/joinProject", function (req, res) {
             if (err2) {console.log(err2.stack)}     // THIS NEEDS TO BE PUT INTO A refreshCookie() function
             var newCookie = req.cookies.userInfo
             newCookie.projects.push(projectid) // update cookie from req -> res to add the new project that the user is assigned to
-            newCookie.project.push(projectName)
+            newCookie.projectNames.push(projectName)
             newCookie.projectDescs.push(projectDesc)
             res.cookie("userInfo", newCookie)
             res.redirect('/UserHomePage/');
