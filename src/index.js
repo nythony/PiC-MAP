@@ -61,8 +61,8 @@ class Passer {
 io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
-    socket.on('join', ({ username, room }, callback) => {
-        const { error, user } = addUser({ id: socket.id, username, room })
+    socket.on('join', ({ username, userid, room, chatroomid }, callback) => {
+        const { error, user} = addUser({ id: socket.id, username, userid, room, chatroomid })
 
         if (error) {
             return callback(error)
@@ -71,23 +71,30 @@ io.on('connection', (socket) => {
         socket.join(user.room)
 
         // Display only to connection
-        socket.emit('message', generateMessage('Admin', `Welcome to ${room}!`))
-        // Display to everyone but the connection
-        socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined ${room}`))
-        io.to(user.room).emit('roomData', {
-            room: user.room,
-            users: getUsersInRoom(user.room)
+        client.query('SELECT * FROM "ChatMessage" AS t1 RIGHT JOIN "User" AS t2 ON t1."User_ID" = t2."User_ID" LEFT JOIN "ChatRoom" AS t3 ON t1."ChatRoom_ID" = t3."ChatRoom_ID" WHERE t3."ChatRoom_ID" = \'' + user.chatroomid + '\';', (error, results) => {
+            for (let foo of results.rows) {
+                //console.log(foo["Message"])
+                //console.log("we're here")
+                socket.emit('message', generateMessage(foo["UserName"], foo["Message"]))
+            }
         })
+
+        // socket.emit('message', generateMessage('Admin', `Welcome to ${room}!`))
+        // Display to everyone but the connection
+        // socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined ${room}`))
+        // io.to(user.room).emit('roomData', {
+        //     room: user.room,
+        //     users: getUsersInRoom(user.room)
+        // })
 
         callback()
     })
 
     // Display to everyone
     socket.on('sendMessage', (message, callback) => {
-        const userid = user.userid
         const user = getUser(socket.id)
         const text = 'INSERT INTO "ChatMessage"( "User_ID", "ChatRoom_ID", "Message" ) VALUES($1, $2, $3) RETURNING *'
-        const values = [userid, 1, message]
+        const values = [user.userid, user.chatroomid, message]
         client.query(text, values, (err, res) => {
             if (err) {
                 console.log(err.stack)
@@ -313,7 +320,7 @@ app.post("/loginPage/submit", function (req, res) {
                                     for (let obj of results2.rows){
                                         storage.push(obj["Project_ID"])
                                     }
-                                    res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, projects: storage});
+                                    res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, projects: storage, chatname: "TestingChatroom", chatroomid: 1});
                                     toRedirect = '/UserHomePage/' // + AuthUser
                                     res.redirect(toRedirect)
                                 })

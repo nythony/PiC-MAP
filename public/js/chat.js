@@ -12,7 +12,7 @@ const locationMessageTemplate = document.querySelector('#location-message-templa
 const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 
 // Options
-const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+const { username, userid, room, chatroomid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
 
 // Definition for message event
@@ -89,7 +89,7 @@ document.querySelector('#send-location').addEventListener('click', () => {
     })
 })
 
-socket.emit('join', { username, room }, (error) => {
+socket.emit('join', { username, userid, room, chatroomid }, (error) => {
     if (error) {
         alert(error)
         location.href = '/'
