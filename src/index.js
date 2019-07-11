@@ -300,6 +300,7 @@ app.post("/UserHomePage/viewProject", function (req, res) {
                 newCookie["teamIDs"] = teamIDs
                 newCookie["teamNames"] = teamNames
                 res.cookie("userInfo", newCookie)
+                console.log("Cookie: ", res.cookies.userInfo);
                 res.redirect('/ProjectHomePage')
             })
         })

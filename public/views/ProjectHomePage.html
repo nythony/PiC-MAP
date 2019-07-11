@@ -54,8 +54,10 @@
         </center>
     </h2>
     <div id="team">
+        <b>Team</b>
         <script type="text/javascript">
             var team = <%- JSON.stringify(user.teamNames) %>;
+            var teamNames = team.replace(",", "\n")
             document.write(team)
         </script>
     </div>
