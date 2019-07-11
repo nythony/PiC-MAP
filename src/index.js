@@ -439,8 +439,6 @@ app.post("/userform-submitted", function (req, res) {
 // When user clicks button to create new project (could be create, update, or delete)
 app.post("/projectform-submitted", function (req, res) {
     project.crudProject(req, res);
-    console.log('post method of project form');
-    res.redirect('/projectForm');
 });
 
 

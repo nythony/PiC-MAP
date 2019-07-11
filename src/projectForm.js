@@ -99,6 +99,7 @@ const crudProject = (req, res) => {
                 newCookie.projectNames.push(projectName)
                 newCookie.projectDescs.push(projectDesc)
                 res.cookie("userInfo", newCookie)
+                res.redirect('/projectForm');
             })
         })
     }
