@@ -292,8 +292,7 @@ app.post("/UserHomePage/viewProject", function (req, res) {
                 }
             }
             IDstring += ')'
-            console.log(IDstring)
-            client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN ('+JSON.stringify(teamIDs)+');', (err2, teamnameresult) => {
+            client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN '+IDstring+');', (err2, teamnameresult) => {
                 var teamNames = []
                 for (let teammate of teamnameresult["rows"]){
                     teamNames.push(teammate["UserName"])
