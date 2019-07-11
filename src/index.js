@@ -284,6 +284,7 @@ app.post("/UserHomePage/viewProject", function (req, res) {
             }
             var IDstring = '('
             var i;
+            console.log(teamIDs.length)
             for (i = 0; i < teamIDs.length-2; i++) {
                 IDstring += (teamIDs[i]).toString()
                 IDstring += ','
