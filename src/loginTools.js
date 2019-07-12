@@ -22,7 +22,7 @@ function checkDatabase(req, res, username, password, callback) {
     console.log('1')
     var userPassMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
     userPassMatch.then(function(result) {
-        loginMatch = result.rows["user_pass_match"]
+        loginMatch = result.rows[0]["user_pass_match"]
         callback(req, res, loginMatch)
     })
 }
