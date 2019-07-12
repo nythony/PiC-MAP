@@ -15,7 +15,7 @@ const client = new Client({
 
 client.connect();
 
-const verifyCredentials(req, res, username, password) => {
+const verifyCredentials = (req, res, username, password) => {
     var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');').then()
     console.log('login return: ', loginMatch)
     client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
