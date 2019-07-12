@@ -156,7 +156,6 @@ app.get("/createNewUser", function (req, res) {
 
 // User Home Page GET request
 app.get("/UserHomePage/", function (req, res) {
-    console.log("Cookie: ", req.cookies.userInfo);
     res.render("UserHomePage", { user: req.cookies.userInfo })
 })
 
@@ -352,7 +351,7 @@ app.post("/loginPage/submit", function (req, res) {
     var password = req.body.password
     var toRedirect = '/failedLoginPage'
     var loginMatch = client.user_pass_match(username, password)
-    console.log(loginMatch)
+    console.log('login return: ', loginMatch)
     client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
         if (error2) throw error2 //Should never happen, if anything it returns and stores null
         var storage = []
