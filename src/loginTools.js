@@ -12,6 +12,7 @@ client.connect();
 // verifyCredentials
 // params - req, res from server, as well as username and password input by user
 // uses db stored function "user_pass_match" and performs page redirect based on result
+// this will change, but this is the dead branch version for now
 const verifyCredentials = (req, res, username, password) => {
     var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');').then()
     console.log('login return: ', loginMatch)
