@@ -12,30 +12,8 @@ const locationMessageTemplate = document.querySelector('#location-message-templa
 const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 
 // Options
-const { username, userid, room, chatroomid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
-const autoscroll = () => {
-    // New message element
-    const $newMessage = $messages.lastElementChild
-
-    // Height of the new message
-    const newMessageStyles = getComputedStyle($newMessage)
-    const newMessageMargin = parseInt(newMessageStyles.marginBottom)
-    const newMessageHeight = $newMessage.offsetHeight + newMessageMargin
-
-    // Visible height
-    const visibleHeight = $messages.offsetHeight
-
-    // Height of messages container
-    const containerHeight = $messages.scrollHeight
-
-    // How far down scrolled?
-    const scrollOffset = $messages.scrollTop + visibleHeight
-
-    if (containerHeight - newMessageHeight <= scrollOffset) {
-        $messages.scrollTop = $messages.scrollHeight
-    }
-}
 
 // Definition for message event
 socket.on('message', (message) => {
@@ -53,7 +31,6 @@ socket.on('message', (message) => {
     // $messagese.insertAdjacentHTML('beforebegin')
     // New Messages show up at bottom inside messages div
     $messages.insertAdjacentHTML('beforeend', html)
-    autoscroll()
 })
 
 socket.on('locationMessage', (message) => {
@@ -64,7 +41,6 @@ socket.on('locationMessage', (message) => {
         createdAt: moment(message.createdAt).format('HH:mm:ss')
     })
     $messages.insertAdjacentHTML('beforeend', html)
-    autoscroll()
 })
 
 socket.on('roomData', ({ room, users }) => {
@@ -113,7 +89,7 @@ document.querySelector('#send-location').addEventListener('click', () => {
     })
 })
 
-socket.emit('join', { username, userid, room, chatroomid }, (error) => {
+socket.emit('join', { username, room }, (error) => {
     if (error) {
         alert(error)
         location.href = '/'
