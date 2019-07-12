@@ -17,7 +17,7 @@
         #projects {
             text-align: center;
             margin-top: 50px;
-            font-size: 120%;
+            font-size: 100%;
             font-family: arial;
         }
 
@@ -47,8 +47,7 @@
 
 <body>
     <div id="header">
-        <h1>
-            Welcome
+        <h1>Welcome 
             <script type="text/javascript">
                 var userN = <%- JSON.stringify(user.name) %>;
                 document.write(userN)
@@ -61,32 +60,22 @@
     </div>
     <div id="projects">
         <h1>Your Projects: </h1> &nbsp
-        <script type="text/javascript">
-                var pNames = <%- JSON.stringify(user.projectNames) %>;
-                var pDescs = <%- JSON.stringify(user.projectDescs) %>;
-                for (let i in pNames) {
-                    document.write("<br>"+pNames[i]+" - "+pDescs[i])
-                }
-        </script>
+            <script type="text/javascript">
+                var userP = <%- JSON.stringify(user.projects) %>;
+                document.write(userP)
+            </script>
+
     </div>
+    <div id="newItems">
+        <form action="createProject" method="post">
+            <button type="submit">Create new project</button>
+        </form><br>
     </div>
     <div id="joinExisting">
         <form action="joinProject" method="post">
             <input type="text" name="projectName" placeholder="Project Name"><br>
             <button type="submit">Join Existing Project</button>
         </form>
-    </div>
-
-    <div id="joinExisting">
-        <form action="viewProject" method="post">
-            <input type="text" name="projectName" placeholder="Project Name"><br>
-            <button type="submit">View Project</button>
-        </form>
-    </div>
-    <div id="newItems">
-        <form action="createProject" method="post">
-            <button type="submit">Create new project</button>
-        </form><br>
     </div>
     <div id="chatApp">
         <form action="/chatapp">
