@@ -352,7 +352,6 @@ app.post("/loginPage/submit", function (req, res) {
     var password = req.body.password
     var toRedirect = '/failedLoginPage'
 
-    // adding line so i can commit
     client.query('SELECT "UserName" FROM "User";', (error, results) => {
         if (error) throw error
         for (let row of results.rows) {
