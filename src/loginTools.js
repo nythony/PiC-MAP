@@ -13,8 +13,18 @@ client.connect();
 // params - req, res from server, as well as username and password input by user
 // uses db stored function "user_pass_match" and performs page redirect based on result
 const verifyCredentials = (req, res, username, password) => {
+    checkDatabase(username, password, loginRedirect(loginMatch))
+}
+
+
+
+function checkDatabase(username, password, callback(loginMatch)) {
     var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');').then()
     console.log('login return: ', loginMatch)
+    callback(loginMatch)
+}
+
+function loginRedirect(loginMatch) {
     if (loginMatch == 1) { // successful login
         res.cookie("userInfo",{name:username,})
         res.redirect("/UserHomePage/")
@@ -24,16 +34,8 @@ const verifyCredentials = (req, res, username, password) => {
     else { // loginMatch == 3, username does not exist
         res.redirect("/")
     }
-
-    
-
-
-
-
-
-
-
 }
+
 
 
 module.exports = {
