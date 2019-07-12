@@ -5,6 +5,7 @@ const path = require('path')
 const http = require('http')
 const express = require('express')
 const socketio = require('socket.io')
+*/
 const { Client } = require('pg');
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
@@ -12,7 +13,7 @@ const client = new Client({
     ssl: true,
 });
 client.connect();
-*/
+
 
 const verifyCredentials = (req, res, username, password) => {
     var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');').then()
