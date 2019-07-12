@@ -19,19 +19,17 @@ const verifyCredentials = (req, res, username, password) => {
 
 
 function checkDatabase(req, res, username, password, callback) {
-    console.log('1')
     var userPassMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
     userPassMatch.then(function(result) {
         loginMatch = result.rows[0]["user_pass_match"]
-        callback(req, res, loginMatch)
+        callback(req, res, username, loginMatch)
     })
 }
 
-function loginRedirect(req, res, loginMatch) {
+function loginRedirect(req, res, username,loginMatch) {
     console.log('login return: ', loginMatch)
-    console.log('3')
     if (loginMatch == 1) { // successful login
-        res.cookie("userInfo",{name:username,})
+        res.cookie("userInfo",{name:username})
         res.redirect("/UserHomePage/")
     } else if (loginMatch == 2) { //username exists, bad password
         res.redirect("/")
