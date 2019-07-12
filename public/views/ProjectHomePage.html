@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>PiC-MAP - User Home Page</title>
+    <link rel="icon" href="/img/favicon.png">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        #header {
+            text-align: right;
+            margin-top: 50px;
+            margin-right: 10px;
+            font-size: 100%;
+            font-family: arial;
+        }
+        #team {
+            text-align: right;
+            margin-top: 50px;
+            margin-right: 50px;
+            font-size: 120%;
+            font-family: arial;
+        }
+        #taskTools {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 120%;
+            font-family: arial;
+        }
+        #newItems {
+            text-align: left;
+            margin-top: 50px;
+            margin-left: 50px;
+            font-size: 100%;
+            font-family: arial;
+        }
+        #chatApp {
+            text-align: left;
+            margin-top: 50px;
+            margin-left: 50px;
+            font-size: 100%;
+            font-family: arial;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <h1>
+            <script type="text/javascript">
+                var userN = <%- JSON.stringify(user.name) %>;
+                document.write(userN)
+            </script>
+        </h1>
+        <form action="/loginPage" method="post">
+            <button type="submit">Log Out</button>
+        </form>
+        <form action="/returnToUserHomePage" method="post">
+            <button type="submit">Return to Home Screen</button>
+        </form>
+    </div>
+    <div id="taskTools">
+        <center>
+            <h1>
+            <script type="text/javascript">
+                var projectName = <%- JSON.stringify(user.currProjectName) %>;
+                document.write(projectName)
+            </script>
+            </h1>&nbsp
+            <script type="text/javascript">
+                var taskFormNames = <%- JSON.stringify(user.taskTools) %>;
+                for (let i in taskFormNames) {
+                    document.write("<br>"+taskFormNames[i])
+                }
+            </script>
+        </center>
+    </div>
+    <div id="team">
+        <b><u>Team</u></b>
+        <script type="text/javascript">
+            var team = <%- JSON.stringify(user.teamNames) %>;
+            for (let i in team) {
+                document.write("<br>"+team[i])
+            }
+        </script>
+    </div>
+    <div id="newItems">
+        <form action="createTaskTool" method="post">
+            <button type="submit">Create new Task Tool</button>
+        </form><br>
+    </div>
+    <div id="chatApp">
+        <form action="/chatapp">
+            <input type="hidden" id="username" name="username" placeholder="Display name" required />
+            <script type="text/javascript">
+                document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
+            </script>
+            <input type="hidden" name="room" placeholder="Room" required value="Test">
+            <button>ChatApp</button>
+        </form>
+    </div>
+    <script src="/js/UserHomePage.js"></script>
+</body>
+</html>

@@ -59,7 +59,7 @@ const crudProject = (req, res) => {
     var btnUpdate = req.body.update;
     var btnDelete = req.body.delete;
 
-    var project = req.body.project;
+    var projectName = req.body.project;
     var projectDesc = req.body.projectDetails;
     var userCreate = JSON.stringify(req.cookies.userInfo.userid)
     console.log(userCreate)
@@ -70,31 +70,35 @@ const crudProject = (req, res) => {
     var status = 0;
     if (projectStatus == 'active')
         status = 1;
-    toRedirect = '/';
 
 
     if (btnSubmit) {
         console.log('----------------------------------create project button is clicked--------------------------------')
 
         const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate", "Status") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
-        const values = [project, projectDesc, userCreate, startDate, dueDate, status];
+        const values = [projectName, projectDesc, userCreate, startDate, dueDate, status];
         // callback
         client.query(text, values, (err, res) => {
             if (err) {
                 console.log(err.stack)
             } else {
                 console.log(res.rows[0])
-
             }
             console.log('----------------------------------record is created--------------------------------');
         })
         // add user-project connection to AttachUserP table
-        client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+project+'\';', (err1, projectidresult) => {
+        client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err1, projectidresult) => {
             if (err1) {console.log(err1.stack)}
             const attachValues = [userCreate, projectidresult["rows"][0]["Project_ID"]]
             const attachText = 'INSERT INTO "AttachUserP"("User_ID", "Project_ID") VALUES($1,$2) RETURNING *'
             client.query(attachText, attachValues, (err2, res2) => {
                 if (err2) {console.log(err2.stack)}
+                var newCookie = req.cookies.userInfo
+                newCookie.projects.push(projectidresult["rows"][0]["Project_ID"]) // update cookie from req -> res to add the new project that the user is assigned to
+                newCookie.projectNames.push(projectName)
+                newCookie.projectDescs.push(projectDesc)
+                res.cookie("userInfo", newCookie)
+                res.redirect('/projectForm');
             })
         })
     }

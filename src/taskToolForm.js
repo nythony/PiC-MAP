@@ -63,8 +63,6 @@ const crudTaskTool = (req, res) => {
 
     var projectID = req.body.projectID;
 
-    toRedirect = '/';
-
 
     if (btnSubmit) {
         console.log('----------------------------------create taskTool button is clicked--------------------------------')
@@ -72,16 +70,19 @@ const crudTaskTool = (req, res) => {
         const text = 'INSERT INTO "TaskTool" ("Project_ID", "TaskToolName") VALUES($1, $2) RETURNING *';
         const values = [projectID, taskTool];
         // callback
-        client.query(text, values, (err, res) => {
+        client.query(text, values, (err, results) => {
             if (err) {
                 console.log(err.stack)
             } else {
-                console.log(res.rows[0])
+                console.log(results.rows[0])
 
             }
             console.log('----------------------------------record is created--------------------------------');
+            var newCookie = req.cookies.userInfo
+            newCookie.taskTools.push(taskTool) // update cookie from req -> res to add the new task to the cookie
+            res.cookie("userInfo", newCookie)
+            res.redirect('/taskToolForm')
         })
-
     }
 
     if (btnUpdate) {
