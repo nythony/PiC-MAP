@@ -20,12 +20,11 @@ const verifyCredentials = (req, res, username, password) => {
 
 function checkDatabase(req, res, username, password, callback) {
     console.log('1')
-    var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
-    loginMatch.then(function(result) {
-        console.log(result) //
+    var userPassMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
+    userPassMatch.then(function(result) {
+        loginMatch = result.rows["user_pass_match"]
+        callback(req, res, loginMatch)
     })
-    console.log('2')
-    callback(req, res, loginMatch)
 }
 
 function loginRedirect(req, res, loginMatch) {
