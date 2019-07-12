@@ -350,7 +350,7 @@ app.post("/loginPage/submit", function (req, res) {
     var username = req.body.username
     var password = req.body.password
     var toRedirect = '/failedLoginPage'
-    var loginMatch = client.user_pass_match(username, password)
+    var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
     console.log('login return: ', loginMatch)
     client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
         if (error2) throw error2 //Should never happen, if anything it returns and stores null
