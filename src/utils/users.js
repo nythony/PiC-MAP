@@ -1,9 +1,11 @@
 const users = []
 
-const addUser = ({ id, username, room }) => {
+const addUser = ({ id, username, userid, room, chatroomid }) => {
     // Clean the data
-    username = username.trim().toLowerCase()
-    room = room.trim().toLowerCase()
+    // username = username.trim().toLowerCase()
+    // room = room.trim().toLowerCase()
+    // userid = userid.trim().toLowerCase()
+    // chatroomid = chatroomid.trim().toLowerCase()
 
     // Validate the data
     if (!username || !room) {
@@ -25,7 +27,7 @@ const addUser = ({ id, username, room }) => {
     }
 
     // Store user
-    const user = { id, username, room }
+    const user = { id, username, userid, room, chatroomid }
     users.push(user)
     return { user }
 }
@@ -43,7 +45,7 @@ const getUser = (id) => {
 }
 
 const getUsersInRoom = (room) => {
-    room = room.trim().toLowerCase()
+    // room = room.trim().toLowerCase()
     return users.filter((user) => user.room === room)
 }
 
