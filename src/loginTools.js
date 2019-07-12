@@ -1,11 +1,6 @@
 // Login Tools
 
-/*
-const path = require('path')
-const http = require('http')
-const express = require('express')
-const socketio = require('socket.io')
-*/
+// Establish db connection from within loginTools
 const { Client } = require('pg');
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
@@ -14,7 +9,9 @@ const client = new Client({
 });
 client.connect();
 
-
+// verifyCredentials
+// params - req, res from server, as well as username and password input by user
+// uses db stored function "user_pass_match" and performs page redirect based on result
 const verifyCredentials = (req, res, username, password) => {
     var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');').then()
     console.log('login return: ', loginMatch)
