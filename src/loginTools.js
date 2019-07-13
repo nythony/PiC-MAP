@@ -44,8 +44,8 @@ const verifyCredentials = (req, res, username, password) => {
                         pNames.push(project["ProjectName"])
                         pDescs.push(project["ProjectDesc"])
                     }
-                    res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], pass:password, projects: storage, projectNames: pNames, 
-                        projectDescs: pDescs, chatname: "TestingChatroom", chatroomid: 1, currProjectID: 0, currProjectName: null, taskTools: []});
+                    res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], chatname: "TestingChatroom", chatroomid: 1, pass:password, projects: storage, projectNames: pNames, 
+                        projectDescs: pDescs, currProjectID: 0, currProjectName: null, taskTools: []});
                     toRedirect = '/UserHomePage/'
                     res.redirect(toRedirect)
                 })
