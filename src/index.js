@@ -64,6 +64,9 @@ io.on('connection', (socket) => {
 
     socket.on('join', ({ username, userid, room, chatroomid }, callback) => {
         const { error, user} = addUser({ id: socket.id, username, userid, room, chatroomid })
+        
+        // DIEGO - I added this temporarily as it didn't seem like the chatapp was getting a chatroomid
+        user.chatroomid = 1
 
         if (error) {
             return callback(error)
