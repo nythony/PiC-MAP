@@ -71,6 +71,8 @@ io.on('connection', (socket) => {
 
         socket.join(user.room)
 
+        user.chatroomid = 1
+
         // Display only to connection
         client.query('SELECT * FROM "ChatMessage" AS t1 RIGHT JOIN "User" AS t2 ON t1."User_ID" = t2."User_ID" LEFT JOIN "ChatRoom" AS t3 ON t1."ChatRoom_ID" = t3."ChatRoom_ID" WHERE t3."ChatRoom_ID" = \'' + user.chatroomid + '\';', (error, results) => {
             for (let foo of results.rows) {
