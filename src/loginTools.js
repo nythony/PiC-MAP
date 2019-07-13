@@ -14,8 +14,8 @@ client.connect();
 // uses db stored function "user_pass_match" and performs page redirect based on result
 const verifyCredentials = (req, res, username, password) => {
     //checkDatabase(req, res, username, password, loginRedirect)
-    var userPassMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
-    userPassMatch.then(function(result) {
+    var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
+    loginMatch.then(function(result) {
         loginMatch = result.rows[0]["user_pass_match"]
     })
     console.log('login return: ', loginMatch)
