@@ -52,7 +52,6 @@ socket.on('message', (message) => {
     // New Messages show up before messages div
     // $messagese.insertAdjacentHTML('beforebegin')
     // New Messages show up at bottom inside messages div
-    $messages.html('')
     $messages.insertAdjacentHTML('beforeend', html)
     autoscroll()
 })
