@@ -56,9 +56,10 @@ socket.on('message', (message) => {
     autoscroll()
 })
 
-socket.on('redirect', function(destination) {
-    window.location.href = destination;
-});
+// We can use this for redirecting!
+// socket.on('redirect', function(destination) {
+//     window.location.href = destination;
+// });
 
 socket.on('locationMessage', (message) => {
     console.log(message)
