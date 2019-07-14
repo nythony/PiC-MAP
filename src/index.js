@@ -139,7 +139,7 @@ io.on('connection', (socket) => {
 
     // When a user enters a projecthomepage
     socket.on('enterProjectHomePage',  ({username, userid, projectname, projectid}, callback) => {
-        const { error, user} = addUser({ id: socket.id, username, userid, projectname, projectid })
+        const { error, user} = addUserToProjectHomePage({ id: socket.id, username, userid, projectname, projectid })
         if (error) {
             return callback(error)
         }
@@ -188,7 +188,6 @@ app.get("/UserHomePage/", function (req, res) {
 
 // Project Home Page GET request
 app.get("/ProjectHomePage/", function (req, res) {
-    console.log("Cookie: ", req.cookies.userInfo);
     res.render("ProjectHomePage", { user: req.cookies.userInfo})
 })
 
