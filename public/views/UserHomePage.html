@@ -59,18 +59,6 @@
             <button type="submit">Log Out</button>
         </form>
     </div>
-    <div id="projects">
-        <h1>Your Projects: </h1> &nbsp
-        <script type="text/javascript">
-                var pNames = <%- JSON.stringify(user.projectNames) %>;
-                var pDescs = <%- JSON.stringify(user.projectDescs) %>;
-                for (let i in pNames) {
-                    document.write("<br>"+pNames[i]+" - "+pDescs[i])
-                }
-        </script>
-
-    </div>
-    </div>
     <div id="joinExisting">
         <form action="joinProject" method="post">
             <input type="hidden" id="username" name="username" required />
