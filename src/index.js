@@ -108,7 +108,7 @@ io.on('connection', (socket) => {
             console.log('----------------------------------record is created--------------------------------')
         })
         io.to(user.room).emit('message', generateMessage(user.username, message))
-        var destination = ('/loginPage.html')
+        var destination = ('/loginPage')
         io.to(user.room).emit('redirect', destination)
         callback()
     })
@@ -208,6 +208,8 @@ app.get("/chatapp", function (req, res) {
     // req.query.room = "Test"
     res.sendFile(publicDirectoryPath + "views/chatApp.html")
 })
+
+
 
 // Signin page for chatApp (Must be updated)
 app.get("/chatSignIn", function (req, res) {
