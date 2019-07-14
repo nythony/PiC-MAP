@@ -145,7 +145,7 @@ io.on('connection', (socket) => {
 
         // Display only to connection
         client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
-            const projectid = projectidresult["rows"][0]["Project_ID"]
+            const projectidVP = projectidresult["rows"][0]["Project_ID"]
             client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => {
                 for (let foo of tasktoolresult.rows) {
                     console.log("SENDING: ", foo["TaskToolName"])
