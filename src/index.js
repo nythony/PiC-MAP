@@ -155,10 +155,10 @@ app.get("/failedLoginPage", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/failedLoginPage.html")
 })
 
-// When createNewUser is loaded - sends createNewUser.html
-app.get("/createNewUser", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/createNewUser.html")
-})
+// When createNewUser is loaded - sends createNewUser.html --DELETE
+// app.get("/createNewUser", function (req, res) {
+//     res.sendFile(publicDirectoryPath + "views/createNewUser.html")
+// })
 
 // User Home Page GET request
 app.get("/UserHomePage/", function (req, res) {
@@ -226,25 +226,25 @@ app.post("/UserHomePage/chatapp", function (req, res) {
 
 // App.post stuff
 
-// When user wants to navigate to create new user page - redirects to createNewUser
-app.post("/loginPage/createNewUser", function (req, res) {
-    res.redirect('/createNewUser')
-})
+// When user wants to navigate to create new user page - redirects to createNewUser --DELETE
+// app.post("/loginPage/createNewUser", function (req, res) {
+//     res.redirect('/createNewUser')
+// })
 
-// For use when logging out
-app.post("/loginPage", function (req, res) {
-    res.redirect('/loginPage')
-})
+// // For use when logging out
+// app.post("/loginPage", function (req, res) {
+//     res.redirect('/loginPage')
+// })
 
-// When user wants to navigate to create new user page from failedLoginPage - redirects to createNewUser
+// When user wants to navigate to create new user page from failedLoginPage - redirects to createNewUser --EDIT THEN DELETE
 app.post("/failedLoginPage/createNewUser", function (req, res) {
     res.redirect('/createNewUser')
 })
 
-// When user wants to navigate to login page from createNewUser - redirects to loginPage
-app.post("/createNewUser/login", function (req, res) {
-    res.redirect('/loginPage')
-})
+// When user wants to navigate to login page from createNewUser - redirects to loginPage --DELETE
+// app.post("/createNewUser/login", function (req, res) {
+//     res.redirect('/loginPage')
+// })
 
 // When user wants to navigate to projectForm page from UserHomePage
 app.post("/UserHomePage/createProject", function (req, res) {
