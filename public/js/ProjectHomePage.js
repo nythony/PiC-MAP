@@ -19,7 +19,7 @@ const $taskTools = document.querySelector('#taskTools')
 const taskToolsTemplate = document.querySelector('#taskTools-template').innerHTML
 
 
-// Get user data stored in cookie
+// Get user data
 const { username, userid, room, chatroomid, projectname, projectid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 console.log("user: ", username)
 console.log("projectname: ", projectname)
