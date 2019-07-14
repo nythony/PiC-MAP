@@ -58,8 +58,18 @@
         <form action="/loginPage" method="post">
             <button type="submit">Log Out</button>
         </form>
+    </div>
     <div id="joinExisting">
         <form action="joinProject" method="post">
+            <input type="hidden" id="usernameJP" name="usernameJP" required />
+            <input type="hidden" id="useridJP" name="useridJP" required />
+            <input type="hidden" id="projectidJP" name="chatroomidJP" required />
+            <input type="text" id="projectNameJP" name="projectNameJP" placeholder="Project Name"><br>
+            <script type="text/javascript">
+                document.getElementById('usernameJP').value = <%- JSON.stringify(user.name) %>;
+                document.getElementById('useridJP').value = <%- JSON.stringify(user.userid) %>;
+                document.getElementById('projectidJP').value = <%- JSON.stringify(user.chatroomid) %>;
+            </script>
             <button type="submit">Join Existing Project</button>
         </form>
     </div>
@@ -68,8 +78,8 @@
         <form action="viewProject" method="post">
             <input type="hidden" id="usernameVP" name="usernameVP" required />
             <input type="hidden" id="useridVP" name="useridVP" required />
-            <input type="hidden" id="projectidVP" name="projectid" required />
-            <input type="text" name="projectName" placeholder="Project Name"><br>
+            <input type="hidden" id="projectidVP" name="projectidVP" required />
+            <input type="text" id="projectNameVP" name="projectNameVP" placeholder="Project Name"><br>
             <script type="text/javascript">
                 document.getElementById('usernameVP').value = <%- JSON.stringify(user.name) %>;
                 document.getElementById('useridVP').value = <%- JSON.stringify(user.userid) %>;
