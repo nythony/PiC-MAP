@@ -20,9 +20,9 @@ const taskToolsTemplate = document.querySelector('#taskTools-template').innerHTM
 
 
 // Get user data
-const { username, userid, room, chatroomid, projectname, projectid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
-console.log("user: ", username)
-console.log("projectname: ", projectname)
+const { usernameVP, useridVP, room, chatroomid, projectnameVP, projectidVP } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+console.log("user: ", usernameVP)
+console.log("projectname: ", projectnameVP)
 
 // Definition for task tool event
 socket.on('taskTool', (newTaskTool) => {
