@@ -144,9 +144,9 @@ io.on('connection', (socket) => {
         socket.join(user.projectNameVP)
 
         // Display only to connection
-        client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
-            const projectidVP = projectidresult["rows"][0]["Project_ID"]
-            client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => {
+        client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectNameVP+'\';', (err, projectidresult) => { // get project ID of input project
+            const projectid = projectidresult["rows"][0]["Project_ID"]
+            client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectid+';', (err3, tasktoolresult) => { // get all task tools for that project ID
                 for (let foo of tasktoolresult.rows) {
                     console.log("SENDING: ", foo["TaskToolName"])
                     socket.emit('taskTool', generateTaskTool(foo["TaskToolName"]))
