@@ -222,7 +222,7 @@ app.get("/ProjectHomePage/", function (req, res) {
                     }
                     newCookie["taskTools"] = taskToolNames
                     res.cookie("userInfo", newCookie)
-                    res.redirect('/ProjectHomePage')
+                    res.sendFile('/ProjectHomePage')
                 })
             })
         })
