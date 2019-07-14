@@ -8,8 +8,8 @@ const addUserToProjectHomePage = ({ id, username, userid, projectname, projectid
     // userid = userid.trim().toLowerCase()
     // chatroomid = chatroomid.trim().toLowerCase()
 
-    console.log(username)
-    console.log(projectname)
+    console.log("USERNAME", username)
+    console.log("PROJECTNAME", projectname)
     // Validate the data
     if (!username || !projectname) {
         return {
