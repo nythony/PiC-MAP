@@ -108,7 +108,8 @@ io.on('connection', (socket) => {
             console.log('----------------------------------record is created--------------------------------')
         })
         io.to(user.room).emit('message', generateMessage(user.username, message))
-        res.redirect('/loginPage')
+        var destination = ('/loginPage.html')
+        io.to(user.room).emit('redirect', destination)
         callback()
     })
 

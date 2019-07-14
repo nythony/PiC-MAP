@@ -56,6 +56,10 @@ socket.on('message', (message) => {
     autoscroll()
 })
 
+socket.on('redirect', function(destination) {
+    window.location.href = destination;
+});
+
 socket.on('locationMessage', (message) => {
     console.log(message)
     const html = Mustache.render(locationMessageTemplate, {
