@@ -75,6 +75,8 @@ io.on('connection', (socket) => {
 
         socket.join(user.room)
 
+        user.chatroomid = 1
+
         // Display only to connection
         client.query('SELECT * FROM "ChatMessage" AS t1 RIGHT JOIN "User" AS t2 ON t1."User_ID" = t2."User_ID" LEFT JOIN "ChatRoom" AS t3 ON t1."ChatRoom_ID" = t3."ChatRoom_ID" WHERE t3."ChatRoom_ID" = \'' + user.chatroomid + '\';', (error, results) => {
             for (let foo of results.rows) {
@@ -110,6 +112,9 @@ io.on('connection', (socket) => {
             console.log('----------------------------------record is created--------------------------------')
         })
         io.to(user.room).emit('message', generateMessage(user.username, message))
+        // We can use this below for redirecting!
+        // var destination = ('/loginPage')
+        // io.to(user.room).emit('redirect', destination)
         callback()
     })
 
@@ -207,6 +212,8 @@ app.get("/chatapp", function (req, res) {
     // req.query.room = "Test"
     res.sendFile(publicDirectoryPath + "views/chatApp.html")
 })
+
+
 
 // Signin page for chatApp (Must be updated)
 app.get("/chatSignIn", function (req, res) {
