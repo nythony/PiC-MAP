@@ -148,8 +148,7 @@ io.on('connection', (socket) => {
         // Display only to connection
         client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => {
             for (let foo of tasktoolresult.rows) {
-            //console.log(foo["Message"])
-            //console.log("we're here")
+                console.log("SENDING: ", foo["TaskToolName"])
                 socket.emit('taskTool', generateTaskTool(foo["TaskToolName"]))
             }
         })
