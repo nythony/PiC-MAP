@@ -12,7 +12,7 @@ const url = require('url')
 // Importing all things from other parts of project
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
-const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjectHomePage, getAllUsersInProjectHomePage } = requre('./utils/usersAtProjectHomePage')
+const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjectHomePage, getAllUsersInProjectHomePage } = require('./utils/usersAtProjectHomePage')
 const { generateTaskTool } = require('./utils/taskTools')
 const project = require('./projectForm.js')
 const requirement = require('./requirementForm.js')
