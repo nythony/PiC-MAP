@@ -136,7 +136,9 @@ io.on('connection', (socket) => {
     })
 
     // When a user enters a projecthomepage
-    socket.on('enterProjectHomePage',  ({username, userid, projectname, projectid}, callback) => {
+    socket.on('enterProjectHomePage',  ({usernameVP, userid, projectname, projectid}, callback) => {
+        console.log("USERNAME  ", username)
+        console.log("PROJECTNAME  ", projectname)
         const { error, user} = addUserToProjectHomePage({ id: socket.id, username, userid, projectname, projectid })
         if (error) {
             return callback(error)
