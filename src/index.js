@@ -215,7 +215,7 @@ app.get("/ProjectHomePage/", function (req, res) {
                 newCookie["teamIDs"] = teamIDs
                 newCookie["teamNames"] = teamNames
                 res.cookie("userInfo", newCookie)
-                res.query.projectidVP = projectid
+                req.query.projectidVP = projectid
                 res.sendFile(publicDirectoryPath + "views/ProjectHomePage.html")
             })
         })
