@@ -137,8 +137,6 @@ io.on('connection', (socket) => {
 
     // When a user enters a projecthomepage
     socket.on('enterProjectHomePage',  ({usernameVP, useridVP, projectNameVP, projectidVP}, callback) => {
-        console.log("USERNAME  ", usernameVP)
-        console.log("PROJECTNAME  ", projectNameVP)
         const { error, user} = addUserToProjectHomePage({ id: socket.id, usernameVP, useridVP, projectNameVP, projectidVP })
         if (error) {
             return callback(error)
@@ -216,15 +214,9 @@ app.get("/ProjectHomePage/", function (req, res) {
                 }
                 newCookie["teamIDs"] = teamIDs
                 newCookie["teamNames"] = teamNames
-                client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectid+';', (err3, tasktoolresult) => {
-                    var taskToolNames = []
-                    for (let tTool of tasktoolresult["rows"]) {
-                        taskToolNames.push(tTool["TaskToolName"])
-                    }
-                    newCookie["taskTools"] = taskToolNames
-                    res.cookie("userInfo", newCookie)
-                    res.sendFile(publicDirectoryPath + "views/ProjectHomePage.html")
-                })
+                res.cookie("userInfo", newCookie)
+                res.query.projectidVP = projectid
+                res.sendFile(publicDirectoryPath + "views/ProjectHomePage.html")
             })
         })
     })
