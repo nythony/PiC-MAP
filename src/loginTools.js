@@ -18,8 +18,11 @@ const verifyCredentials = (req, res, username, password) => {
     loginMatch.then(function(result) {
         loginMatch = result.rows[0]["user_pass_match"]
         if (loginMatch == 1) { // successful login
-            res.cookie("userInfo",{name:username})
-            res.redirect("/UserHomePage/")
+            client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
+                var thisUserID = userid: useridresult["rows"][0]["User_ID"]
+                res.cookie("userInfo",{name:username, userid: thisUserID, chatName: "TestingChatroom", chatroomid: 1})
+                res.redirect("/UserHomePage/")
+            }
         } else if (loginMatch == 2) { //username exists, bad password
             res.redirect("/")
         }

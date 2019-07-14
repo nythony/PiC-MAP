@@ -12,6 +12,8 @@ const url = require('url')
 // Importing all things from other parts of project
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
+const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjectHomePage, getAllUsersInProjectHomePage } = requre('./utils/usersAtProjectHomePage')
+const { generateTaskTool } = require('./utils/taskTools')
 const project = require('./projectForm.js')
 const requirement = require('./requirementForm.js')
 const task = require('./taskForm.js')
@@ -33,7 +35,6 @@ app.engine('.html', require('ejs').__express);
 app.set('view engine', 'html');
 const server = http.createServer(app)
 const io = socketio(server)
-const projectHomePageIO = socketio(server)
 const port = process.env.PORT || 3000; //Talk to browser through this port
 const publicDirectoryPath = path.join(__dirname, '../public/')
 app.use(express.static(publicDirectoryPath))
@@ -66,8 +67,6 @@ io.on('connection', (socket) => {
     socket.on('join', ({ username, userid, room, chatroomid }, callback) => {
         const { error, user} = addUser({ id: socket.id, username, userid, room, chatroomid })
         
-        // DIEGO - I added this temporarily as it didn't seem like the chatapp was getting a chatroomid
-        user.chatroomid = 1
 
         if (error) {
             return callback(error)
@@ -136,6 +135,25 @@ io.on('connection', (socket) => {
                 users: getUsersInRoom(user.room)
             })
         }
+    })
+
+    // When a user enters a projecthomepage
+    socket.on('enterProjectHomePage',  ({username, userid, projectname, projectid}, callback) => {
+        const { error, user} = addUser({ id: socket.id, username, userid, projectname, projectid })
+        if (error) {
+            return callback(error)
+        }
+        socket.join(user.projectname)
+
+        // Display only to connection
+        client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectid+';', (err3, tasktoolresult) => {
+            for (let foo of tasktoolresult.rows) {
+            //console.log(foo["Message"])
+            //console.log("we're here")
+                socket.emit('taskTool', generateTaskTool(foo["TaskToolName"]))
+            }
+        })
+        callback()
     })
 })
 
@@ -315,9 +333,8 @@ app.post("/UserHomePage/viewProject", function (req, res) {
     client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
         var newCookie = req.cookies.userInfo
         const projectid = projectidresult["rows"][0]["Project_ID"]
-        newCookie.currProjectID = projectid // update cookie for the input project
-        newCookie.currProjectName = projectName
-        console.log('projectid: ', projectid)
+        newCookie["currProjectID"] = projectName
+        newCookie["currProjectID"] = projectid // update cookie for the input project
         client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
             var teamIDs = []
             for (let teammate of teamIDresult["rows"]){

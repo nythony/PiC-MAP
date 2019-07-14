@@ -1,6 +1,7 @@
-const users = []
+const projectHomePageUsers = []
 
-const addUser = ({ id, username, userid, room, chatroomid }) => {
+
+const addUserToProjectHomePage = ({ id, username, userid, projectname, projectid }) => {
     // Clean the data
     // username = username.trim().toLowerCase()
     // room = room.trim().toLowerCase()
@@ -8,15 +9,15 @@ const addUser = ({ id, username, userid, room, chatroomid }) => {
     // chatroomid = chatroomid.trim().toLowerCase()
 
     // Validate the data
-    if (!username || !room) {
+    if (!username || !projectname) {
         return {
-            error: 'Username and room are required!'
+            error: 'Username and project name are required!'
         }
     }
 
     // Check for existing user
-    const existingUser = users.find((user) => {
-        return user.room === room && user.username === username
+    const existingUser = projectHomePageUsers.find((user) => {
+        return projectHomePageUsers.projectname === projectname && projectHomePageUsers.username === username
     })
 
     // Validate username
@@ -27,12 +28,12 @@ const addUser = ({ id, username, userid, room, chatroomid }) => {
     }
 
     // Store user
-    const user = { id, username, userid, room, chatroomid }
-    users.push(user)
+    const user = { id, username, userid, projectname, projectid }
+    projectHomePageUsers.push(user)
     return { user }
 }
 
-const removeUser = (id) => {
+const removeUserFromProjectHomePage = (id) => {
     const index = users.findIndex((user) => user.id === id)
 
     if (index !== -1) {
@@ -40,24 +41,21 @@ const removeUser = (id) => {
     }
 }
 
-const getUser = (id) => {
+const getUserInProjectHomePage = (id) => {
     return users.find((user) => user.id === id)
 }
 
 
 
 
-const getUsersInRoom = (room) => {
+const getAllUsersInProjectHomePage = (room) => {
     // room = room.trim().toLowerCase()
     return users.filter((user) => user.room === room)
 }
 
-
-
-
 module.exports = {
-    addUser,
-    removeUser,
-    getUser,
-    getUsersInRoom,
+    addUserToProjectHomePage,
+    removeUserFromProjectHomePage,
+    getUserInProjectHomePage,
+    getAllUsersInProjectHomePage,
 }

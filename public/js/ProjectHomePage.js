@@ -18,8 +18,8 @@ const $taskTools = document.querySelector('#taskTools')
 const taskToolsTemplate = document.querySelector('#taskTools-template').innerHTML
 
 
-// Options
-const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+// Get user data stored in cookie
+const { username, userid, room, chatroomid, projectname, projectid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
 
 // Definition for task tool event
@@ -53,7 +53,7 @@ $taskToolForm.addEventListener('submit', (e) => {
 })
 
 
-socket.emit('enterProjectHomePage', { username, room }, (error) => {
+socket.emit('enterProjectHomePage', { username, userid, projectname, projectid }, (error) => {
     if (error) {
         alert(error)
         location.href = '/'
