@@ -185,7 +185,7 @@ app.get("/UserHomePage/", function (req, res) {
 
 // Project Home Page GET request
 app.get("/ProjectHomePage/", function (req, res) {
-    console.log("query1: ", req.query)
+    console.log("query0: ", req.query)
     var projectName = req.query.projectNameVP
     console.log("projectname: ", projectName)
     client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
@@ -216,6 +216,7 @@ app.get("/ProjectHomePage/", function (req, res) {
                 newCookie["teamNames"] = teamNames
                 res.cookie("userInfo", newCookie)
                 req.query.projectidVP = projectid
+                console.log("query1: ", req.query)
                 res.sendFile(publicDirectoryPath + "views/ProjectHomePage.html")
             })
         })
