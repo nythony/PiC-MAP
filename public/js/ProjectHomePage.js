@@ -27,9 +27,9 @@ console.log("projectname: ", projectNameVP)
 // Definition for task tool event
 socket.on('taskTool', (newTaskTool) => {
     const html = Mustache.render(taskToolsTemplate, {
-        tasktoolname: newTaskTool.taskToolName,
-        console.log("rendering: ", tasktoolname)
+        tasktoolname: newTaskTool.taskToolName
     })
+    console.log("rendering: ", tasktoolname)
     taskTools.insertAdjacentHTML('beforeend', html)
 })
 
