@@ -136,17 +136,17 @@ io.on('connection', (socket) => {
     })
 
     // When a user enters a projecthomepage
-    socket.on('enterProjectHomePage',  ({usernameVP, userid, projectname, projectid}, callback) => {
+    socket.on('enterProjectHomePage',  ({usernameVP, useridVP, projectNameVP, projectidVP}, callback) => {
         console.log("USERNAME  ", usernameVP)
-        console.log("PROJECTNAME  ", projectname)
-        const { error, user} = addUserToProjectHomePage({ id: socket.id, usernameVP, userid, projectname, projectid })
+        console.log("PROJECTNAME  ", projectNameVP)
+        const { error, user} = addUserToProjectHomePage({ id: socket.id, usernameVP, useridVP, projectNameVP, projectidVP })
         if (error) {
             return callback(error)
         }
-        socket.join(user.projectname)
+        socket.join(user.projectNameVP)
 
         // Display only to connection
-        client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectid+';', (err3, tasktoolresult) => {
+        client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => {
             for (let foo of tasktoolresult.rows) {
             //console.log(foo["Message"])
             //console.log("we're here")
