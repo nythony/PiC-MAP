@@ -326,7 +326,7 @@ app.post("/UserHomePage/joinProject", function (req, res) {
 // TEMPORARY
 // When user clicks button to view a project
 app.post("/UserHomePage/viewProject", function (req, res) {
-    var projectName = req.body.projectName
+    var projectName = req.body.projectNameVP
     client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
         var newCookie = req.cookies.userInfo
         const projectid = projectidresult["rows"][0]["Project_ID"]
@@ -334,7 +334,7 @@ app.post("/UserHomePage/viewProject", function (req, res) {
         newCookie["currProjectID"] = projectid // update cookie for the input project
         client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
             var teamIDs = []
-            for (let teammate of teamIDresult["rows"]){
+            for (let teammate of teamIDresult["rows"]) {
                 teamIDs.push(teammate["User_ID"]) // get the IDs of the users associated with this project
             }
             var IDstring = '('
