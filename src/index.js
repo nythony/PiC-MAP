@@ -325,7 +325,7 @@ app.post("/UserHomePage/joinProject", function (req, res) {
 
 // TEMPORARY
 // When user clicks button to view a project
-app.post("/UserHomePage/ProjectHomePage", function (req, res) {
+app.post("/ProjectHomePage", function (req, res) {
     console.log("query: ", req.query)
     var projectName = req.body.projectNameVP
     client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
