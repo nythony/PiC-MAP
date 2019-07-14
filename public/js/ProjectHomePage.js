@@ -20,7 +20,8 @@ const taskToolsTemplate = document.querySelector('#taskTools-template').innerHTM
 
 // Get user data stored in cookie
 const { username, userid, room, chatroomid, projectname, projectid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
-
+console.log("user: ", username)
+console.log("projectname: ", projectname)
 
 // Definition for task tool event
 socket.on('taskTool', (newTaskTool) => {
