@@ -55,7 +55,7 @@ $taskToolForm.addEventListener('submit', (e) => {
 })
 
 
-socket.emit('enterProjectHomePage', { usernameVP, useridVP, projectnameVP, projectidVP }, (error) => {
+socket.emit('enterProjectHomePage', { usernameVP, useridVP, projectNameVP, projectidVP }, (error) => {
     console.log("ENTER PROJECT EVENT")
     if (error) {
         alert(error)
