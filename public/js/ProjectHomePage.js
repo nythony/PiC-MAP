@@ -1,5 +1,6 @@
 // ProjectHomePage socket.io
 
+console.log("running ProjectHomePage.js")
 const socket = io()
 
 // Elements
@@ -55,6 +56,7 @@ $taskToolForm.addEventListener('submit', (e) => {
 
 
 socket.emit('enterProjectHomePage', { username, userid, projectname, projectid }, (error) => {
+    console.log("ENTER PROJECT EVENT")
     if (error) {
         alert(error)
         location.href = '/'
