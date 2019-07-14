@@ -326,7 +326,7 @@ app.post("/UserHomePage/joinProject", function (req, res) {
 // TEMPORARY
 // When user clicks button to view a project
 app.post("/UserHomePage/viewProject", function (req, res) {
-    console.log(req.query)
+    console.log("query: ", req.query)
     var projectName = req.body.projectNameVP
     client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
         var newCookie = req.cookies.userInfo
