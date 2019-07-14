@@ -187,7 +187,7 @@ app.get("/UserHomePage/", function (req, res) {
 // Project Home Page GET request
 app.get("/ProjectHomePage/", function (req, res) {
     console.log("query: ", req.query)
-    var projectName = req.body.projectNameVP
+    var projectName = req.query.projectNameVP
     client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
         var newCookie = req.cookies.userInfo
         const projectid = projectidresult["rows"][0]["Project_ID"]
@@ -362,6 +362,7 @@ app.post("/UserHomePage/joinProject", function (req, res) {
 })
 
 
+/* I DON'T THINK THIS POST IS EVER CALLED !
 // TEMPORARY
 // When user clicks button to view a project
 app.post("/UserHomePage/ProjectHomePage", function (req, res) {
@@ -406,6 +407,7 @@ app.post("/UserHomePage/ProjectHomePage", function (req, res) {
         })
     })
 })
+*/
 
 
 // When user attempts to sign in
