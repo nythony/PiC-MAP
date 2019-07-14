@@ -20,9 +20,9 @@ const taskToolsTemplate = document.querySelector('#taskTools-template').innerHTM
 
 
 // Get user data
-const { usernameVP, useridVP, room, chatroomid, projectnameVP, projectidVP } = Qs.parse(location.search, { ignoreQueryPrefix: true })
-console.log("user: ", usernameVP)
-console.log("projectname: ", projectnameVP)
+const { usernameVP, useridVP, room, chatroomid, projectNameVP, projectidVP } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+console.log("user: ", usernameVP)   
+console.log("projectname: ", projectNameVP)
 
 // Definition for task tool event
 socket.on('taskTool', (newTaskTool) => {
@@ -55,7 +55,7 @@ $taskToolForm.addEventListener('submit', (e) => {
 })
 
 
-socket.emit('enterProjectHomePage', { username, userid, projectname, projectid }, (error) => {
+socket.emit('enterProjectHomePage', { usernameVP, useridVP, projectnameVP, projectidVP }, (error) => {
     console.log("ENTER PROJECT EVENT")
     if (error) {
         alert(error)
