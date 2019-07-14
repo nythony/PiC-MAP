@@ -148,7 +148,7 @@ io.on('connection', (socket) => {
             const projectid = projectidresult["rows"][0]["Project_ID"]
             client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectid+';', (err3, tasktoolresult) => { // get all task tools for that project ID
                 for (let foo of tasktoolresult.rows) {
-                    console.log('emitting taskTool to :', socket)
+                    console.log('emitting taskTool to :', socket.id)
                     socket.emit('taskTool', generateTaskTool(foo["TaskToolName"]))
                 }
             })
