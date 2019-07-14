@@ -33,6 +33,7 @@ app.engine('.html', require('ejs').__express);
 app.set('view engine', 'html');
 const server = http.createServer(app)
 const io = socketio(server)
+const projectHomePageIO = socketio(server)
 const port = process.env.PORT || 3000; //Talk to browser through this port
 const publicDirectoryPath = path.join(__dirname, '../public/')
 app.use(express.static(publicDirectoryPath))
@@ -132,7 +133,6 @@ io.on('connection', (socket) => {
         }
     })
 })
-
 
 
 // App.get stuff

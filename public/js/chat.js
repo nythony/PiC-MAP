@@ -14,7 +14,7 @@ const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 // Options
 const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
-
+currMessages = []
 // Definition for message event
 socket.on('message', (message) => {
     console.log(message)

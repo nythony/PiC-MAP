@@ -29,6 +29,9 @@ const verifyCredentials = (req, res, username, password) => {
     })
 }
 
+
+// CALLBACK EXAMPLE
+
 /*
 function checkDatabase(req, res, username, password, callback) {
     var userPassMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
