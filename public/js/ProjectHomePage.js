@@ -29,6 +29,7 @@ socket.on('taskTool', (newTaskTool) => {
     const html = Mustache.render(taskToolsTemplate, {
         name: newTaskTool.name,
     })
+    console.log("rendering: ", html)
     taskTools.insertAdjacentHTML('beforeend', html)
 })
 
