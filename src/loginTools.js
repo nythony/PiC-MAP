@@ -22,7 +22,7 @@ const verifyCredentials = (req, res, username, password) => {
                 var thisUserID = useridresult["rows"][0]["User_ID"]
                 res.cookie("userInfo",{name:username, userid: thisUserID, chatName: "TestingChatroom", chatroomid: 1})
                 res.redirect("/UserHomePage/")
-            }
+            })
         } else if (loginMatch == 2) { //username exists, bad password
             res.redirect("/")
         }
