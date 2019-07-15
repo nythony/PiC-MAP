@@ -13,51 +13,52 @@ client.connect();
 // params - req, res from server, as well as username and password input by user
 // uses db stored function "user_pass_match" and performs page redirect based on result
 const verifyCredentials = (req, res, username, password) => {
-    var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');').then()
-    console.log('login return: ', loginMatch)
-    client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
-        if (error2) throw error2 //Should never happen, if anything it returns and stores null
-        var storage = []
-        for (let obj of results2.rows) {
-            storage.push(obj["Project_ID"])
-        }
-        client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
-            client.query('SELECT "Project_ID" FROM "User" as Ur RIGHT JOIN "AttachUserP" AS Ap ON Ap."User_ID" = Ur."User_ID" WHERE Ur."UserName" = \'' + username + '\';', (error2, results2) => {
-                if (error2) throw error2 //Should never happen, if anything it returns and stores null
-                var storage = []
-                for (let obj of results2.rows){
-                    storage.push(obj["Project_ID"])
-                }
-                var IDstring = '('
-                var i;
-                for (i = 0; i < storage.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
-                    IDstring += (storage[i]).toString()
-                    if (i != storage.length-1) {
-                        IDstring += ','
-                    }
-                }
-                IDstring += ')'
-                client.query('SELECT "ProjectName", "ProjectDesc" FROM "Project" WHERE "Project_ID" IN '+IDstring+';', (error3, projectnameresult) => {
-                    var pNames = []
-                    var pDescs = []
-                    for (let project of projectnameresult["rows"]){ // get the names of all users whose IDs we have
-                        pNames.push(project["ProjectName"])
-                        pDescs.push(project["ProjectDesc"])
-                    }
-                    res.cookie("userInfo",{name:username, userid: useridresult["rows"][0]["User_ID"], chatname: "TestingChatroom", chatroomid: 1, pass:password, projects: storage, projectNames: pNames, 
-                        projectDescs: pDescs, currProjectID: 0, currProjectName: null, taskTools: []});
-                    toRedirect = '/UserHomePage/'
-                    res.redirect(toRedirect)
-                })
+    //checkDatabase(req, res, username, password, loginRedirect)
+    var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
+    loginMatch.then(function(result) {
+        loginMatch = result.rows[0]["user_pass_match"]
+        if (loginMatch == 1) { // successful login
+            client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
+                var thisUserID = useridresult["rows"][0]["User_ID"]
+                res.cookie("userInfo",{name:username, userid: thisUserID, chatname: "TestingChatroom", chatroomid: 1})
+                res.redirect("/UserHomePage/")
             })
-        })
+        } else if (loginMatch == 2) { //username exists, bad password
+            res.redirect("/")
+        }
+        else { // loginMatch == 3, username does not exist
+            res.redirect("/")
+        }
     })
-
-
-
-
-
 }
+
+
+// CALLBACK EXAMPLE
+
+/*
+function checkDatabase(req, res, username, password, callback) {
+    var userPassMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
+    userPassMatch.then(function(result) {
+        loginMatch = result.rows[0]["user_pass_match"]
+        callback(req, res, username, loginMatch)
+    })
+}
+
+
+function loginRedirect(req, res, username, loginMatch) {
+    console.log('login return: ', loginMatch)
+    if (loginMatch == 1) { // successful login
+        res.cookie("userInfo",{name:username})
+        res.redirect("/UserHomePage/")
+    } else if (loginMatch == 2) { //username exists, bad password
+        res.redirect("/")
+    }
+    else { // loginMatch == 3, username does not exist
+        res.redirect("/")
+    }
+}
+*/
+
 
 
 module.exports = {

@@ -12,6 +12,8 @@ const url = require('url')
 // Importing all things from other parts of project
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
+const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjectHomePage, getAllUsersInProjectHomePage } = require('./utils/usersAtProjectHomePage')
+const { generateTaskTool } = require('./utils/taskTools')
 const project = require('./projectForm.js')
 const requirement = require('./requirementForm.js')
 const task = require('./taskForm.js')
@@ -21,8 +23,8 @@ const login = require('./loginTools.js')
 
 //Connecting to cloud based database:
 const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+    //connectionString: process.env.DATABASE_URL,
+    connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 })
 client.connect()
@@ -64,14 +66,13 @@ io.on('connection', (socket) => {
 
     socket.on('join', ({ username, userid, room, chatroomid }, callback) => {
         const { error, user} = addUser({ id: socket.id, username, userid, room, chatroomid })
+        
 
         if (error) {
             return callback(error)
         }
 
         socket.join(user.room)
-
-        user.chatroomid = 1
 
         // Display only to connection
         client.query('SELECT * FROM "ChatMessage" AS t1 RIGHT JOIN "User" AS t2 ON t1."User_ID" = t2."User_ID" LEFT JOIN "ChatRoom" AS t3 ON t1."ChatRoom_ID" = t3."ChatRoom_ID" WHERE t3."ChatRoom_ID" = \'' + user.chatroomid + '\';', (error, results) => {
@@ -133,8 +134,28 @@ io.on('connection', (socket) => {
             })
         }
     })
-})
 
+    // When a user enters a projecthomepage
+    socket.on('enterProjectHomePage',  ({usernameVP, useridVP, projectNameVP, projectidVP}, callback) => {
+        const { error, user} = addUserToProjectHomePage({ id: socket.id, usernameVP, useridVP, projectNameVP, projectidVP })
+        if (error) {
+            return callback(error)
+        }
+        socket.join(user.projectNameVP)
+
+        // Display only to connection
+        client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectNameVP+'\';', (err, projectidresult) => { // get project ID of input project
+            const projectid = projectidresult["rows"][0]["Project_ID"]
+            client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectid+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+                for (let foo of tasktoolresult.rows) {
+                    socket.emit('taskTool', generateTaskTool(foo["TaskToolName"]))
+                }
+            })
+        })
+        //socket.emit('projectData', {projectname: user.projectNameVP, users: getAllUsersInProject(user.projectNameVP)})
+        callback()
+    })
+})
 
 
 // App.get stuff
@@ -167,8 +188,42 @@ app.get("/UserHomePage/", function (req, res) {
 
 // Project Home Page GET request
 app.get("/ProjectHomePage/", function (req, res) {
-    console.log("Cookie: ", req.cookies.userInfo);
-    res.render("ProjectHomePage", { user: req.cookies.userInfo})
+    console.log("query0: ", req.query)
+    var projectName = req.query.projectNameVP
+    console.log("projectname: ", projectName)
+    client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
+        var newCookie = req.cookies.userInfo
+        const projectid = projectidresult["rows"][0]["Project_ID"]
+        newCookie["currProjectID"] = projectName
+        newCookie["currProjectID"] = projectid // update cookie for the input project
+        client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
+            var teamIDs = []
+            for (let teammate of teamIDresult["rows"]) {
+                teamIDs.push(teammate["User_ID"]) // get the IDs of the users associated with this project
+            }
+            var IDstring = '('
+            var i;
+            for (i = 0; i < teamIDs.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
+                IDstring += (teamIDs[i]).toString()
+                if (i != teamIDs.length-1) {
+                    IDstring += ','
+                }
+            }
+            IDstring += ')'
+            client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN '+IDstring+';', (err2, teamnameresult) => {
+                var teamNames = []
+                for (let teammate of teamnameresult["rows"]){ // get the names of all users whose IDs we have
+                    teamNames.push(teammate["UserName"])
+                }
+                newCookie["teamIDs"] = teamIDs
+                newCookie["teamNames"] = teamNames
+                res.cookie("userInfo", newCookie)
+                req.query.projectidVP = projectid
+                console.log("query1: ", req.query)
+                res.sendFile(publicDirectoryPath + "views/ProjectHomePage.html")
+            })
+        })
+    })
 })
 
 
@@ -236,17 +291,17 @@ app.post("/loginPage", function (req, res) {
     res.redirect('/loginPage')
 })
 
-// When user wants to navigate to create new user page from failedLoginPage - redirects to createNewUser --EDIT THEN DELETE
-app.post("/failedLoginPage/createNewUser", function (req, res) {
-    res.redirect('/createNewUser')
-})
+// When user wants to navigate to create new user page from failedLoginPage - redirects to createNewUser --DELETE
+// app.post("/failedLoginPage/createNewUser", function (req, res) {
+//     res.redirect('/createNewUser')
+// })
 
 // When user wants to navigate to login page from createNewUser - redirects to loginPage --DELETE
 // app.post("/createNewUser/login", function (req, res) {
 //     res.redirect('/loginPage')
 // })
 
-// When user wants to navigate to projectForm page from UserHomePage
+// When user wants to navigate to projectForm page from UserHomePage --EDIT DELETE
 app.post("/UserHomePage/createProject", function (req, res) {
     res.redirect('/projectForm')
 })
@@ -256,7 +311,7 @@ app.post("/projectForm/backToUserHomePage", function (req, res) {
     res.redirect('/UserHomePage/')
 })
 
-// When user wants to navigate to UserHomePage from ProjectHomePage (I actually don't think this is being used)
+// When user wants to navigate to UserHomePage from ProjectHomePage (I actually don't think this is being used) Do we just need a button for this?
 app.post("/ProjectHomePage/returnToUserHomePage", function (req, res) {
     res.redirect('/UserHomePage/')
 })
@@ -305,19 +360,20 @@ app.post("/UserHomePage/joinProject", function (req, res) {
 })
 
 
+/* I DON'T THINK THIS POST IS EVER CALLED !
 // TEMPORARY
 // When user clicks button to view a project
-app.post("/UserHomePage/viewProject", function (req, res) {
-    var projectName = req.body.projectName
+app.post("/UserHomePage/ProjectHomePage", function (req, res) {
+    console.log("query: ", req.query)
+    var projectName = req.body.projectNameVP
     client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
         var newCookie = req.cookies.userInfo
         const projectid = projectidresult["rows"][0]["Project_ID"]
-        newCookie.currProjectID = projectid // update cookie for the input project
-        newCookie.currProjectName = projectName
-        console.log('projectid: ', projectid)
+        newCookie["currProjectID"] = projectName
+        newCookie["currProjectID"] = projectid // update cookie for the input project
         client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
             var teamIDs = []
-            for (let teammate of teamIDresult["rows"]){
+            for (let teammate of teamIDresult["rows"]) {
                 teamIDs.push(teammate["User_ID"]) // get the IDs of the users associated with this project
             }
             var IDstring = '('
@@ -349,6 +405,7 @@ app.post("/UserHomePage/viewProject", function (req, res) {
         })
     })
 })
+*/
 
 
 // When user attempts to sign in
@@ -360,6 +417,7 @@ app.post("/loginPage/submit", function (req, res) {
     var toRedirect = '/failedLoginPage'
     login.verifyCredentials(req, res, username, password)               
 })
+
 
 app.post("/failedLoginPage/submit", function (req, res) {
     var username = req.body.username

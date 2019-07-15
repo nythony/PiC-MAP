@@ -14,6 +14,7 @@ const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 // Options
 const { username, userid, room, chatroomid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
+
 const autoscroll = () => {
     // New message element
     const $newMessage = $messages.lastElementChild
