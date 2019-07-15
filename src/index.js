@@ -21,8 +21,8 @@ const login = require('./loginTools.js')
 
 //Connecting to cloud based database:
 const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+    //connectionString: process.env.DATABASE_URL,
+    connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 })
 client.connect()
@@ -236,17 +236,17 @@ app.post("/loginPage", function (req, res) {
     res.redirect('/loginPage')
 })
 
-// When user wants to navigate to create new user page from failedLoginPage - redirects to createNewUser --EDIT THEN DELETE
-app.post("/failedLoginPage/createNewUser", function (req, res) {
-    res.redirect('/createNewUser')
-})
+// When user wants to navigate to create new user page from failedLoginPage - redirects to createNewUser --DELETE
+// app.post("/failedLoginPage/createNewUser", function (req, res) {
+//     res.redirect('/createNewUser')
+// })
 
 // When user wants to navigate to login page from createNewUser - redirects to loginPage --DELETE
 // app.post("/createNewUser/login", function (req, res) {
 //     res.redirect('/loginPage')
 // })
 
-// When user wants to navigate to projectForm page from UserHomePage
+// When user wants to navigate to projectForm page from UserHomePage --EDIT DELETE
 app.post("/UserHomePage/createProject", function (req, res) {
     res.redirect('/projectForm')
 })
@@ -256,7 +256,7 @@ app.post("/projectForm/backToUserHomePage", function (req, res) {
     res.redirect('/UserHomePage/')
 })
 
-// When user wants to navigate to UserHomePage from ProjectHomePage (I actually don't think this is being used)
+// When user wants to navigate to UserHomePage from ProjectHomePage (I actually don't think this is being used) Do we just need a button for this?
 app.post("/ProjectHomePage/returnToUserHomePage", function (req, res) {
     res.redirect('/UserHomePage/')
 })
