@@ -20,17 +20,28 @@ const taskToolsTemplate = document.querySelector('#taskTools-template').innerHTM
 
 
 // Get user data
-const { username, userid, room, chatroomid, projectname, projectid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
-console.log("user: ", username)
-console.log("projectname: ", projectname)
+const { usernameVP, useridVP, room, chatroomid, projectNameVP, projectidVP } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+console.log("user: ", usernameVP)   
+console.log("projectname: ", projectNameVP)
 
 // Definition for task tool event
 socket.on('taskTool', (newTaskTool) => {
     const html = Mustache.render(taskToolsTemplate, {
-        name: newTaskTool.name,
+        tasktoolname: newTaskTool.taskToolName
     })
+    console.log("rendering: ", newTaskTool.taskToolName)
     taskTools.insertAdjacentHTML('beforeend', html)
 })
+
+
+socket.on('projectData', ({ projectname, users }) => {
+    const html = Mustache.render(sidebarTemplate, {
+        projectname,
+        users
+    })
+    document.querySelector('#sidebar').innerHTML = html
+})
+
 
 
 // Listen for task tool form
@@ -55,8 +66,8 @@ $taskToolForm.addEventListener('submit', (e) => {
 })
 
 
-socket.emit('enterProjectHomePage', { username, userid, projectname, projectid }, (error) => {
-    console.log("ENTER PROJECT EVENT")
+socket.emit('enterProjectHomePage', { usernameVP, useridVP, projectNameVP, projectidVP }, (error) => {
+    console.log("ENTER PROJECT EVENT for :", socket.id)
     if (error) {
         alert(error)
         location.href = '/'

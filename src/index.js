@@ -136,21 +136,23 @@ io.on('connection', (socket) => {
     })
 
     // When a user enters a projecthomepage
-    socket.on('enterProjectHomePage',  ({username, userid, projectname, projectid}, callback) => {
-        const { error, user} = addUserToProjectHomePage({ id: socket.id, username, userid, projectname, projectid })
+    socket.on('enterProjectHomePage',  ({usernameVP, useridVP, projectNameVP, projectidVP}, callback) => {
+        const { error, user} = addUserToProjectHomePage({ id: socket.id, usernameVP, useridVP, projectNameVP, projectidVP })
         if (error) {
             return callback(error)
         }
-        socket.join(user.projectname)
+        socket.join(user.projectNameVP)
 
         // Display only to connection
-        client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectid+';', (err3, tasktoolresult) => {
-            for (let foo of tasktoolresult.rows) {
-            //console.log(foo["Message"])
-            //console.log("we're here")
-                socket.emit('taskTool', generateTaskTool(foo["TaskToolName"]))
-            }
+        client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectNameVP+'\';', (err, projectidresult) => { // get project ID of input project
+            const projectid = projectidresult["rows"][0]["Project_ID"]
+            client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectid+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+                for (let foo of tasktoolresult.rows) {
+                    socket.emit('taskTool', generateTaskTool(foo["TaskToolName"]))
+                }
+            })
         })
+        //socket.emit('projectData', {projectname: user.projectNameVP, users: getAllUsersInProject(user.projectNameVP)})
         callback()
     })
 })
@@ -186,7 +188,42 @@ app.get("/UserHomePage/", function (req, res) {
 
 // Project Home Page GET request
 app.get("/ProjectHomePage/", function (req, res) {
-    res.render("ProjectHomePage", { user: req.cookies.userInfo})
+    console.log("query0: ", req.query)
+    var projectName = req.query.projectNameVP
+    console.log("projectname: ", projectName)
+    client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
+        var newCookie = req.cookies.userInfo
+        const projectid = projectidresult["rows"][0]["Project_ID"]
+        newCookie["currProjectID"] = projectName
+        newCookie["currProjectID"] = projectid // update cookie for the input project
+        client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
+            var teamIDs = []
+            for (let teammate of teamIDresult["rows"]) {
+                teamIDs.push(teammate["User_ID"]) // get the IDs of the users associated with this project
+            }
+            var IDstring = '('
+            var i;
+            for (i = 0; i < teamIDs.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
+                IDstring += (teamIDs[i]).toString()
+                if (i != teamIDs.length-1) {
+                    IDstring += ','
+                }
+            }
+            IDstring += ')'
+            client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN '+IDstring+';', (err2, teamnameresult) => {
+                var teamNames = []
+                for (let teammate of teamnameresult["rows"]){ // get the names of all users whose IDs we have
+                    teamNames.push(teammate["UserName"])
+                }
+                newCookie["teamIDs"] = teamIDs
+                newCookie["teamNames"] = teamNames
+                res.cookie("userInfo", newCookie)
+                req.query.projectidVP = projectid
+                console.log("query1: ", req.query)
+                res.sendFile(publicDirectoryPath + "views/ProjectHomePage.html")
+            })
+        })
+    })
 })
 
 
@@ -323,10 +360,12 @@ app.post("/UserHomePage/joinProject", function (req, res) {
 })
 
 
+/* I DON'T THINK THIS POST IS EVER CALLED !
 // TEMPORARY
 // When user clicks button to view a project
-app.post("/UserHomePage/viewProject", function (req, res) {
-    var projectName = req.body.projectName
+app.post("/UserHomePage/ProjectHomePage", function (req, res) {
+    console.log("query: ", req.query)
+    var projectName = req.body.projectNameVP
     client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
         var newCookie = req.cookies.userInfo
         const projectid = projectidresult["rows"][0]["Project_ID"]
@@ -334,7 +373,7 @@ app.post("/UserHomePage/viewProject", function (req, res) {
         newCookie["currProjectID"] = projectid // update cookie for the input project
         client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
             var teamIDs = []
-            for (let teammate of teamIDresult["rows"]){
+            for (let teammate of teamIDresult["rows"]) {
                 teamIDs.push(teammate["User_ID"]) // get the IDs of the users associated with this project
             }
             var IDstring = '('
@@ -366,6 +405,7 @@ app.post("/UserHomePage/viewProject", function (req, res) {
         })
     })
 })
+*/
 
 
 // When user attempts to sign in
