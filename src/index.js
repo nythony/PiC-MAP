@@ -12,6 +12,8 @@ const url = require('url')
 // Importing all things from other parts of project
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
+const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjectHomePage, getAllUsersInProjectHomePage } = require('./utils/usersAtProjectHomePage')
+const { generateTaskTool } = require('./utils/taskTools')
 const project = require('./projectForm.js')
 const requirement = require('./requirementForm.js')
 const task = require('./taskForm.js')
@@ -64,14 +66,13 @@ io.on('connection', (socket) => {
 
     socket.on('join', ({ username, userid, room, chatroomid }, callback) => {
         const { error, user} = addUser({ id: socket.id, username, userid, room, chatroomid })
+        
 
         if (error) {
             return callback(error)
         }
 
         socket.join(user.room)
-
-        user.chatroomid = 1
 
         // Display only to connection
         client.query('SELECT * FROM "ChatMessage" AS t1 RIGHT JOIN "User" AS t2 ON t1."User_ID" = t2."User_ID" LEFT JOIN "ChatRoom" AS t3 ON t1."ChatRoom_ID" = t3."ChatRoom_ID" WHERE t3."ChatRoom_ID" = \'' + user.chatroomid + '\';', (error, results) => {
@@ -133,8 +134,26 @@ io.on('connection', (socket) => {
             })
         }
     })
-})
 
+    // When a user enters a projecthomepage
+    socket.on('enterProjectHomePage',  ({username, userid, projectname, projectid}, callback) => {
+        const { error, user} = addUserToProjectHomePage({ id: socket.id, username, userid, projectname, projectid })
+        if (error) {
+            return callback(error)
+        }
+        socket.join(user.projectname)
+
+        // Display only to connection
+        client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectid+';', (err3, tasktoolresult) => {
+            for (let foo of tasktoolresult.rows) {
+            //console.log(foo["Message"])
+            //console.log("we're here")
+                socket.emit('taskTool', generateTaskTool(foo["TaskToolName"]))
+            }
+        })
+        callback()
+    })
+})
 
 
 // App.get stuff
@@ -167,7 +186,6 @@ app.get("/UserHomePage/", function (req, res) {
 
 // Project Home Page GET request
 app.get("/ProjectHomePage/", function (req, res) {
-    console.log("Cookie: ", req.cookies.userInfo);
     res.render("ProjectHomePage", { user: req.cookies.userInfo})
 })
 
@@ -312,9 +330,8 @@ app.post("/UserHomePage/viewProject", function (req, res) {
     client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
         var newCookie = req.cookies.userInfo
         const projectid = projectidresult["rows"][0]["Project_ID"]
-        newCookie.currProjectID = projectid // update cookie for the input project
-        newCookie.currProjectName = projectName
-        console.log('projectid: ', projectid)
+        newCookie["currProjectID"] = projectName
+        newCookie["currProjectID"] = projectid // update cookie for the input project
         client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
             var teamIDs = []
             for (let teammate of teamIDresult["rows"]){
@@ -360,6 +377,7 @@ app.post("/loginPage/submit", function (req, res) {
     var toRedirect = '/failedLoginPage'
     login.verifyCredentials(req, res, username, password)               
 })
+
 
 app.post("/failedLoginPage/submit", function (req, res) {
     var username = req.body.username

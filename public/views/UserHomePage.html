@@ -108,27 +108,24 @@
             <button type="submit">Log Out</button>
         </form>
     </div>
-    <div id="projects">
-        <h1>Your Projects: </h1> &nbsp
-        <script type="text/javascript">
-                var pNames = <%- JSON.stringify(user.projectNames) %>;
-                var pDescs = <%- JSON.stringify(user.projectDescs) %>;
-                for (let i in pNames) {
-                    document.write("<br>"+pNames[i]+" - "+pDescs[i])
-                }
-        </script>
-
-    </div>
-    </div>
     <div id="joinExisting">
         <form action="joinProject" method="post">
+            <input type="hidden" id="usernameJP" name="usernameJP" required />
+            <input type="hidden" id="useridJP" name="useridJP" required />
+            <input type="hidden" id="projectidJP" name="chatroomidJP" required />
             <input type="text" name="projectName" placeholder="Project Name"><br>
+            <script type="text/javascript">
+                document.getElementById('usernameJP').value = <%- JSON.stringify(user.name) %>;
+                document.getElementById('useridJP').value = <%- JSON.stringify(user.userid) %>;
+                document.getElementById('projectidJP').value = <%- JSON.stringify(user.chatroomid) %>;
+            </script>
             <button type="submit">Join Existing Project</button>
         </form>
     </div>
 
     <div id="joinExisting">
         <form action="viewProject" method="post">
+            
             <input type="text" name="projectName" placeholder="Project Name"><br>
             <button type="submit">View Project</button>
         </form>
