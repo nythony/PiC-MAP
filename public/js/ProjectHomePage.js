@@ -34,6 +34,16 @@ socket.on('taskTool', (newTaskTool) => {
 })
 
 
+socket.on('projectData', ({ projectname, users }) => {
+    const html = Mustache.render(sidebarTemplate, {
+        projectname,
+        users
+    })
+    document.querySelector('#sidebar').innerHTML = html
+})
+
+
+
 // Listen for task tool form
 $taskToolForm.addEventListener('submit', (e) => {
     e.preventDefault()

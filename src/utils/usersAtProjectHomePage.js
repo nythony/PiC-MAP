@@ -50,9 +50,17 @@ const getUserInProjectHomePage = (id) => {
 
 
 
-const getAllUsersInProjectHomePage = (room) => {
+const getAllUsersInProjectHomePage = (projectName) => {
     // room = room.trim().toLowerCase()
-    return users.filter((user) => user.room === room)
+    teamMembers = []
+    client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectName+';', (err1, teamIDresult) => {
+        for (let foo of teamIDresult) {
+            client.query('SELECT "UserName" FROM "User" WHERE "User_ID" = \''+foo["User_ID"]+'\';', (err2, teamnameresult) => {
+                teamMembers.push(teamnameresult.rows[0]["UserName"])
+            })
+        }
+    })
+    return teamMembers
 }
 
 module.exports = {

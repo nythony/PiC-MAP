@@ -151,8 +151,9 @@ io.on('connection', (socket) => {
                     socket.emit('taskTool', generateTaskTool(foo["TaskToolName"]))
                 }
             })
-            callback()
         })
+        socket.emit('projectData', {projectname: user.projectNameVP, users: getAllUsersInProject(user.projectNameVP)})
+        callback()
     })
 })
 
