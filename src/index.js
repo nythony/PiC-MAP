@@ -152,7 +152,7 @@ io.on('connection', (socket) => {
                 }
             })
         })
-        socket.emit('projectData', {projectname: user.projectNameVP, users: getAllUsersInProject(user.projectNameVP)})
+        //socket.emit('projectData', {projectname: user.projectNameVP, users: getAllUsersInProject(user.projectNameVP)})
         callback()
     })
 })
