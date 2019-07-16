@@ -13,7 +13,7 @@ const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 
 // Options
 const { username, userid, room, chatroomid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
-
+console.log({ username, userid, room, chatroomid })
 
 const autoscroll = () => {
     // New message element
@@ -40,7 +40,6 @@ const autoscroll = () => {
 
 // Definition for message event
 socket.on('message', (message) => {
-    console.log(message)
     const html = Mustache.render(messageTemplate, {
         username: message.username,
         message: message.text,
