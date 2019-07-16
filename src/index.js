@@ -160,8 +160,8 @@ io.on('connection', (socket) => {
     socket.on('newTaskTool', ({taskToolProjectID, taskTool}, callback) => {
         const user = getUserInProjectHomePage(socket.id)
         const text = 'INSERT INTO "TaskTool"( "Project_ID", "TaskToolName" ) VALUES($1, $2) RETURNING *'
-        console.log(text)
         const values = [taskToolProjectID, taskTool]
+        console.log(values)
         client.query(text, values, (err, res) => {
             if (err) {
                 console.log(err.stack)
