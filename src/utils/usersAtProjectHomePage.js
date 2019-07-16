@@ -34,11 +34,12 @@ const addUserToProjectHomePage = ({ id, usernameVP, useridVP, projectNameVP, pro
 }
 
 const removeUserFromProjectHomePage = (id) => {
-    const index = users.findIndex((user) => user.id === id)
+    const index = projectHomePageUsers.findIndex((user) => user.id === id)
 
     if (index !== -1) {
-        return users.splice(index, 1)[0]
+        return projectHomePageUsers.splice(index, 1)[0]
     }
+    console.log('users at project ', projectHomePageUsers)
 }
 
 const getUserInProjectHomePage = (id) => {

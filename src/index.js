@@ -126,8 +126,7 @@ io.on('connection', (socket) => {
     // Disconnect event is built in
     socket.on('disconnect', () => {
         const user = removeUser(socket.id)
-        console.log("dc'd user: ", user)
-
+        const userLeavingProjectHomePage = removeUserFromProjectHomePage(socket.id)
         if (user) {
             // io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
             io.to(user.room).emit('roomData', {
@@ -146,8 +145,7 @@ io.on('connection', (socket) => {
             if (error) {
                 return callback(error)
             }
-            socket.join((user.projectidVP).toString() + user.projectNameVP) // CHATROOM NAMING CONVENTION?
-            console.log("chatroom: ", (user.projectidVP).toString() + user.projectNameVP)
+            socket.join((user.projectidVP).toString() + user.projectNameVP) // CHATROOM NAMING CONVENTION - ID + name (e.g. 8Twitter)
             client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
                 for (let foo of tasktoolresult.rows) {
                     socket.emit('taskTool', generateTaskTool(foo["TaskToolName"])) // display all task tools to user who just joined
@@ -165,7 +163,6 @@ io.on('connection', (socket) => {
         const text = 'INSERT INTO "TaskTool"( "Project_ID", "TaskToolName" ) VALUES($1, $2) RETURNING *'
         const values = [taskToolProjectID, taskTool]
         client.query(text, values, (err, res) => { // add taskTool to database
-            console.log("chatroom: ", taskToolProjectID + taskToolProjectName)
             io.in(taskToolProjectID.toString()+taskToolProjectName).emit('taskTool', generateTaskTool(taskTool)) // emit the new task tool to all user in room (ID of room is projectidVP)
             callback()
         })
