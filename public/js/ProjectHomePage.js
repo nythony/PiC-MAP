@@ -20,6 +20,7 @@ const taskToolsTemplate = document.querySelector('#taskTools-template').innerHTM
 
 
 // Get user data
+// some of these aren't used as this passes through the query, not cookie
 const { usernameVP, useridVP, room, chatroomid, projectNameVP, projectidVP } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
 
@@ -53,9 +54,9 @@ $taskToolForm.addEventListener('submit', (e) => {
 
     // Retrieve task tool name value of task tool form
     const taskTool = e.target.elements.newTaskToolName.value
-    projectidVP = e.target.elements.newTaskProjectName.value
+    const taskToolProjectName = e.target.elements.newTaskProjectName.value
 
-    socket.emit('newTaskTool', {projectidVP, taskTool}, (error) => {
+    socket.emit('newTaskTool', {taskToolProjectName, taskTool}, (error) => {
         // Enable form
         if (error) {
             return console.log(error)
