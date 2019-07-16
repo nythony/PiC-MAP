@@ -23,8 +23,8 @@ const login = require('./loginTools.js')
 
 //Connecting to cloud based database:
 const client = new Client({
-    //connectionString: process.env.DATABASE_URL,
-    connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+    connectionString: process.env.DATABASE_URL,
+    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 })
 client.connect()
@@ -233,7 +233,7 @@ app.get("/ProjectHomePage/", function (req, res) {
 // })
 
 
-// Current version of how to submit projects to db
+// Current version of how to submit projects to db --EDIT DELETE
 app.get("/projectForm", function (req, res) {
     project.getProject(req, res);
     res.render("projectForm", { user: req.cookies.userInfo })
@@ -306,7 +306,7 @@ app.post("/UserHomePage/createProject", function (req, res) {
     res.redirect('/projectForm')
 })
 
-// When user wants to navigate to UserHomePage from projectForm
+// When user wants to navigate to UserHomePage from projectForm --EDIT DELETE (currently if you submit project form you get redirected here)
 app.post("/projectForm/backToUserHomePage", function (req, res) {
     res.redirect('/UserHomePage/')
 })
