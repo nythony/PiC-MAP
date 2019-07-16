@@ -54,7 +54,8 @@ $taskToolForm.addEventListener('submit', (e) => {
     // Retrieve task tool name value of task tool form
     const taskTool = e.target.elements.newTaskToolName.value
     const taskToolProjectID = e.target.elements.newTaskProjectID.value
-    socket.emit('newTaskTool', {taskToolProjectID, taskTool}, (error) => {
+    const taskToolProjectName = e.target.elements.newTaskProjectName.value
+    socket.emit('newTaskTool', {taskToolProjectID, taskToolProjectName, taskTool}, (error) => {
         // Enable form
         if (error) {
             return console.log(error)

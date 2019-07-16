@@ -146,7 +146,7 @@ io.on('connection', (socket) => {
             if (error) {
                 return callback(error)
             }
-            socket.join(user.projectidVP)
+            socket.join(user.projectidVP + user.projectnameVP) // CHATROOM NAMING CONVENTION?
             client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
                 for (let foo of tasktoolresult.rows) {
                     socket.emit('taskTool', generateTaskTool(foo["TaskToolName"])) // display all task tools to user who just joined
@@ -160,7 +160,7 @@ io.on('connection', (socket) => {
 
 
     // When a new task tool is created with in ProjectHomePage
-    socket.on('newTaskTool', ({taskToolProjectID, taskTool}, callback) => {
+    socket.on('newTaskTool', ({taskToolProjectID, taskToolProjectName, taskTool}, callback) => {
         const text = 'INSERT INTO "TaskTool"( "Project_ID", "TaskToolName" ) VALUES($1, $2) RETURNING *'
         const values = [taskToolProjectID, taskTool]
         client.query(text, values, (err, res) => { // add taskTool to database

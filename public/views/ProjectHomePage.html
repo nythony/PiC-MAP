@@ -27,8 +27,10 @@
             </form><br>
             <form id="taskTool-form">
                 <input type="hidden" id="newTaskProjectID" name="newTaskProjectID"/>
+                <input type="hidden" id="newTaskProjectName" name="newTaskProjectName"/>
                 <script type="text/javascript">
                     document.getElementById('newTaskProjectID').value = <%- JSON.stringify(user.currProjectID) %>;
+                    document.getElementById('newTaskProjectName').value = <%- JSON.stringify(user.currProjectName) %>;
                 </script>
                 <input name="newTaskToolName" placeholder="New Task Tool" required autocomplete="on"/>
                 <button type="submit">Create new Task Tool</button>
