@@ -24,6 +24,7 @@ const { usernameVP, useridVP, room, chatroomid, projectNameVP, projectidVP } = Q
 console.log("user: ", usernameVP)   
 console.log("projectname: ", projectNameVP)
 
+
 // Definition for task tool event
 socket.on('taskTool', (newTaskTool) => {
     const html = Mustache.render(taskToolsTemplate, {
