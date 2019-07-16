@@ -170,7 +170,7 @@ io.on('connection', (socket) => {
             console.log('----------------------------------record is created--------------------------------')
         })
         console.log(user)
-        io.to(user.room).emit('taskTool', generateTaskTool(taskTool))
+        io.to(user.projectidVP).emit('taskTool', generateTaskTool(taskTool)) // emit the new task tool to all user in room (ID of room is projectidVP)
         // We can use this below for redirecting!
         // var destination = ('/loginPage')
         // io.to(user.room).emit('redirect', destination)
