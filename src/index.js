@@ -161,7 +161,6 @@ io.on('connection', (socket) => {
         const user = getUserInProjectHomePage(socket.id)
         const text = 'INSERT INTO "TaskTool"( "Project_ID", "TaskToolName" ) VALUES($1, $2) RETURNING *'
         const values = [taskToolProjectID, taskTool]
-        console.log(values)
         client.query(text, values, (err, res) => {
             if (err) {
                 console.log(err.stack)
@@ -171,6 +170,7 @@ io.on('connection', (socket) => {
             }
             console.log('----------------------------------record is created--------------------------------')
         })
+        console.log(user)
         io.to(user.room).emit('taskTool', generateTaskTool(taskTool))
         // We can use this below for redirecting!
         // var destination = ('/loginPage')
