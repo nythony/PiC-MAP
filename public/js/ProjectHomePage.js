@@ -53,7 +53,7 @@ $taskToolForm.addEventListener('submit', (e) => {
     //$messageFormButton.setAttribute('disabled', 'disabled')
 
     // Retrieve task tool name value of task tool form
-    const taskTool = e.target.elements.tasktoolname-createTaskTool.value
+    const taskTool = e.target.elements.newTaskToolName.value
 
     socket.emit('newTaskTool', {projectidVP, taskTool}, (error) => {
         // Enable form
