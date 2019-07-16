@@ -146,7 +146,7 @@ io.on('connection', (socket) => {
             if (error) {
                 return callback(error)
             }
-            socket.join(user.projectidVP + user.projectnameVP) // CHATROOM NAMING CONVENTION?
+            socket.join(user.projectidVP.toString() + user.projectnameVP) // CHATROOM NAMING CONVENTION?
             console.log("chatroom: ", user.projectidVP + user.projectnameVP)
             client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
                 for (let foo of tasktoolresult.rows) {
@@ -166,7 +166,7 @@ io.on('connection', (socket) => {
         const values = [taskToolProjectID, taskTool]
         client.query(text, values, (err, res) => { // add taskTool to database
             console.log("chatroom: ", taskToolProjectID + taskToolProjectName)
-            io.in(taskToolProjectID+taskToolProjectName).emit('taskTool', generateTaskTool(taskTool)) // emit the new task tool to all user in room (ID of room is projectidVP)
+            io.in(taskToolProjectID.toString()+taskToolProjectName).emit('taskTool', generateTaskTool(taskTool)) // emit the new task tool to all user in room (ID of room is projectidVP)
             callback()
         })
     })
