@@ -163,7 +163,7 @@ io.on('connection', (socket) => {
         const text = 'INSERT INTO "TaskTool"( "Project_ID", "TaskToolName" ) VALUES($1, $2) RETURNING *'
         const values = [taskToolProjectID, taskTool]
         client.query(text, values, (err, res) => { // add taskTool to database
-            io.in(taskToolProjectID.toString()+taskToolProjectName).emit('taskTool', generateTaskTool(taskTool)) // emit the new task tool to all user in room (ID of room is projectidVP)
+            io.in(taskToolProjectID.toString()+taskToolProjectName).emit('taskTool', generateTaskTool(taskTool)) // emit the new task tool to all user in room (room identifier is projectid+projectname)
             callback()
         })
     })
@@ -210,7 +210,7 @@ app.get("/ProjectHomePage/", function (req, res) {
             const chatID = chatresult["rows"][0]["ChatRoom_ID"]
             const chatName = chatresult["rows"][0]["ChatName"]
             newCookie["chatroomid"] = chatID
-            newCookie["chatname"] = chatName
+            newCookie["chatname"] = chatName // update cookie, put new cookie in response, and finish
             res.cookie("userInfo", newCookie)
             req.query.projectidVP = projectid
             res.render(publicDirectoryPath + "views/ProjectHomePage.html", { user: req.cookies.userInfo })

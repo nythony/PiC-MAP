@@ -28,12 +28,12 @@ const { usernameVP, useridVP, room, chatroomid, projectNameVP, projectidVP } = Q
 // Definition for task tool event
 socket.on('taskTool', (newTaskTool) => {
     const html = Mustache.render(taskToolsTemplate, {
-        tasktoolname: newTaskTool.taskToolName
+        tasktoolname: newTaskTool.taskToolName // package the new task tool
     })
-    taskTools.insertAdjacentHTML('beforeend', html)
+    taskTools.insertAdjacentHTML('beforeend', html) // insert into html
 })
 
-
+// load the project data (this is not in use yet, but i plan on making this show team members on project)
 socket.on('projectData', ({ projectname, users }) => {
     const html = Mustache.render(sidebarTemplate, {
         projectname,
@@ -48,14 +48,11 @@ socket.on('projectData', ({ projectname, users }) => {
 $taskToolForm.addEventListener('submit', (e) => {
     e.preventDefault()
 
-    // Disable form
-    //$messageFormButton.setAttribute('disabled', 'disabled')
-
-    // Retrieve task tool name value of task tool form
+    // Retrieve values (hidden and not hidden) of task tool form
     const taskTool = e.target.elements.newTaskToolName.value
     const taskToolProjectID = e.target.elements.newTaskProjectID.value
     const taskToolProjectName = e.target.elements.newTaskProjectName.value
-    socket.emit('newTaskTool', {taskToolProjectID, taskToolProjectName, taskTool}, (error) => {
+    socket.emit('newTaskTool', {taskToolProjectID, taskToolProjectName, taskTool}, (error) => { // send newTaskTool event to server
         // Enable form
         if (error) {
             return console.log(error)
@@ -67,6 +64,7 @@ $taskToolForm.addEventListener('submit', (e) => {
 })
 
 
+// When a user enters a projecthomepage, sends user info to server
 socket.emit('enterProjectHomePage', { usernameVP, useridVP, projectNameVP, projectidVP }, (error) => {
     if (error) {
         alert(error)
