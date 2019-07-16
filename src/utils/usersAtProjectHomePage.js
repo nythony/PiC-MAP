@@ -44,7 +44,7 @@ const removeUserFromProjectHomePage = (id) => {
 }
 
 const getUserInProjectHomePage = (id) => {
-    return users.find((user) => user.id === id)
+    return projectHomePageUsers.find((user) => user.id === id)
 }
 
 
