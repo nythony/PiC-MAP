@@ -137,18 +137,17 @@ io.on('connection', (socket) => {
 
     // When a user enters a projecthomepage
     socket.on('enterProjectHomePage',  ({usernameVP, useridVP, projectNameVP, projectidVP}, callback) => {
-        const { error, user} = addUserToProjectHomePage({ id: socket.id, usernameVP, useridVP, projectNameVP, projectidVP })
-        if (error) {
-            return callback(error)
-        }
-        socket.join(user.projectNameVP)
-
         // Display only to connection
         client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectNameVP+'\';', (err, projectidresult) => { // get project ID of input project
-            const projectid = projectidresult["rows"][0]["Project_ID"]
-            client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectid+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+            projectidVP = projectidresult["rows"][0]["Project_ID"]
+            const { error, user} = addUserToProjectHomePage({ id: socket.id, usernameVP, useridVP, projectNameVP, projectidVP }) // register user on page
+            if (error) {
+                return callback(error)
+            }
+            socket.join(user.projectNameVP)
+            client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
                 for (let foo of tasktoolresult.rows) {
-                    socket.emit('taskTool', generateTaskTool(foo["TaskToolName"]))
+                    socket.emit('taskTool', generateTaskTool(foo["TaskToolName"])) // display all task tools to user who just joined
                 }
             })
         })
@@ -239,7 +238,6 @@ app.get("/ProjectHomePage/", function (req, res) {
                 newCookie["teamNames"] = teamNames
                 res.cookie("userInfo", newCookie)
                 req.query.projectidVP = projectid
-                console.log("COOKIE: ", newCookie)
                 res.render(publicDirectoryPath + "views/ProjectHomePage.html", { user: req.cookies.userInfo })
             })
         })
