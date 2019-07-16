@@ -29,6 +29,7 @@ const addUserToProjectHomePage = ({ id, usernameVP, useridVP, projectNameVP, pro
     // Store user
     const user = { id, usernameVP, useridVP, projectNameVP, projectidVP }
     projectHomePageUsers.push(user)
+    console.log('users at project ', projectHomePageUsers)
     return { user }
 }
 
@@ -47,8 +48,9 @@ const getUserInProjectHomePage = (id) => {
 
 
 
-const getAllUsersInProjectHomePage = (projectName) => {
+const getAllUsersInProjectHomePage = (projectidVP) => {
     // room = room.trim().toLowerCase()
+    return users.filter((user) => user.projectidVP === projectidVP)
     teamMembers = []
     client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectName+';', (err1, teamIDresult) => {
         for (let foo of teamIDresult) {

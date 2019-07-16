@@ -157,24 +157,12 @@ io.on('connection', (socket) => {
 
     // When a new task tool is created with in ProjectHomePage
     socket.on('newTaskTool', ({taskToolProjectID, taskTool}, callback) => {
-        const user = getUserInProjectHomePage(socket.id)
         const text = 'INSERT INTO "TaskTool"( "Project_ID", "TaskToolName" ) VALUES($1, $2) RETURNING *'
         const values = [taskToolProjectID, taskTool]
-        client.query(text, values, (err, res) => {
-            if (err) {
-                console.log(err.stack)
-            } else {
-                console.log(res.rows[0])
-
-            }
-            console.log('----------------------------------record is created--------------------------------')
+        client.query(text, values, (err, res) => { // add taskTool to database
+            io.to(taskToolProjectID).emit('taskTool', generateTaskTool(taskTool)) // emit the new task tool to all user in room (ID of room is projectidVP)
+            callback()
         })
-        console.log(user)
-        io.to(user.projectidVP).emit('taskTool', generateTaskTool(taskTool)) // emit the new task tool to all user in room (ID of room is projectidVP)
-        // We can use this below for redirecting!
-        // var destination = ('/loginPage')
-        // io.to(user.room).emit('redirect', destination)
-        callback()
     })
 })
 
