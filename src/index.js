@@ -159,7 +159,6 @@ io.on('connection', (socket) => {
     // When a new task tool is created with in ProjectHomePage
     socket.on('newTaskTool', ({taskToolProjectName, taskTool}, callback) => {
         const user = getUserInProjectHomePage(socket.id)
-        console.log('name2: ', taskToolProjectName)
         const text = 'INSERT INTO "TaskTool"( "Project_ID", "TaskToolName" ) VALUES($1, $2) RETURNING *'
         const values = [taskToolProjectName, taskTool]
         client.query(text, values, (err, res) => {

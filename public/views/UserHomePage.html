@@ -128,7 +128,7 @@
             <input type="hidden" id="usernameVP" name="usernameVP" required />
             <input type="hidden" id="useridVP" name="useridVP" required />
             <input type="hidden" id="projectidVP" name="projectidVP" required />
-            <input type="text" id="projectNameVP" name="projectNameVP" placeholder="Project Name"><br>
+            <input type="text" id="projectNameVP" name="projectNameVP" placeholder="Project Name" required autocomplete="on"><br>
             <script type="text/javascript">
                 document.getElementById('usernameVP').value = <%- JSON.stringify(user.name) %>;
                 document.getElementById('useridVP').value = <%- JSON.stringify(user.userid) %>;

@@ -26,7 +26,7 @@
                 <button>ChatApp</button>
             </form><br>
             <form id="taskTool-form">
-                <input type="hidden" name="newTaskProjectName"/>
+                <input type="hidden" id="newTaskProjectName" name="newTaskProjectName"/>
                 <script type="text/javascript">
                     document.getElementById('newTaskProjectName').value = <%- JSON.stringify(user.currProjectID) %>;
                 </script>
