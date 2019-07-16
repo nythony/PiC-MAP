@@ -164,7 +164,7 @@ io.on('connection', (socket) => {
         const text = 'INSERT INTO "TaskTool"( "Project_ID", "TaskToolName" ) VALUES($1, $2) RETURNING *'
         const values = [taskToolProjectID, taskTool]
         client.query(text, values, (err, res) => { // add taskTool to database
-            io.in(taskToolProjectID).emit('taskTool', generateTaskTool(taskTool)) // emit the new task tool to all user in room (ID of room is projectidVP)
+            io.in(taskToolProjectID+taskToolProjectName).emit('taskTool', generateTaskTool(taskTool)) // emit the new task tool to all user in room (ID of room is projectidVP)
             callback()
         })
     })
