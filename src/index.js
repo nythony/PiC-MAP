@@ -145,7 +145,7 @@ io.on('connection', (socket) => {
             if (error) {
                 return callback(error)
             }
-            socket.join(user.projectNameVP)
+            socket.join(user.projectidVP)
             client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
                 for (let foo of tasktoolresult.rows) {
                     socket.emit('taskTool', generateTaskTool(foo["TaskToolName"])) // display all task tools to user who just joined
