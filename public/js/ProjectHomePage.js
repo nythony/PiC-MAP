@@ -10,7 +10,7 @@ const $messageFormInput = $messageForm.querySelector('input')
 const $messageFormButton = $messageForm.querySelector('button')
 */
 const $taskToolForm = document.querySelector('#taskTool-form')
-const $taskToolFormInput = $taskToolForm.querySelector('input')
+const $taskToolFormInput = $taskToolForm.querySelector('tasktoolname-createTaskTool')
 const $taskToolFormButton = $taskToolForm.querySelector('button')
 const $taskTools = document.querySelector('#taskTools')
 
@@ -45,7 +45,7 @@ socket.on('projectData', ({ projectname, users }) => {
 
 
 
-// Listen for task tool form
+// Listen for task tool form submit
 $taskToolForm.addEventListener('submit', (e) => {
     e.preventDefault()
 
@@ -53,9 +53,9 @@ $taskToolForm.addEventListener('submit', (e) => {
     //$messageFormButton.setAttribute('disabled', 'disabled')
 
     // Retrieve task tool name value of task tool form
-    const taskTool = e.target.elements.taskTool.value
+    const taskTool = e.target.elements.tasktoolname-createTaskTool.value
 
-    socket.emit('sendMessage', taskTool, (error) => {
+    socket.emit('newTaskTool', {projectidVP, taskTool}, (error) => {
         // Enable form
         if (error) {
             return console.log(error)

@@ -11,25 +11,28 @@
     <div class="chat">
         <div id="sidebar" class="chat__sidebar">
             <center>
-            <form action="createTaskTool" method="post">
-                <button type="submit">Create new Task Tool</button>
-            </form><br>
-            <div id="chatApp">
-                <form action="/chatapp">
-                    <input type="hidden" id="username" name="username" placeholder="Display name" required />
-                    <script type="text/javascript">
-                        document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
-                    </script>
-                    <input type="hidden" name="room" placeholder="Room" required value="Test">
-                    <button>ChatApp</button>
-                </form><br>
-            </div>
             <form action="/loginPage" method="post">
                 <button type="submit">Log Out</button>
             </form><br>
             <form action="/returnToUserHomePage" method="post">
                 <button type="submit">Return to Home Screen</button>
             </form>
+            <form action="/chatapp">
+                <input type="hidden" id="username" name="username" placeholder="Display name" required />
+                <script type="text/javascript">
+                    document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
+                </script>
+                <input type="hidden" name="room" placeholder="Room" required value="Test">
+                <button>ChatApp</button>
+            </form><br>
+            <form id="taskTool-form">
+                <input type="hidden" id="projectname-createTaskTool" name="projectname-createTaskTool"/>
+                <script type="text/javascript">
+                    document.getElementById('projectname-createTaskTool').value = <%- JSON.stringify(user.currProjectID) %>;
+                </script>
+                <input id ="tasktoolname-createTaskTool" name="tasktoolname-createTaskTool" placeholder="New Task Tool" required autocomplete="on"/>
+                <button type="submit">Create new Task Tool</button>
+            </form><br>
             </center>
         </div>
         <div class="chat__main">
@@ -39,13 +42,6 @@
                 document.write(userN)
                 </script>
             </h1>
-            <div id="taskTools" class="chat__messages"></div>
-            <div class="compose">
-                <form id="taskTool-form">
-                    <input name="taskTool" placeholder="New Task" required autocomplete="off">
-                    <button>Create</button>
-                </form>
-            </div>
         </div>
     </div>
     <script id="taskTools-template" type="text/html">
