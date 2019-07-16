@@ -126,6 +126,7 @@ io.on('connection', (socket) => {
     // Disconnect event is built in
     socket.on('disconnect', () => {
         const user = removeUser(socket.id)
+        console.log("dc'd user: ", user)
 
         if (user) {
             // io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
@@ -155,6 +156,8 @@ io.on('connection', (socket) => {
         //socket.emit('projectData', {projectname: user.projectNameVP, users: getAllUsersInProject(user.projectNameVP)})
         callback()
     })
+
+
 
     // When a new task tool is created with in ProjectHomePage
     socket.on('newTaskTool', ({taskToolProjectID, taskTool}, callback) => {

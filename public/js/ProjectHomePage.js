@@ -27,7 +27,6 @@ const { usernameVP, useridVP, room, chatroomid, projectNameVP, projectidVP } = Q
 
 // Definition for task tool event
 socket.on('taskTool', (newTaskTool) => {
-    console.log("posting: ", newTaskTool)
     const html = Mustache.render(taskToolsTemplate, {
         tasktoolname: newTaskTool.taskToolName
     })
@@ -55,8 +54,6 @@ $taskToolForm.addEventListener('submit', (e) => {
     // Retrieve task tool name value of task tool form
     const taskTool = e.target.elements.newTaskToolName.value
     const taskToolProjectID = e.target.elements.newTaskProjectID.value
-    console.log("ID PLZ: ", taskToolProjectID)
-
     socket.emit('newTaskTool', {taskToolProjectID, taskTool}, (error) => {
         // Enable form
         if (error) {
@@ -70,7 +67,6 @@ $taskToolForm.addEventListener('submit', (e) => {
 
 
 socket.emit('enterProjectHomePage', { usernameVP, useridVP, projectNameVP, projectidVP }, (error) => {
-    console.log("ENTER PROJECT EVENT for :", socket.id)
     if (error) {
         alert(error)
         location.href = '/'
