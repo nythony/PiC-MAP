@@ -202,36 +202,20 @@ app.get("/UserHomePage/", function (req, res) {
 app.get("/ProjectHomePage/", function (req, res) {
     var projectName = req.query.projectNameVP
     client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
-        var newCookie = req.cookies.userInfo
+        var newCookie = req.cookies.userInfo // duplicate cookie
         const projectid = projectidresult["rows"][0]["Project_ID"]
         newCookie["currProjectName"] = projectName
         newCookie["currProjectID"] = projectid // update cookie for the input project
-        client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
-            var teamIDs = []
-            for (let teammate of teamIDresult["rows"]) {
-                teamIDs.push(teammate["User_ID"]) // get the IDs of the users associated with this project
-            }
-            var IDstring = '('
-            var i;
-            for (i = 0; i < teamIDs.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
-                IDstring += (teamIDs[i]).toString()
-                if (i != teamIDs.length-1) {
-                    IDstring += ','
-                }
-            }
-            IDstring += ')'
-            client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN '+IDstring+';', (err2, teamnameresult) => {
-                var teamNames = []
-                for (let teammate of teamnameresult["rows"]){ // get the names of all users whose IDs we have
-                    teamNames.push(teammate["UserName"])
-                }
-                newCookie["teamIDs"] = teamIDs
-                newCookie["teamNames"] = teamNames
-                res.cookie("userInfo", newCookie)
-                req.query.projectidVP = projectid
-                res.render(publicDirectoryPath + "views/ProjectHomePage.html", { user: req.cookies.userInfo })
-            })
+        client.query('SELECT "ChatRoom_ID","ChatName" FROM "ChatRoom" WHERE "Project_ID" = \''+projectid+'\';', (err1, chatresult) => { // get chatroom name and id for this project
+            const chatID = chatresult["rows"][0]["ChatRoom_ID"]
+            const chatName = chatresult["rows"][0]["ChatName"]
+            newCookie["chatroomid"] = chatID
+            newCookie["chatname"] = chatName
+            res.cookie("userInfo", newCookie)
+            req.query.projectidVP = projectid
+            res.render(publicDirectoryPath + "views/ProjectHomePage.html", { user: req.cookies.userInfo })
         })
+        
     })
 })
 

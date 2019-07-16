@@ -29,7 +29,6 @@ const addUserToProjectHomePage = ({ id, usernameVP, useridVP, projectNameVP, pro
     // Store user
     const user = { id, usernameVP, useridVP, projectNameVP, projectidVP }
     projectHomePageUsers.push(user)
-    console.log('users at project ', projectHomePageUsers)
     return { user }
 }
 
@@ -39,7 +38,6 @@ const removeUserFromProjectHomePage = (id) => {
     if (index !== -1) {
         return projectHomePageUsers.splice(index, 1)[0]
     }
-    console.log('users at project ', projectHomePageUsers)
 }
 
 const getUserInProjectHomePage = (id) => {
