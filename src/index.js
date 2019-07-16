@@ -214,7 +214,7 @@ app.get("/ProjectHomePage/", function (req, res) {
     client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
         var newCookie = req.cookies.userInfo
         const projectid = projectidresult["rows"][0]["Project_ID"]
-        newCookie["currProjectID"] = projectName
+        newCookie["currProjectName"] = projectName
         newCookie["currProjectID"] = projectid // update cookie for the input project
         client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
             var teamIDs = []
@@ -240,7 +240,7 @@ app.get("/ProjectHomePage/", function (req, res) {
                 res.cookie("userInfo", newCookie)
                 req.query.projectidVP = projectid
                 console.log("COOKIE: ", newCookie)
-                res.sendFile(publicDirectoryPath + "views/ProjectHomePage.html")
+                res.render(publicDirectoryPath + "views/ProjectHomePage.html", { user: req.cookies.userInfo })
             })
         })
     })
