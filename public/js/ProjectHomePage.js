@@ -21,8 +21,7 @@ const taskToolsTemplate = document.querySelector('#taskTools-template').innerHTM
 
 // Get user data
 const { usernameVP, useridVP, room, chatroomid, projectNameVP, projectidVP } = Qs.parse(location.search, { ignoreQueryPrefix: true })
-console.log("user: ", usernameVP)   
-console.log("projectname: ", projectNameVP)
+
 
 
 // Definition for task tool event
@@ -54,6 +53,7 @@ $taskToolForm.addEventListener('submit', (e) => {
 
     // Retrieve task tool name value of task tool form
     const taskTool = e.target.elements.newTaskToolName.value
+    projectidVP = e.target.elements.newTaskProjectName.value
 
     socket.emit('newTaskTool', {projectidVP, taskTool}, (error) => {
         // Enable form

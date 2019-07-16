@@ -26,9 +26,9 @@
                 <button>ChatApp</button>
             </form><br>
             <form id="taskTool-form">
-                <input type="hidden" id="projectname-createTaskTool" name="projectname-createTaskTool"/>
+                <input type="hidden" name="newTaskProjectName"/>
                 <script type="text/javascript">
-                    document.getElementById('projectname-createTaskTool').value = <%- JSON.stringify(user.currProjectID) %>;
+                    document.getElementById('newTaskProjectName').value = <%- JSON.stringify(user.currProjectID) %>;
                 </script>
                 <input name="newTaskToolName" placeholder="New Task Tool" required autocomplete="on"/>
                 <button type="submit">Create new Task Tool</button>
