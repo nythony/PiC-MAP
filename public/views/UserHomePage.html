@@ -44,6 +44,14 @@
       background: #f1f1f1;
     }
 
+    .form-container input[type=date], .form-container input[type=password] {
+      width: 100%;
+      padding: 15px;
+      margin: 5px 0 22px 0;
+      border: none;
+      background: #f1f1f1;
+    }
+
     /* When the inputs get focus, do something */
     .form-container input[type=text]:focus, .form-container input[type=password]:focus {
       background-color: #ddd;
@@ -144,7 +152,7 @@
 
      <div class="form-popup" id="projectForm">
           <form action="/projectform-submitted" class="form-container" method = "post" id="create-new-project-form">
-            <h1>Create a New Project</h1>
+            <h1>Create A New Project</h1>
 
             <label><b>Name</b></label>
             <input type="text" id="project" name="project" placeholder="Enter the project name" required>
@@ -154,8 +162,8 @@
 
             <label><b>Add Members</b></label>
             <div class="add-project-members">
-                <input name="project-member" placeholder="Enter the username of a member" autocomplete="off">
-                <button>Send</button> <!--We want this to call a socket even that pushes to an array of users-->
+                <input type = "text" name="project-member" placeholder="Enter the username of a member" autocomplete="off">
+                <button>Add</button> <!--We want this to call a socket even that pushes to an array of users-->
             </div>
 
             <label><b>Start Date</b></label>
@@ -165,7 +173,7 @@
             <input type="date" id="dueDate" name="dueDate">
 
 
-            <button type="submit" class="btn">Register</button> <!--The array of users get parsed an should create appropriate AttachUserP-->
+            <button type="submit" class="btn">Create</button> <!--The array of users get parsed an should create appropriate AttachUserP-->
             <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
           </form>
         </div>
