@@ -158,7 +158,7 @@ io.on('connection', (socket) => {
 
  	// Creating a new project in the userHomePage
     socket.on('createProject', ({name, desc, start, due}, callback) => {
-        const userCreate = 'Alina'
+        const userCreate = 8; //This is hardcoded as Alina's ID
 
         const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate") VALUES($1,$2,$3,$4,$5) RETURNING *';
         const values = [name, desc, userCreate, start, due];

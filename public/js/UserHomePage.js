@@ -33,6 +33,7 @@ $createProjectForm.addEventListener('submit', (e) => {
         }
 
         var form = document.getElementById("create-project-form")
+        document.getElementById("projectForm").style.display = "none";
         form.reset()
     })
 })
