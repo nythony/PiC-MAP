@@ -160,7 +160,7 @@ io.on('connection', (socket) => {
     socket.on('createProject', ({name, desc, start, due}, callback) => {
         const userCreate = 'Alina'
 
-        const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
+        const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate") VALUES($1,$2,$3,$4,$5) RETURNING *';
         const values = [name, desc, userCreate, start, due];
         // callback
         client.query(text, values, (err, res) => {
@@ -169,7 +169,7 @@ io.on('connection', (socket) => {
             } else {
                 console.log(res.rows[0])
             }
-            console.log('----------------------------------record is created--------------------------------');
+            console.log('----------------------------------project is created--------------------------------');
         })
         callback()
     })
