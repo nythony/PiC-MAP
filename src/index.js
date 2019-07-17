@@ -157,7 +157,7 @@ io.on('connection', (socket) => {
     })
 
  	// Creating a new project in the userHomePage
-    socket.on('createProject', ({name, desc, start, due}, callback) => {
+    socket.on('createProject', ({name, desc, start, due, id}, callback) => {
         const userCreate = id; //This is hardcoded as Alina's ID
         
         //Converting empty date to null values to enter into date type values in DB
