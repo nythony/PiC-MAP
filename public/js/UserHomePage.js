@@ -3,8 +3,8 @@ console.log("running UserHomePage.js")
 const socket = io()
 
 const $createProjectForm = document.querySelector('#create-project-form')
-const $createProjectFormInput = $messageForm.querySelector('input')
-const $createProjectFormButton = $messageForm.querySelector('button')
+const $createProjectFormInput = $createProjectForm.querySelector('input')
+const $createProjectFormButton = $createProjectForm.querySelector('button')
 
 
 // Listen for submission of create-project-form
