@@ -84,7 +84,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
         
         <h2>Please enter your username and password to sign in.</h2>
         
-        <form id="login-form">
+        <form action="loginPage/submit" method="post" id="login-form">
             <input type="text" name="username" placeholder="username">
             <input type="password" name="password" placeholder="password">
             <button type="submit">Sign In</button>
@@ -100,10 +100,10 @@ body {font-family: Arial, Helvetica, sans-serif;}
             <h1>Register</h1>
 
             <label><b>Username</b></label>
-            <input type="text" name="username" placeholder="username">
+            <input type="text" name="username" placeholder="username" required>
 
             <label><b>Password</b></label>
-            <input type="password" name="password" placeholder="password">
+            <input type="password" name="password" placeholder="password" required>
 
             <button type="submit" class="btn">Register</button>
             <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
@@ -121,12 +121,6 @@ function closeForm() {
   document.getElementById("registerForm").style.display = "none";
 }
 </script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/login.js"></script>
 
 </body>
 </html>

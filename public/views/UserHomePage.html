@@ -146,6 +146,7 @@
         </form>
     </div>
 
+    <!--POP UP FOR CREATING A PROJECT-->
     <button class="open-button" onclick="openForm()">Create Project</button>
 
     <div id="newItems">
@@ -153,6 +154,35 @@
      <div class="form-popup" id="projectForm">
           <form class="form-container" id="create-project-form">
             <h1>Create A New Project</h1>
+
+            <label><b>Name</b></label>
+            <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" required>
+
+            <label><b>Description</b> <i>(optional)</i></label>
+            <input type="text" id="projectDescription" name="projectDescription" placeholder="Enter the project description" value = "">
+
+            <label><b>Start Date</b> <i>(optional)</i></label>
+            <input type="date" id="startDate" name="startDate"> <!--Defaulted to creation timestamp-->
+
+            <label><b>Due Date</b> <i>(optional)</i></label>
+            <input type="date" id="dueDate" name="dueDate">
+
+            <input type="hidden" id="userid" name="userid" required />
+            <script type="text/javascript">
+                document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
+            </script>
+
+            <button type="submit" class="btn">Create</button> <!--The array of users get parsed an should create appropriate AttachUserP-->
+            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+          </form>
+        </div>
+
+    <!--POP UP FOR EDITING A PROJECT AFTER PROJECT NAME IS ENTERED-->
+    <div class="form-popup" id="editProjectForm">
+        <button class="open-button" onclick="openForm()">Edit Project</button>
+
+          <form class="form-container" id="edit-project-form">
+            <h1>Edit Your Project</h1>
 
             <label><b>Name</b></label>
             <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" required>
@@ -197,9 +227,8 @@
         }
         </script>
 
-
-
     </div>
+
     <div id="chatApp">
         <form action="/chatapp">
             <input type="hidden" id="username" name="username" required />

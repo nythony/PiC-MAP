@@ -441,7 +441,7 @@ app.post("/UserHomePage/ProjectHomePage", function (req, res) {
 // When user attempts to sign in
 // If successful, redirects to UserHomePage
 // If unsuccessful, redirects to failedLoginPage
-app.post("/loginPage/submit", function (req, res) {
+app.post("/loginPage/submit", function (req, res) { //--EDIT DELETE
     var username = req.body.username
     var password = req.body.password
     var toRedirect = '/failedLoginPage'
@@ -449,7 +449,8 @@ app.post("/loginPage/submit", function (req, res) {
 })
 
 
-app.post("/failedLoginPage/submit", function (req, res) {
+
+app.post("/failedLoginPage/submit", function (req, res) {  //--EDIT DELETE
     var username = req.body.username
     var password = req.body.password
     client.query('SELECT "UserName" FROM "User";', (error, results) => {
@@ -469,7 +470,7 @@ app.post("/failedLoginPage/submit", function (req, res) {
     res.redirect('/failedLoginPage')
 });
 
-app.post("/createNewUser/submit", function (req, res) {
+app.post("/createNewUser/submit", function (req, res) { //--EDIT DELETE
     var username = req.body.username
     var password = req.body.password
     client.query('INSERT INTO "User"("UserName", "Password") VALUES(\'' + username + '\', \'' + password + '\');', (error, results) => {

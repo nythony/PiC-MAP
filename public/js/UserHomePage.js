@@ -2,6 +2,10 @@
 console.log("running UserHomePage.js")
 const socket = io()
 
+//////////////////////
+//	Create Project  //
+//////////////////////
+
 const $createProjectForm = document.querySelector('#create-project-form')
 const $createProjectFormInput = $createProjectForm.querySelector('input')
 const $createProjectFormButton = $createProjectForm.querySelector('button')
@@ -41,6 +45,11 @@ $createProjectForm.addEventListener('submit', (e) => {
     })
 })
 
+
+
+//////////////////////
+//	 Edit Project   //
+//////////////////////
 
 
 
