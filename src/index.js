@@ -14,7 +14,7 @@ const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
 const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjectHomePage, getAllUsersInProjectHomePage } = require('./utils/usersAtProjectHomePage')
 const { generateTaskTool } = require('./utils/taskTools')
-const project = require('./projectForm.js')
+//const project = require('./projectForm.js')
 const requirement = require('./requirementForm.js')
 const task = require('./taskForm.js')
 const taskTool = require('./taskToolForm.js')
@@ -255,10 +255,10 @@ app.get("/ProjectHomePage/", function (req, res) {
 
 
 // Current version of how to submit projects to db --EDIT DELETE
-app.get("/projectForm", function (req, res) {
-    project.getProject(req, res);
-    res.render("projectForm", { user: req.cookies.userInfo })
-})
+// app.get("/projectForm", function (req, res) {
+//     project.getProject(req, res);
+//     res.render("projectForm", { user: req.cookies.userInfo })
+// })
 
 app.get("/requirementform", function (req, res) {
     requirement.getRequirement(req, res);
@@ -323,9 +323,9 @@ app.post("/loginPage", function (req, res) {
 // })
 
 // When user wants to navigate to projectForm page from UserHomePage --EDIT DELETE
-app.post("/UserHomePage/createProject", function (req, res) {
-    res.redirect('/projectForm')
-})
+// app.post("/UserHomePage/createProject", function (req, res) {
+//     res.redirect('/projectForm')
+// })
 
 // When user wants to navigate to UserHomePage from projectForm --EDIT DELETE (currently if you submit project form you get redirected here)
 app.post("/projectForm/backToUserHomePage", function (req, res) {
@@ -493,10 +493,10 @@ app.post("/userform-submitted", function (req, res) {
     console.log(uhuman);
 });
 
-// When user clicks button to create new project (could be create, update, or delete)
-app.post("/projectform-submitted", function (req, res) {
-    project.crudProject(req, res);
-});
+// When user clicks button to create new project (could be create, update, or delete) --EDIT DELETE, goes to socket instead
+// app.post("/projectform-submitted", function (req, res) {
+//     project.crudProject(req, res);
+// });
 
 
 app.post("/requirementform-submitted", function (req, res) {

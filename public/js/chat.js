@@ -1,3 +1,7 @@
+//When a form gets submitted, it goes to the eventListener of that form. The event listening then emits an event that is heard by index.js,
+// which does the DB query stuff and emits another event heard by the socket.on(message)
+
+
 const socket = io()
 
 // Elements
