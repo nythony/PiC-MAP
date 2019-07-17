@@ -160,11 +160,15 @@
             <label><b>Description</b></label>
             <input type="text" id="projectDetails" name="projectDetails" placeholder="Enter the project description" value = "">
 
-            <label><b>Add Members</b></label>
+            <!--label><b>Add Members</b></label>
             <div class="add-project-members">
-                <button style="position: absolute; right: 0;">Add</button> <!--We want this to call a socket even that pushes to an array of users-->
+                <button style="position: absolute; right: 0;">Add</button> 
                 <input type = "text" name="project-member" placeholder="Enter the username of a member" autocomplete="off">
-            </div>
+            
+        <Use only for edit project. Otherwise this addUser button would have to do two different events.
+        We want this to call a socket event that pushes to an array of users>
+
+            </div-->
 
             <label><b>Start Date</b></label>
             <input type="date" id="startDate" name="startDate"> <!--Defaulted to creation timestamp-->

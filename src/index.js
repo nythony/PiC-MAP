@@ -155,6 +155,27 @@ io.on('connection', (socket) => {
         //socket.emit('projectData', {projectname: user.projectNameVP, users: getAllUsersInProject(user.projectNameVP)})
         callback()
     })
+
+ 	// Creating a new project in the userHomePage
+    socket.on('createProject', ({name, desc, start, due}, callback) => {
+        const userCreate = 'Alina'
+
+        const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
+        const values = [name, desc, userCreate, start, due];
+        // callback
+        client.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            } else {
+                console.log(res.rows[0])
+            }
+            console.log('----------------------------------record is created--------------------------------');
+        })
+        callback()
+    })
+
+
+
 })
 
 
