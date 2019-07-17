@@ -157,7 +157,7 @@
             <label><b>Name</b></label>
             <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" required>
 
-            <label><b>Description</b></label>
+            <label><b>Description</b> <i>(optional)</i></label>
             <input type="text" id="projectDescription" name="projectDescription" placeholder="Enter the project description" value = "">
 
             <!--label><b>Add Members</b></label>
@@ -170,12 +170,16 @@
 
             </div-->
 
-            <label><b>Start Date</b></label>
+            <label><b>Start Date</b> <i>(optional)</i></label>
             <input type="date" id="startDate" name="startDate"> <!--Defaulted to creation timestamp-->
 
-            <label><b>Due Date</b></label>
+            <label><b>Due Date</b> <i>(optional)</i></label>
             <input type="date" id="dueDate" name="dueDate">
 
+            <input type="hidden" id="userid" name="userid" required />
+            <script type="text/javascript">
+                document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
+            </script>
 
             <button type="submit" class="btn">Create</button> <!--The array of users get parsed an should create appropriate AttachUserP-->
             <button type="button" class="btn cancel" onclick="closeForm()">Close</button>

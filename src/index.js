@@ -158,8 +158,9 @@ io.on('connection', (socket) => {
 
  	// Creating a new project in the userHomePage
     socket.on('createProject', ({name, desc, start, due}, callback) => {
-        const userCreate = 8; //This is hardcoded as Alina's ID
+        const userCreate = id; //This is hardcoded as Alina's ID
         
+        //Converting empty date to null values to enter into date type values in DB
         if (start == ""){
         	start = null
         }
@@ -169,7 +170,6 @@ io.on('connection', (socket) => {
         }
 
         const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate") VALUES($1,$2,$3,$4,$5) RETURNING *';
-        
         const values = [name, desc, userCreate, start, due];
         // callback
         client.query(text, values, (err, res) => {

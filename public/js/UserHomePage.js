@@ -18,15 +18,18 @@ $createProjectForm.addEventListener('submit', (e) => {
     const desc = e.target.elements.projectDescription.value
     const start = e.target.elements.startDate.value
     const due = e.target.elements.dueDate.value
+    const id = e.target.elements.userid.value
 
     console.log("Name: ", name)
     console.log("Desc: ", desc)
     console.log("Start: ", start)
     console.log("Due: ", due)
+    console.log("ID (hidden): ", )
+
 
 
     //To be heard by index.js
-    socket.emit('createProject', {name, desc, start, due}, (error) => {
+    socket.emit('createProject', {name, desc, start, due, id}, (error) => {
   
         if (error) {
             return console.log(error)
