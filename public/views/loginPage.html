@@ -81,18 +81,20 @@ body {font-family: Arial, Helvetica, sans-serif;}
     </div>
     <div id="content">
         <img src="../img/favicon.png" alt="logo" width="200" height="200">
+        
         <h2>Please enter your username and password to sign in.</h2>
+        
         <form action="loginPage/submit" method="post" id="login-form">
             <input type="text" name="username" placeholder="username">
             <input type="password" name="password" placeholder="password">
             <button type="submit">Sign In</button>
         </form>
+
+
         <br><br><br>
         <h3>New? Click the button below to create an account.</h3>
-
         <button class="open-button" onclick="openForm()">Register</button>
 
-       
         <div class="form-popup" id="registerForm">
           <form action="/createNewUser/submit" class="form-container" method = "post" id="create-new-user-form">
             <h1>Register</h1>
@@ -108,6 +110,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
           </form>
         </div>
 
+        </div>
 
 <script>
 function openForm() {

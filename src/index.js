@@ -14,7 +14,7 @@ const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
 const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjectHomePage, getAllUsersInProjectHomePage } = require('./utils/usersAtProjectHomePage')
 const { generateTaskTool } = require('./utils/taskTools')
-const project = require('./projectForm.js')
+//const project = require('./projectForm.js')
 const requirement = require('./requirementForm.js')
 const task = require('./taskForm.js')
 const taskTool = require('./taskToolForm.js')
@@ -23,8 +23,8 @@ const login = require('./loginTools.js')
 
 //Connecting to cloud based database:
 const client = new Client({
-    //connectionString: process.env.DATABASE_URL,
-    connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+    connectionString: process.env.DATABASE_URL,
+    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 })
 client.connect()
@@ -156,8 +156,6 @@ io.on('connection', (socket) => {
         callback()
     })
 
-
-
     // When a new task tool is created with in ProjectHomePage
     socket.on('newTaskTool', ({taskToolProjectID, taskToolProjectName, taskTool}, callback) => {
         const text = 'INSERT INTO "TaskTool"( "Project_ID", "TaskToolName" ) VALUES($1, $2) RETURNING *'
@@ -167,6 +165,34 @@ io.on('connection', (socket) => {
             callback()
         })
     })
+
+ 	// Creating a new project in the userHomePage
+    socket.on('createProject', ({name, desc, start, due, id}, callback) => {
+        const userCreate = id; //This is hardcoded as Alina's ID
+        
+        //Converting empty date to null values to enter into date type values in DB
+        if (start == ""){
+        	start = null
+        }
+
+        if (due == ""){
+        	due = null
+        }
+
+        const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate") VALUES($1,$2,$3,$4,$5) RETURNING *';
+        const values = [name, desc, userCreate, start, due];
+        // callback
+        client.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            } else {
+                console.log(res.rows[0])
+            }
+            console.log('----------------------------------project is created--------------------------------');
+        })
+        callback()
+    })
+
 })
 
 
@@ -226,11 +252,11 @@ app.get("/ProjectHomePage/", function (req, res) {
 // })
 
 
-// Current version of how to submit projects to db
-app.get("/projectForm", function (req, res) {
-    project.getProject(req, res);
-    res.render("projectForm", { user: req.cookies.userInfo })
-})
+// Current version of how to submit projects to db --EDIT DELETE
+// app.get("/projectForm", function (req, res) {
+//     project.getProject(req, res);
+//     res.render("projectForm", { user: req.cookies.userInfo })
+// })
 
 app.get("/requirementform", function (req, res) {
     requirement.getRequirement(req, res);
@@ -295,11 +321,11 @@ app.post("/loginPage", function (req, res) {
 // })
 
 // When user wants to navigate to projectForm page from UserHomePage --EDIT DELETE
-app.post("/UserHomePage/createProject", function (req, res) {
-    res.redirect('/projectForm')
-})
+// app.post("/UserHomePage/createProject", function (req, res) {
+//     res.redirect('/projectForm')
+// })
 
-// When user wants to navigate to UserHomePage from projectForm
+// When user wants to navigate to UserHomePage from projectForm --EDIT DELETE (currently if you submit project form you get redirected here)
 app.post("/projectForm/backToUserHomePage", function (req, res) {
     res.redirect('/UserHomePage/')
 })
@@ -404,7 +430,7 @@ app.post("/UserHomePage/ProjectHomePage", function (req, res) {
 // When user attempts to sign in
 // If successful, redirects to UserHomePage
 // If unsuccessful, redirects to failedLoginPage
-app.post("/loginPage/submit", function (req, res) {
+app.post("/loginPage/submit", function (req, res) { //--EDIT DELETE
     var username = req.body.username
     var password = req.body.password
     var toRedirect = '/failedLoginPage'
@@ -412,7 +438,8 @@ app.post("/loginPage/submit", function (req, res) {
 })
 
 
-app.post("/failedLoginPage/submit", function (req, res) {
+
+app.post("/failedLoginPage/submit", function (req, res) {  //--EDIT DELETE
     var username = req.body.username
     var password = req.body.password
     client.query('SELECT "UserName" FROM "User";', (error, results) => {
@@ -432,7 +459,7 @@ app.post("/failedLoginPage/submit", function (req, res) {
     res.redirect('/failedLoginPage')
 });
 
-app.post("/createNewUser/submit", function (req, res) {
+app.post("/createNewUser/submit", function (req, res) { //--EDIT DELETE
     var username = req.body.username
     var password = req.body.password
     client.query('INSERT INTO "User"("UserName", "Password") VALUES(\'' + username + '\', \'' + password + '\');', (error, results) => {
@@ -465,10 +492,10 @@ app.post("/userform-submitted", function (req, res) {
     console.log(uhuman);
 });
 
-// When user clicks button to create new project (could be create, update, or delete)
-app.post("/projectform-submitted", function (req, res) {
-    project.crudProject(req, res);
-});
+// When user clicks button to create new project (could be create, update, or delete) --EDIT DELETE, goes to socket instead
+// app.post("/projectform-submitted", function (req, res) {
+//     project.crudProject(req, res);
+// });
 
 
 app.post("/requirementform-submitted", function (req, res) {

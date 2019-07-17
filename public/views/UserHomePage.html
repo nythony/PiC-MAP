@@ -44,6 +44,14 @@
       background: #f1f1f1;
     }
 
+    .form-container input[type=date], .form-container input[type=password] {
+      width: 100%;
+      padding: 15px;
+      margin: 5px 0 22px 0;
+      border: none;
+      background: #f1f1f1;
+    }
+
     /* When the inputs get focus, do something */
     .form-container input[type=text]:focus, .form-container input[type=password]:focus {
       background-color: #ddd;
@@ -137,27 +145,90 @@
             <button>View Project</button>
         </form>
     </div>
+
+    <!--POP UP FOR CREATING A PROJECT-->
+    <button class="open-button" onclick="openForm()">Create Project</button>
+
     <div id="newItems">
 
+     <div class="form-popup" id="projectForm">
+          <form class="form-container" id="create-project-form">
+            <h1>Create A New Project</h1>
+
+            <label><b>Name</b></label>
+            <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" required>
+
+            <label><b>Description</b> <i>(optional)</i></label>
+            <input type="text" id="projectDescription" name="projectDescription" placeholder="Enter the project description" value = "">
+
+            <label><b>Start Date</b> <i>(optional)</i></label>
+            <input type="date" id="startDate" name="startDate"> <!--Defaulted to creation timestamp-->
+
+            <label><b>Due Date</b> <i>(optional)</i></label>
+            <input type="date" id="dueDate" name="dueDate">
+
+            <input type="hidden" id="userid" name="userid" required />
+            <script type="text/javascript">
+                document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
+            </script>
+
+            <button type="submit" class="btn">Create</button> <!--The array of users get parsed an should create appropriate AttachUserP-->
+            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+          </form>
+        </div>
+
+    <!--POP UP FOR EDITING A PROJECT AFTER PROJECT NAME IS ENTERED-->
+    <div class="form-popup" id="editProjectForm">
+        <button class="open-button" onclick="openForm()">Edit Project</button>
+
+          <form class="form-container" id="edit-project-form">
+            <h1>Edit Your Project</h1>
+
+            <label><b>Name</b></label>
+            <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" required>
+
+            <label><b>Description</b> <i>(optional)</i></label>
+            <input type="text" id="projectDescription" name="projectDescription" placeholder="Enter the project description" value = "">
+
+            <!--label><b>Add Members</b></label>
+            <div class="add-project-members">
+                <button style="position: absolute; right: 0;">Add</button> 
+                <input type = "text" name="project-member" placeholder="Enter the username of a member" autocomplete="off">
+            
+        <Use only for edit project. Otherwise this addUser button would have to do two different events.
+        We want this to call a socket event that pushes to an array of users>
+
+            </div-->
+
+            <label><b>Start Date</b> <i>(optional)</i></label>
+            <input type="date" id="startDate" name="startDate"> <!--Defaulted to creation timestamp-->
+
+            <label><b>Due Date</b> <i>(optional)</i></label>
+            <input type="date" id="dueDate" name="dueDate">
+
+            <input type="hidden" id="userid" name="userid" required />
+            <script type="text/javascript">
+                document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
+            </script>
+
+            <button type="submit" class="btn">Create</button> <!--The array of users get parsed an should create appropriate AttachUserP-->
+            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+          </form>
+        </div>
 
 
+        <script>
+        function openForm() {
+          document.getElementById("projectForm").style.display = "block";
+        }
 
-
-
-        <form action="createProject" method="post">
-            <button type="submit">Create new project</button>
-        </form><br>
-
-
-
-
-
-
-
-
-
+        function closeForm() {
+          document.getElementById("projectForm").style.display = "none";
+        }
+        </script>
 
     </div>
+
     <div id="chatApp">
         <form action="/chatapp">
             <input type="hidden" id="username" name="username" required />
@@ -173,6 +244,11 @@
             <button>ChatApp</button>
         </form>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="/js/UserHomePage.js"></script>
 </body>
 </html>

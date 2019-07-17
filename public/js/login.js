@@ -1,5 +1,7 @@
 
 console.log('running login script')
+const socket = io()
+
 
 const $loginForm = document.querySelector('#login-form')
 const $loginFormUsername = $loginForm.querySelector('username')
