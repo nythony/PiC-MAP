@@ -1,6 +1,6 @@
 const users = []
 
-const addUser = ({ id, username, userid, room, chatroomid }) => {
+const addUser = ({ id, username, userid, room, chatroomid, roomNumber }) => {
     // Clean the data
     // username = username.trim().toLowerCase()
     // room = room.trim().toLowerCase()
@@ -8,7 +8,7 @@ const addUser = ({ id, username, userid, room, chatroomid }) => {
     // chatroomid = chatroomid.trim().toLowerCase()
 
     // Validate the data
-    if (!username || !room) {
+    if (!username || !roomNumber) {
         return {
             error: 'Username and room are required!'
         }
@@ -16,7 +16,7 @@ const addUser = ({ id, username, userid, room, chatroomid }) => {
 
     // Check for existing user
     const existingUser = users.find((user) => {
-        return user.room === room && user.username === username
+        return user.roomNumber === roomNumber && user.username === username
     })
 
     // Validate username
@@ -27,7 +27,7 @@ const addUser = ({ id, username, userid, room, chatroomid }) => {
     }
 
     // Store user
-    const user = { id, username, userid, room, chatroomid }
+    const user = { id, username, userid, room, chatroomid, roomNumber }
     users.push(user)
     return { user }
 }
@@ -47,9 +47,9 @@ const getUser = (id) => {
 
 
 
-const getUsersInRoom = (room) => {
+const getUsersInRoom = (roomNumber) => {
     // room = room.trim().toLowerCase()
-    return users.filter((user) => user.room === room)
+    return users.filter((user) => user.roomNumber === roomNumber)
 }
 
 

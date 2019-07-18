@@ -10,7 +10,7 @@ var cookieParser = require('cookie-parser');
 const url = require('url')
 
 // Importing all things from other parts of project
-const { generateMessage, generateLocationMessage } = require('./utils/messages')
+const { generateMessage} = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/usersAtChat')
 const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjectHomePage, getAllUsersInProjectHomePage } = require('./utils/usersAtProjectHomePage')
 const { generateTaskTool } = require('./utils/taskTools')
@@ -63,7 +63,8 @@ io.on('connection', (socket) => {
             return callback(error)
         }
 
-        socket.join(user.room)
+        socket.join(user.roomNumber)
+        console.log(user)
 
         // Display only to connection
         client.query('SELECT * FROM "ChatMessage" AS t1 RIGHT JOIN "User" AS t2 ON t1."User_ID" = t2."User_ID" LEFT JOIN "ChatRoom" AS t3 ON t1."ChatRoom_ID" = t3."ChatRoom_ID" WHERE t3."ChatRoom_ID" = \'' + user.chatroomid + '\';', (error, results) => {
@@ -77,9 +78,9 @@ io.on('connection', (socket) => {
         // socket.emit('message', generateMessage('Admin', `Welcome to ${room}!`))
         // Display to everyone but the connection
         // socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined ${room}`))
-        io.to(user.room).emit('roomData', {
+        io.to(user.roomNumber).emit('roomData', {
             room: user.room,
-            users: getUsersInRoom(user.room)
+            users: getUsersInRoom(user.roomNumber)
         })
 
         callback()
@@ -99,30 +100,24 @@ io.on('connection', (socket) => {
             }
             console.log('----------------------------------record is created--------------------------------')
         })
-        console.log(user.room)
-        io.to(user.room).emit('message', generateMessage(user.username, message))
+        console.log(user.roomNumber)
+        io.to(user.roomNumber).emit('message', generateMessage(user.username, message))
         // We can use this below for redirecting!
         // var destination = ('/loginPage')
         // io.to(user.room).emit('redirect', destination)
         callback()
     })
 
-    socket.on('sendLocation', (coords, callback) => {
-        const user = getUser(socket.id)
-        io.to(user.room).emit('locationMessage', generateLocationMessage(user.username, `https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
-        callback()
-    })
-
-    // When a user disconnects
+        // When a user disconnects
     // Disconnect event is built in
     socket.on('disconnect', () => {
         const user = removeUser(socket.id)
         const userLeavingProjectHomePage = removeUserFromProjectHomePage(socket.id)
         if (user) {
             // io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
-            io.to(user.room).emit('roomData', {
+            io.to(user.roomNumber).emit('roomData', {
                 room: user.room,
-                users: getUsersInRoom(user.room)
+                users: getUsersInRoom(user.roomNumber)
             })
         }
     })
@@ -283,12 +278,6 @@ app.get("/chatapp", function (req, res) {
 app.get("/chatSignIn", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/chatSignIn.html")
 })
-
-app.post("/UserHomePage/chatapp", function (req, res) {
-    // console.log(req)
-    res.sendFile(publicDirectoryPath + "views/chatApp.html")
-})
-
 
 
 // App.post stuff
