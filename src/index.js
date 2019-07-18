@@ -11,7 +11,7 @@ const url = require('url')
 
 // Importing all things from other parts of project
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
-const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
+const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/usersAtChat')
 const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjectHomePage, getAllUsersInProjectHomePage } = require('./utils/usersAtProjectHomePage')
 const { generateTaskTool } = require('./utils/taskTools')
 //const project = require('./projectForm.js')
@@ -45,16 +45,7 @@ app.set('views', path.join(__dirname, '../public/views'))
 
 app.use(cookieParser());
 
-// Trying to mask some user authentication
-/* Getting rid of global variable and changing to cookie
-class Passer {
-    constructor(userid, projectid, taskid){
-        this.userid = userid
-        this.projectid = projectid
-        this.taskid = taskid
-    }
-}
-*/
+
 
 // IO
 
@@ -64,7 +55,7 @@ class Passer {
 io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
-    socket.on('join', ({ username, userid, room, chatroomid }, callback) => {
+    socket.on('joinChat', ({ username, userid, room, chatroomid }, callback) => {
         const { error, user} = addUser({ id: socket.id, username, userid, room, chatroomid })
         
 
@@ -237,6 +228,8 @@ app.get("/ProjectHomePage/", function (req, res) {
             const chatName = chatresult["rows"][0]["ChatName"]
             newCookie["chatroomid"] = chatID
             newCookie["chatname"] = chatName // update cookie, put new cookie in response, and finish
+            const roomNumber = "C" + chatName
+            newCookie["roomNumber"] = roomNumber
             res.cookie("userInfo", newCookie)
             req.query.projectidVP = projectid
             res.render(publicDirectoryPath + "views/ProjectHomePage.html", { user: req.cookies.userInfo })

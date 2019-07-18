@@ -5,7 +5,7 @@ const http = require('http')
 const express = require('express')
 const socketio = require('socket.io')
 const { generateMessage, generateLocationMessage } = require('./utils/messages')
-const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
+const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/usersAtChat')
 const pg = require('pg')
 //const db = require('./queries')
 

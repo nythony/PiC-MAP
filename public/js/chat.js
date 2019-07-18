@@ -16,8 +16,8 @@ const locationMessageTemplate = document.querySelector('#location-message-templa
 const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 
 // Options
-const { username, userid, room, chatroomid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
-console.log({ username, userid, room, chatroomid })
+const { username, userid, room, chatroomid, roomNumber } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+console.log({ username, userid, room, chatroomid, roomNumber })
 
 const autoscroll = () => {
     // New message element
@@ -122,7 +122,7 @@ document.querySelector('#send-location').addEventListener('click', () => {
     })
 })
 
-socket.emit('join', { username, userid, room, chatroomid }, (error) => {
+socket.emit('joinChat', { username, userid, room, chatroomid }, (error) => {
     if (error) {
         alert(error)
         location.href = '/'
