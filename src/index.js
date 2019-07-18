@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
     socket.on('joinChat', ({ username, userid, room, chatroomid, roomNumber }, callback) => {
-        const { error, user} = addUser({ id: socket.id, username, userid, room, chatroomid })
+        const { error, user} = addUser({ id: socket.id, username, userid, room, chatroomid, roomNumber })
         
 
         if (error) {
