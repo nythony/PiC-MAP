@@ -23,10 +23,20 @@ body {font-family: Arial, Helvetica, sans-serif;}
 .form-popup {
   display: none;
   position: fixed;
-  bottom: 0;
-  right: 15px;
+  /* bottom: 0;
+  right: 15px; */
+  top: 50%;
+  left: 50%;
+  /* Adjust width as desired */
+  width: 300px;
+  /* Adjust height as desired */
+  height: 300px;
+  /* negative half of width */
+  margin-left: -150px;
+  /* negative half of  */
+  margin_top: -150px;
   border: 3px solid #f1f1f1;
-  z-index: 9;
+  /* z-index: 9; */
 }
 
 /* Add styles to the form container */
@@ -87,7 +97,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
         <form action="loginPage/submit" method="post" id="login-form">
             <input type="text" name="username" placeholder="username">
             <input type="password" name="password" placeholder="password">
-            <button type="submit">Sign In</button>
+            <button class="open-button" type="submit">Sign In</button>
         </form>
 
 

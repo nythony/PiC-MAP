@@ -12,12 +12,11 @@ const $messages = document.querySelector('#messages')
 
 // Templates
 const messageTemplate = document.querySelector('#message-template').innerHTML
-const locationMessageTemplate = document.querySelector('#location-message-template').innerHTML
 const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 
 // Options
-const { username, userid, room, chatroomid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
-console.log({ username, userid, room, chatroomid })
+const { username, userid, room, chatroomid, roomNumber } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+console.log({ username, userid, room, chatroomid, roomNumber })
 
 const autoscroll = () => {
     // New message element
@@ -65,17 +64,6 @@ socket.on('message', (message) => {
 //     window.location.href = destination;
 // });
 
-socket.on('locationMessage', (message) => {
-    console.log(message)
-    const html = Mustache.render(locationMessageTemplate, {
-        username: message.username,
-        url: message.url,
-        createdAt: moment(message.createdAt).format('HH:mm:ss')
-    })
-    $messages.insertAdjacentHTML('beforeend', html)
-    autoscroll()
-})
-
 socket.on('roomData', ({ room, users }) => {
     const html = Mustache.render(sidebarTemplate, {
         room,
@@ -107,22 +95,7 @@ $messageForm.addEventListener('submit', (e) => {
     })
 })
 
-document.querySelector('#send-location').addEventListener('click', () => {
-    if (!navigator.geolocation) {
-        return alert('Geolocation is not supported by your browser.')
-    }
-
-    navigator.geolocation.getCurrentPosition((position) => {
-        socket.emit('sendLocation', {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-        }, () => {
-            console.log('Location shared!')
-        })
-    })
-})
-
-socket.emit('join', { username, userid, room, chatroomid }, (error) => {
+socket.emit('joinChat', { username, userid, room, chatroomid, roomNumber }, (error) => {
     if (error) {
         alert(error)
         location.href = '/'
