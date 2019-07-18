@@ -271,7 +271,7 @@ app.get("/issueform", function (req, res) {
 
 // Current version of chatApp (Must be updated)
 app.get("/chatapp", function (req, res) {
-    console.log(req)
+    // console.log(req)
     // req.query.username = "Jalapeno"
     // req.query.room = "Test"
     res.sendFile(publicDirectoryPath + "views/chatApp.html")
@@ -285,7 +285,7 @@ app.get("/chatSignIn", function (req, res) {
 })
 
 app.post("/UserHomePage/chatapp", function (req, res) {
-    console.log(req)
+    // console.log(req)
     res.sendFile(publicDirectoryPath + "views/chatApp.html")
 })
 
