@@ -228,7 +228,7 @@ app.get("/ProjectHomePage/", function (req, res) {
             const chatName = chatresult["rows"][0]["ChatName"]
             newCookie["chatroomid"] = chatID
             newCookie["chatname"] = chatName // update cookie, put new cookie in response, and finish
-            const roomNumber = "C" + chatID.string()
+            const roomNumber = "C" + chatID.toString()
             newCookie["roomNumber"] = roomNumber
             res.cookie("userInfo", newCookie)
             req.query.projectidVP = projectid
