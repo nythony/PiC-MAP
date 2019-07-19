@@ -67,10 +67,11 @@ io.on('connection', (socket) => {
         console.log(user)
 
         // Display only to connection
-        client.query('SELECT * FROM "ChatMessage" AS t1 RIGHT JOIN "User" AS t2 ON t1."User_ID" = t2."User_ID" LEFT JOIN "ChatRoom" AS t3 ON t1."ChatRoom_ID" = t3."ChatRoom_ID" WHERE t3."ChatRoom_ID" = \'' + user.chatroomid + '\';', (error, results) => {
+        client.query('SELECT * FROM "ChatMessage" WHERE "ChatRoom_ID" = \'' + user.chatroomid + '\' ORDER BY "ChatMessage_ID";', (error, results) => {
             for (let foo of results.rows) {
                 //console.log(foo["Message"])
                 //console.log("we're here")
+                console.log(foo)
                 socket.emit('message', generateMessageHistory(foo["UserName"], foo["Message"], foo["TimeStamp"]))
             }
         })
