@@ -10,7 +10,7 @@ var cookieParser = require('cookie-parser');
 const url = require('url')
 
 // Importing all things from other parts of project
-const { generateMessage} = require('./utils/messages')
+const { generateMessage, generateMessageHistory} = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/usersAtChat')
 const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjectHomePage, getAllUsersInProjectHomePage } = require('./utils/usersAtProjectHomePage')
 const { generateTaskTool } = require('./utils/taskTools')
@@ -71,7 +71,7 @@ io.on('connection', (socket) => {
             for (let foo of results.rows) {
                 //console.log(foo["Message"])
                 //console.log("we're here")
-                socket.emit('message', generateMessage(foo["UserName"], foo["Message"]))
+                socket.emit('message', generateMessageHistory(foo["UserName"], foo["Message"], foo["TimeStamp"]))
             }
         })
 
