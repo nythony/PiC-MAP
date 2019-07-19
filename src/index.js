@@ -64,14 +64,14 @@ io.on('connection', (socket) => {
         }
 
         socket.join(user.roomNumber)
-        console.log(user)
+        //console.log(user)
 
         // Display only to connection
         client.query('SELECT t1."Message", t2."UserName", t1."TimeStamp" FROM "ChatMessage" AS t1 JOIN "User" AS t2 ON t1."User_ID" = t2."User_ID" JOIN "ChatRoom" AS t3 ON t1."ChatRoom_ID" = t3."ChatRoom_ID" WHERE t3."ChatRoom_ID" = \'' + user.chatroomid + '\' ORDER BY "ChatMessage_ID";', (error, results) => {
             for (let foo of results.rows) {
                 //console.log(foo["Message"])
                 //console.log("we're here")
-                console.log(foo)
+                //console.log(foo)
                 socket.emit('message', generateMessageHistory(foo["UserName"], foo["Message"], foo["TimeStamp"]))
             }
         })
@@ -96,7 +96,7 @@ io.on('connection', (socket) => {
             if (err) {
                 console.log(err.stack)
             } else {
-                console.log(res.rows[0])
+                //console.log(res.rows[0])
 
             }
             console.log('----------------------------------record is created--------------------------------')
