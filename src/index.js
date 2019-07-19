@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
         console.log(user)
 
         // Display only to connection
-        client.query('SELECT * FROM "ChatMessage" WHERE "ChatRoom_ID" = \'' + user.chatroomid + '\' ORDER BY "ChatMessage_ID";', (error, results) => {
+        client.query('SELECT t1."Message", t2."UserName", t1."TimeStamp" FROM "ChatMessage" AS t1 JOIN "User" AS t2 ON t1."User_ID" = t2."User_ID" JOIN "ChatRoom" AS t3 ON t1."ChatRoom_ID" = t3."ChatRoom_ID" WHERE t3."ChatRoom_ID" = \'' + user.chatroomid + '\' ORDER BY "ChatMessage_ID";', (error, results) => {
             for (let foo of results.rows) {
                 //console.log(foo["Message"])
                 //console.log("we're here")

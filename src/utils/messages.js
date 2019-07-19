@@ -6,7 +6,7 @@ const generateMessage = (username, text) => {
     }
 }
 
-const generateMessageHistory = (username, text) => {
+const generateMessageHistory = (username, text, createdAt) => {
     return {
         username,
         text,
