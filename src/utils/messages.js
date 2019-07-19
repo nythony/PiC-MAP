@@ -6,6 +6,15 @@ const generateMessage = (username, text) => {
     }
 }
 
+const generateMessageHistory = (username, text, createdAt) => {
+    return {
+        username,
+        text,
+        createdAt
+    }
+}
+
 module.exports = {
-    generateMessage
+    generateMessage,
+    generateMessageHistory
 }

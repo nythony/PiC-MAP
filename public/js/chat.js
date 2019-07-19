@@ -46,7 +46,7 @@ socket.on('message', (message) => {
     const html = Mustache.render(messageTemplate, {
         username: message.username,
         message: message.text,
-        createdAt: moment(message.createdAt).format('HH:mm:ss')
+        createdAt: moment(message.createdAt).format('dddd MM/DD/YY HH:mm')
     })
     // New Messages show up at top inside messages div
     // $messagese.insertAdjacentHTML('afterbegin')
