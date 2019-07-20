@@ -427,10 +427,10 @@ app.post("/loginPage/submit", function (req, res) { //--EDIT DELETE
                 res.redirect("/UserHomePage/")
             })
         } else if (loginMatch == 2) { //username exists, bad password
-            io.socket.emit('failedLogin', 'Login unsuccessful: Wrong password')
+            io.sockets.emit('failedLogin', 'Login unsuccessful: Wrong password')
         }
         else { // loginMatch == 3, username does not exist
-            io.socket.emit('failedLogin', 'Login unsuccessful: Username does not exist')
+            io.sockets.emit('failedLogin', 'Login unsuccessful: Username does not exist')
         } 
     })           
 })
