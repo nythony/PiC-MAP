@@ -2,7 +2,7 @@
 console.log('running login script')
 const socket = io()
 
-
+/* We are not using socket to verify credentials
 const $loginForm = document.querySelector('#login-form')
 const $loginFormUsername = $loginForm.querySelector('username')
 const $loginFormPassword = $loginForm.querySelector('password')
@@ -13,13 +13,14 @@ const $createLoginFormUsername = $createLoginForm.querySelector('username')
 const $createLoginFormPassword = $createLoginForm.querySelector('password')
 const $createLoginFormButton = $createLoginForm.querySelector('button')
 
+
+
 //Form submission - function calls
 $loginForm.addEventListener('submit', checkLogin)
 $createLoginForm.addEventListener('submit', createNewLogin)
 
-//Error message
-const failedLoginTemplate = document.querySelector('#failedLogin-template').innerHTML
-const $loginFail = document.querySelector('#loginFail')
+
+
 
 
 function checkLogin(event) {
@@ -32,6 +33,7 @@ function checkLogin(event) {
     console.log(password)
 
 }
+*/
 
 
 function createNewLogin(event) {
@@ -44,6 +46,10 @@ function createNewLogin(event) {
     console.log(password)
 
 }
+
+//Error message
+const failedLoginTemplate = document.querySelector('#failedLogin-template').innerHTML
+const $loginFail = document.querySelector('#loginFail')
 
 socket.on('failedLogin', (eMessage) => {
 
