@@ -13,9 +13,13 @@ const $createLoginFormUsername = $createLoginForm.querySelector('username')
 const $createLoginFormPassword = $createLoginForm.querySelector('password')
 const $createLoginFormButton = $createLoginForm.querySelector('button')
 
-
+//Form submission - function calls
 $loginForm.addEventListener('submit', checkLogin)
 $createLoginForm.addEventListener('submit', createNewLogin)
+
+//Error message
+const failedLoginTemplate = document.querySelector('#failedLogin-template').innerHTML
+const $loginFail = document.querySelector('#loginFail')
 
 
 function checkLogin(event) {
