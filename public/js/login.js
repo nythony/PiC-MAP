@@ -40,3 +40,16 @@ function createNewLogin(event) {
     console.log(password)
 
 }
+
+socket.on('failedLogin', (eMessage) => {
+
+    const html = Mustache.render(failedLoginTemplate, {
+        messageDisplay: eMessage
+    })
+
+    $loginFail.insertAdjacentHTML('beforeend', html)
+
+    var form = document.getElementById("login-form")
+    form.reset()
+
+})
