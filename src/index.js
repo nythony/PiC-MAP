@@ -19,7 +19,7 @@ const requirement = require('./requirementForm.js')
 const task = require('./taskForm.js')
 const taskTool = require('./taskToolForm.js')
 const issue = require('./issueForm.js')
-const login = require('./loginTools.js')
+//const login = require('./loginTools.js')
 
 //Connecting to cloud based database:
 const client = new Client({
@@ -416,9 +416,26 @@ app.post("/UserHomePage/ProjectHomePage", function (req, res) {
 app.post("/loginPage/submit", function (req, res) { //--EDIT DELETE
     var username = req.body.username
     var password = req.body.password
-    var toRedirect = '/failedLoginPage'
-    login.verifyCredentials(req, res, username, password)               
+    
+    var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
+    loginMatch.then(function(result) {
+        loginMatch = result.rows[0]["user_pass_match"]
+        if (loginMatch == 1) { // successful login
+            client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
+                var thisUserID = useridresult["rows"][0]["User_ID"]
+                res.cookie("userInfo",{name:username, userid: thisUserID, chatname: "TestingChatroom", chatroomid: 1})
+                res.redirect("/UserHomePage/")
+            })
+        } else if (loginMatch == 2) { //username exists, bad password
+            res.redirect("/failedLoginPage")
+        }
+        else { // loginMatch == 3, username does not exist
+            res.redirect("/failedLoginPage")
+        } 
+    })           
 })
+
+//PUT VERIFY CREDENTIALS HERE AND ADD SOCKET FOR FAILED LOGIN.
 
 
 
