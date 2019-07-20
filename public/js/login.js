@@ -33,10 +33,10 @@ function checkLogin(event) {
     console.log(password)
 
 }
-*/
 
 
-function createNewLogin(event) {
+
+function createNewLogin(event) { --CONVERT TO SOCKET?
     event.preventDefault()
     // Retrieve username and password from create-login-form
     username = event.target.elements.username.value
@@ -46,6 +46,10 @@ function createNewLogin(event) {
     console.log(password)
 
 }
+
+
+*/
+
 
 //Error message
 const failedLoginTemplate = document.querySelector('#failedLogin-template').innerHTML
