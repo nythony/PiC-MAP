@@ -24,10 +24,10 @@ const verifyCredentials = (req, res, username, password) => {
                 res.redirect("/UserHomePage/")
             })
         } else if (loginMatch == 2) { //username exists, bad password
-            res.redirect("/")
+            res.redirect("/failedLoginPage")
         }
         else { // loginMatch == 3, username does not exist
-            res.redirect("/")
+            res.redirect("/failedLoginPage")
         }
     })
 }
