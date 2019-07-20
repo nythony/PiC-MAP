@@ -122,6 +122,14 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
         </div>
 
+      <!--Error message template-->
+       <div id="loginFail"></div>
+        <script id="failedLogin-template" type="text/html">
+            <div class="errorMessage">
+              <h4 style="color:red"><center>{{messageDisplay}}</center></h4>
+            </div>
+        </script>
+
 <script>
 function openForm() {
   document.getElementById("registerForm").style.display = "block";
