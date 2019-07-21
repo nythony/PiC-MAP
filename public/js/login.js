@@ -67,8 +67,8 @@ socket.on('failedLogin', (eMessage) => {
     form.reset()
 
     var timer = setTimeout(function() {
-        window.location='http://youtube.com'
-    }, 3000);
+        window.location='/'
+    }, 8000);
     /*
 
                   // Your application has indicated there's an error
