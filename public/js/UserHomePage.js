@@ -2,11 +2,29 @@
 console.log("running UserHomePage.js")
 const socket = io()
 
+var cookieParser = require('cookie-parser');
+
 ////////////////////
 //  Project List  //
 ////////////////////
 
-var userID = document.cookie;
+var rCookie = document.cookie;
+var userID = cookie.parse(rCookie;
+
+//Convert cookie string to object
+function parseCookie(cookie){
+    console.log("Trying to parse ", cookie)
+    cookie = cookie.split("; ").join(";");
+    cookie = cookie.split(" =").join("=");
+    cookie = cookie.split(";");
+
+    var object = {};
+    for(var i=0; i<cookie.length; i++){
+        cookie[i] = cookie[i].split('=');
+        object[cookie[i][0]] = decodeURIComponent(cookie[i][1]);
+    }
+    return object;
+}
 
 
 // When a user enters a projecthomepage, sends user info to server
