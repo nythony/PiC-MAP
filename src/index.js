@@ -273,7 +273,7 @@ app.get("/chatapp", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/chatApp.html")
 })
 
-app.get("/tasktool", function (req, res) {
+app.get("/TaskTool", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/TaskTool.html")
 })
 
