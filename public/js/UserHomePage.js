@@ -9,7 +9,7 @@ var cookieParser = require('cookie-parser');
 ////////////////////
 
 var rCookie = document.cookie;
-var userID = cookie.parse(rCookie;
+var userID = cookie.parse(rCookie);
 
 //Convert cookie string to object
 function parseCookie(cookie){
