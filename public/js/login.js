@@ -66,4 +66,18 @@ socket.on('failedLogin', (eMessage) => {
     var form = document.getElementById("login-form")
     form.reset()
 
+    var timer = setTimeout(function() {
+        window.location='http://youtube.com'
+    }, 3000);
+    /*
+
+                  // Your application has indicated there's an error
+                        window.setTimeout(function(){
+
+                            // Move to a new location or you can do something else
+                            window.location.href = "https://www.google.com";
+
+                        }, 5000);
+                        */
+
 })
