@@ -289,7 +289,7 @@ app.get("/chatSignIn", function (req, res) {
 // })
 
 // For use when logging out
-app.post("/loginPage", function (req, res) {
+app.post("/logout", function (req, res) {
     res.redirect('/loginPage')
 })
 
@@ -413,7 +413,7 @@ app.post("/UserHomePage/ProjectHomePage", function (req, res) {
 // When user attempts to sign in
 // If successful, redirects to UserHomePage
 // If unsuccessful, redirects to failedLoginPage
-app.post("/loginPage/submit", function (req, res) { //--EDIT DELETE
+app.post("/loginPage", function (req, res) { //--EDIT DELETE
     var username = req.body.username
     var password = req.body.password
     
