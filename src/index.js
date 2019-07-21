@@ -273,11 +273,8 @@ app.get("/chatapp", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/chatApp.html")
 })
 
-
-
-// Signin page for chatApp (Must be updated)
-app.get("/chatSignIn", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/chatSignIn.html")
+app.get("/tasktool", function (req, res) {
+    res.sendFile(publicDirectoryPath + "views/TaskTool.html")
 })
 
 
