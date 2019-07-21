@@ -11,6 +11,7 @@ var userID = document.cookie;
 
 // When a user enters a projecthomepage, sends user info to server
 socket.emit('enterUserHomePage', userID, (error) => {
+    console.log("we are emitting enterUserHomePage")
     if (error) {
         alert(error)
         location.href = '/'
