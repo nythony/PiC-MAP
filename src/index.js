@@ -153,6 +153,11 @@ io.on('connection', (socket) => {
         })
     })
 
+
+////////////////////
+//  UserHomePage  //
+////////////////////
+
  	// Creating a new project in the userHomePage
     socket.on('createProject', ({name, desc, start, due, id}, callback) => {
         const userCreate = id; //This is hardcoded as Alina's ID
