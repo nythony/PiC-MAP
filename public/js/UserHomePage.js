@@ -6,7 +6,7 @@ const socket = io()
 //  Project List  //
 ////////////////////
 
-var userId = document.cookie();
+var userId = document.cookie;
 console.log(userID);
 
 
