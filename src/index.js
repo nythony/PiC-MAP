@@ -187,6 +187,7 @@ io.on('connection', (socket) => {
 
         // When a user enters a userhomepage--Need change.
     socket.on('enterUserHomePage',  (userProj, callback) => {
+        console.log("we are in index.js @ enterUserHomePage")
         console.log(userProj);
         callback()
     })
