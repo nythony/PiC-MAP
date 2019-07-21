@@ -439,25 +439,25 @@ app.post("/loginPage/submit", function (req, res) { //--EDIT DELETE
 
 
 
-app.post("/failedLoginPage/submit", function (req, res) {  //--EDIT DELETE
-    var username = req.body.username
-    var password = req.body.password
-    client.query('SELECT "UserName" FROM "User";', (error, results) => {
-        if (error) throw error
-        for (let row of results.rows) {
-            if (row["UserName"] == username) {
-                client.query('SELECT "Password" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results1) => {
-                    if (error1) throw error1
-                    console.log(results1["rows"][0]["Password"])
-                    if (results1["rows"][0]["Password"] == password) {
-                        res.redirect('/loginResult/' + username)
-                    }
-                })
-            }
-        }
-    })
-    res.redirect('/failedLoginPage')
-});
+// app.post("/failedLoginPage/submit", function (req, res) {  //--EDIT DELETE
+//     var username = req.body.username
+//     var password = req.body.password
+//     client.query('SELECT "UserName" FROM "User";', (error, results) => {
+//         if (error) throw error
+//         for (let row of results.rows) {
+//             if (row["UserName"] == username) {
+//                 client.query('SELECT "Password" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results1) => {
+//                     if (error1) throw error1
+//                     console.log(results1["rows"][0]["Password"])
+//                     if (results1["rows"][0]["Password"] == password) {
+//                         res.redirect('/loginResult/' + username)
+//                     }
+//                 })
+//             }
+//         }
+//     })
+//     res.redirect('/failedLoginPage')
+// });
 
 app.post("/createNewUser/submit", function (req, res) { //--EDIT DELETE
     var username = req.body.username
