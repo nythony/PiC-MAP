@@ -197,9 +197,9 @@ app.get("/loginPage", function (req, res) { //Redirect to home page/login page, 
 })
 
 // When user enters incorrect login information - sends failedLoginPage.html
-app.get("/failedLoginPage", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/failedLoginPage.html")
-})
+// app.get("/failedLoginPage", function (req, res) {
+//     res.sendFile(publicDirectoryPath + "views/failedLoginPage.html")
+// })
 
 // When createNewUser is loaded - sends createNewUser.html --DELETE
 // app.get("/createNewUser", function (req, res) {
