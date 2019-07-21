@@ -2,6 +2,25 @@
 console.log("running UserHomePage.js")
 const socket = io()
 
+////////////////////
+//  Project List  //
+////////////////////
+
+var userId = document.cookie();
+console.log(userID);
+
+
+// When a user enters a projecthomepage, sends user info to server
+socket.emit('enterUserHomePage', user, (error) => {
+    if (error) {
+        alert(error)
+        location.href = '/'
+    }
+})
+
+
+
+
 //////////////////////
 //	Create Project  //
 //////////////////////
@@ -50,11 +69,6 @@ $createProjectForm.addEventListener('submit', (e) => {
 //////////////////////
 //	 Edit Project   //
 //////////////////////
-
-
-
-
-
 
 
 

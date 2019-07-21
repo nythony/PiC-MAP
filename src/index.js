@@ -185,6 +185,36 @@ io.on('connection', (socket) => {
         callback()
     })
 
+        // When a user enters a userhomepage--Need change.
+    socket.on('enterUserHomePage',  ({usernameVP, useridVP, projectNameVP, projectidVP}, callback) => {
+        // Display only to connection
+        client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectNameVP+'\';', (err, projectidresult) => { // get project ID of input project
+            projectidVP = projectidresult["rows"][0]["Project_ID"]
+            const { error, user} = addUserToProjectHomePage({ id: socket.id, usernameVP, useridVP, projectNameVP, projectidVP }) // register user on page
+            if (error) {
+                return callback(error)
+            }
+            socket.join((user.projectidVP).toString() + user.projectNameVP) // CHATROOM NAMING CONVENTION - ID + name (e.g. 8Twitter)
+            client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+                for (let foo of tasktoolresult.rows) {
+                    socket.emit('taskTool', generateTaskTool(foo["TaskToolName"])) // display all task tools to user who just joined
+                }
+            })
+        })
+        //socket.emit('projectData', {projectname: user.projectNameVP, users: getAllUsersInProject(user.projectNameVP)})
+        callback()
+    })
+
+    // When a new task tool is created with in ProjectHomePage
+    socket.on('newTaskTool', ({taskToolProjectID, taskToolProjectName, taskTool}, callback) => {
+        const text = 'INSERT INTO "TaskTool"( "Project_ID", "TaskToolName" ) VALUES($1, $2) RETURNING *'
+        const values = [taskToolProjectID, taskTool]
+        client.query(text, values, (err, res) => { // add taskTool to database
+            io.in(taskToolProjectID.toString()+taskToolProjectName).emit('taskTool', generateTaskTool(taskTool)) // emit the new task tool to all user in room (room identifier is projectid+projectname)
+            callback()
+        })
+    })
+
 })
 
 
