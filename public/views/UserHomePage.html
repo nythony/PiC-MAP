@@ -147,47 +147,61 @@
     </div>
 
 
-    <!--POP UP FOR EDITING A PROJECT AFTER PROJECT NAME IS ENTERED-->
-    <div id="newItems">
 
-    <div class="form-popup" id="editProjectForm">
-        <button class="open-button" onclick="openForm()">Edit Project</button>
+    <div id="projects">
 
-          <form class="form-container" id="edit-project-form">
-            <h1>Edit Your Project</h1>
+        <div id = "project-list"></div>
+            <script id="projectList-template" type="text/html">
+                <div class="projectElement">
+                    <p>
+                        <span class="projectElement_Name">{{projectName}}</span>
+                        <span class="projectElement_Desc">{{projectDescription}}</span>
+                    </p>
+                   
 
-            <label><b>Name</b></label>
-            <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" required>
+            <!--POP UP FOR EDITING A PROJECT AFTER PROJECT NAME IS ENTERED-->
+            <div class="form-popup" id="editProjectForm">
+                <button class="open-button" onclick="openForm()">Edit Project</button>
 
-            <label><b>Description</b> <i>(optional)</i></label>
-            <input type="text" id="projectDescription" name="projectDescription" placeholder="Enter the project description" value = "">
+                  <form class="form-container" id="edit-project-form">
+                    <h1>Edit Your Project</h1>
 
-            <!--label><b>Add Members</b></label>
-            <div class="add-project-members">
-                <button style="position: absolute; right: 0;">Add</button> 
-                <input type = "text" name="project-member" placeholder="Enter the username of a member" autocomplete="off">
-            
-        <Use only for edit project. Otherwise this addUser button would have to do two different events.
-        We want this to call a socket event that pushes to an array of users>
+                    <label><b>Name</b></label>
+                    <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" required>
 
-            </div-->
+                    <label><b>Description</b> <i>(optional)</i></label>
+                    <input type="text" id="projectDescription" name="projectDescription" placeholder="Enter the project description" value = "">
 
-            <label><b>Start Date</b> <i>(optional)</i></label>
-            <input type="date" id="startDate" name="startDate"> <!--Defaulted to creation timestamp-->
+                    <label><b>Add Members</b></label>
+                    <div class="add-project-members">
+                        <button style="position: absolute; right: 0;">Add</button> 
+                        <input type = "text" name="project-member" placeholder="Enter the username of a member" autocomplete="off">
+                    
+                <!--Use only for edit project. Otherwise this addUser button would have to do two different events.
+                We want this to call a socket event that pushes to an array of users-->
 
-            <label><b>Due Date</b> <i>(optional)</i></label>
-            <input type="date" id="dueDate" name="dueDate">
+                    </div>
 
-            <input type="hidden" id="userid" name="userid" required />
-            <script type="text/javascript">
-                document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
+                    <label><b>Start Date</b> <i>(optional)</i></label>
+                    <input type="date" id="startDate" name="startDate"> <!--Defaulted to creation timestamp-->
+
+                    <label><b>Due Date</b> <i>(optional)</i></label>
+                    <input type="date" id="dueDate" name="dueDate">
+
+                    <input type="hidden" id="userid" name="userid" required />
+                    <script type="text/javascript">
+                        document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
+                    </script>
+
+                    <button type="submit" class="btn">Edit: not functional</button> <!--The array of users get parsed an should create appropriate AttachUserP-->
+                    <button type="button" class="btn cancel" onclick="closeForm()">Delete: NOt functional</button>
+                  </form>
+                </div>
+                </div>
             </script>
-
-            <button type="submit" class="btn">Create</button> <!--The array of users get parsed an should create appropriate AttachUserP-->
-            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-          </form>
-        </div>
+            
     </div>
+
 
 
 
