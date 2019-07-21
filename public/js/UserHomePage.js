@@ -7,11 +7,10 @@ const socket = io()
 ////////////////////
 
 var userID = document.cookie;
-console.log(userID);
 
 
 // When a user enters a projecthomepage, sends user info to server
-socket.emit('enterUserHomePage', user, (error) => {
+socket.emit('enterUserHomePage', userID, (error) => {
     if (error) {
         alert(error)
         location.href = '/'
