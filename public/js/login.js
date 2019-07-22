@@ -2,7 +2,7 @@
 console.log('running login script')
 const socket = io()
 
-/* We are not using socket to verify credentials
+// We are not using socket to verify credentials
 const $loginForm = document.querySelector('#login-form')
 const $loginFormUsername = $loginForm.querySelector('username')
 const $loginFormPassword = $loginForm.querySelector('password')
@@ -21,8 +21,6 @@ $createLoginForm.addEventListener('submit', createNewLogin)
 
 
 
-
-
 function checkLogin(event) {
     event.preventDefault()
     // Retrieve username and password from login-form
@@ -36,7 +34,7 @@ function checkLogin(event) {
 
 
 
-function createNewLogin(event) { --CONVERT TO SOCKET?
+function createNewLogin(event) { //CONVERT TO SOCKET?
     event.preventDefault()
     // Retrieve username and password from create-login-form
     username = event.target.elements.username.value
@@ -48,7 +46,6 @@ function createNewLogin(event) { --CONVERT TO SOCKET?
 }
 
 
-*/
 
 
 //Error message
