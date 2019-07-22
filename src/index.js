@@ -187,10 +187,22 @@ io.on('connection', (socket) => {
 
         // When a user enters a userhomepage--Need change.
     socket.on('enterUserHomePage',  (userProj, callback) => {
-        console.log("we are in index.js @ enterUserHomePage")
-        console.log(userProj);
+        var username = userProj.username;
+        var list = []
+        const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \''+username+'\ ORDER BY "StartDate";'
+        
+        client.query(text, (err, results) => { 
+            for (var obj in results.rows){
+                storage.push(obj["Project_ID"])
+            }
+        })
+        console.log(list)
+        //socket.emit('projectList', )
         callback()
     })
+
+
+
 
     // When a new task tool is created with in ProjectHomePage
     socket.on('newTaskTool', ({taskToolProjectID, taskToolProjectName, taskTool}, callback) => {

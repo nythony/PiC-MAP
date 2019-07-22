@@ -15,12 +15,46 @@ console.log("Object ", { username, password });
 
 // When a user enters a projecthomepage, sends user info to server
 socket.emit('enterUserHomePage', { username, password }, (error) => {
-    console.log("we are emitting enterUserHomePage")
     if (error) {
         alert(error)
         location.href = '/'
     }
 })
+
+
+//////////////////////
+//   Edit Project   //
+//////////////////////
+
+
+
+
+
+
+// var projectMemberList = [] //do not need to add creator, because create button should automatically create AttachUserP for creator --Might not need
+// // Elements
+// const $addMembers = document.querySelector('#add-project-members')
+// const $addMembersInput = $addMembersInput.querySelector('input')
+// const $addMembersButton = $addMembersInput.querySelector('button')
+
+// //When the add button is clicked to add a user (in edit project) --STILL NEED TO IMPLEMENT AND TEST IF WORKS
+// $addMembers.addEventListener('submit', (e) => {
+//     e.preventDefault()
+
+//     // Retrieve message value of message form
+//     const member = e.target.elements.project-member.value
+
+//     socket.emit('addProjectMember', member, (error) => {
+//         // Enable form
+
+//         if (error) {
+//             return console.log(error)
+//         }
+
+//         var form = document.getElementById("add-project-members")
+//         form.reset()
+//     })
+// })
 
 
 
@@ -68,39 +102,4 @@ $createProjectForm.addEventListener('submit', (e) => {
     })
 })
 
-
-
-//////////////////////
-//	 Edit Project   //
-//////////////////////
-
-
-
-
-
-
-// var projectMemberList = [] //do not need to add creator, because create button should automatically create AttachUserP for creator --Might not need
-// // Elements
-// const $addMembers = document.querySelector('#add-project-members')
-// const $addMembersInput = $addMembersInput.querySelector('input')
-// const $addMembersButton = $addMembersInput.querySelector('button')
-
-// //When the add button is clicked to add a user (in edit project) --STILL NEED TO IMPLEMENT AND TEST IF WORKS
-// $addMembers.addEventListener('submit', (e) => {
-//     e.preventDefault()
-
-//     // Retrieve message value of message form
-//     const member = e.target.elements.project-member.value
-
-//     socket.emit('addProjectMember', member, (error) => {
-//         // Enable form
-
-//         if (error) {
-//             return console.log(error)
-//         }
-
-//         var form = document.getElementById("add-project-members")
-//         form.reset()
-//     })
-// })
 
