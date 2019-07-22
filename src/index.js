@@ -446,7 +446,7 @@ app.post("/loginPage", function (req, res) { //--EDIT DELETE
             client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
                 var thisUserID = useridresult["rows"][0]["User_ID"]
                 res.cookie("userInfo",{name:username, userid: thisUserID, chatname: "TestingChatroom", chatroomid: 1})
-                res.redirect("/UserHomePage/")
+                res.redirect("UserHomePage")
             })
         } else if (loginMatch == 2) { //username exists, bad password
             io.sockets.emit('failedLogin', 'Login unsuccessful: Wrong password')
