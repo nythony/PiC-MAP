@@ -18,8 +18,7 @@ const $loginFormButton = $loginForm.querySelector('button')
 
 //Form submission - function calls
 $loginForm.addEventListener('submit', checkLogin)
-$createLoginForm.addEventListener('submit', createNewLogin)
-
+//$createLoginForm.addEventListener('submit', createNewLogin)
 
 
 function checkLogin(event) {
