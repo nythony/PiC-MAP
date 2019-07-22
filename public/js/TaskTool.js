@@ -10,8 +10,8 @@ const subtaskTemplate = document.querySelector('#subtask-template').innerHTML
 
 // Options
 console.log("Hello!")
-//const {username, userid, roomNumber, TaskToolName, TaskTool_ID} = Qs.parse(location.search, { ignoreQueryPrefix: true })
-//console.log({username, userid, roomNumber, TaskToolName, TaskTool_ID})
+const {username, userid, roomNumber, TaskToolName, TaskTool_ID} = Qs.parse(location.search, { ignoreQueryPrefix: true })
+console.log({username, userid, roomNumber, TaskToolName, TaskTool_ID})
 
 // Definition for subtaskCategory event
 socket.on('subtaskCategory', (subtaskCategory) => {
