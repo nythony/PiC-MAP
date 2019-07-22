@@ -194,6 +194,7 @@ io.on('connection', (socket) => {
 
         client.query(text, (err, results) => { 
             for (let obj of results.rows){
+                console.log(obj["Project_ID"])
                 list.push({projID: obj["Project_ID"], projName: obj["ProjectName"], projDesc: obj["ProjectDesc"]})
             }
         })
@@ -253,7 +254,6 @@ app.get("/UserHomePage/", function (req, res) {
             client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
                 var thisUserID = useridresult["rows"][0]["User_ID"]
                 res.cookie("userInfo",{name:username, userid: thisUserID, chatname: "TestingChatroom", chatroomid: 1})
-                console.log(req.cookies.userInfo)
                 res.render("UserHomePage", { user: req.cookies.userInfo })
                //res.redirect("UserHomePage")
             })
