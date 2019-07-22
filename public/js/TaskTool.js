@@ -22,14 +22,9 @@ socket.on('subtaskCategory', (subtaskCategory) => {
 })
 
 // Definition for subtask event
-socket.on('subtask', (subtask) => {
+socket.on('subtask', (subtasks) => {
     const html = Mustache.render(subtaskTemplate, {
-        TaskName: subtask.TaskName,
-        TaskDesc: subtask.TaskDesc,
-        //TaskUsers: subtask.TaskUsers,
-        DueDate: subtask.DueDate,
-        TasksLabel: subtask.TasksLabel,
-        TasksCategory: subtask.TasksCategory
+        subtasks
     })
     document.querySelector('#subtask').innerHTML = html
 })
