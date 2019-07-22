@@ -196,7 +196,7 @@ io.on('connection', (socket) => {
             for (let obj of results.rows){
                 var proj = {}
                 proj["projID"] = obj["Project_ID"]
-                proj["projName"] obj["ProjectName"]
+                proj["projName"] = obj["ProjectName"]
                 proj["projDesc"] = obj["ProjectDesc"]
                 list.push(proj);
             }
