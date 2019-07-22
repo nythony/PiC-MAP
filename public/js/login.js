@@ -8,11 +8,11 @@ const $loginFormUsername = $loginForm.querySelector('username')
 const $loginFormPassword = $loginForm.querySelector('password')
 const $loginFormButton = $loginForm.querySelector('button')
 
-//Form is getting submitted to createNewUser/submit. Not using socket.
-// const $createLoginForm = document.querySelector('#create-login-form')
-// const $createLoginFormUsername = $createLoginForm.querySelector('username')
-// const $createLoginFormPassword = $createLoginForm.querySelector('password')
-// const $createLoginFormButton = $createLoginForm.querySelector('button')
+// //Form is getting submitted to createNewUser/submit. Not using socket.
+// const $registerForm = document.querySelector('#registerForm')
+// const $registerFormUsername = $registerForm.querySelector('username')
+// const $registerFormPassword = $registerForm.querySelector('password')
+// const $registerFormButton = $registerForm.querySelector('button')
 
 
 
