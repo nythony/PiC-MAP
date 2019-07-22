@@ -189,13 +189,15 @@ io.on('connection', (socket) => {
     socket.on('enterUserHomePage',  (userProj, callback) => { 
         var username = userProj.username;
         var list = []
-        var proj = {}
 
         const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
 
         client.query(text, (err, results) => { 
             for (let obj of results.rows){
-                proj = {projName: obj["Project_ID"], projName: obj["ProjectName"], projDesc: obj["ProjectDesc"]}
+                var proj = {}
+                proj["projID"] = obj["Project_ID"]
+                proj["projName"] obj["ProjectName"]
+                proj["projDesc"] = obj["ProjectDesc"]
                 list.push(proj);
             }
         })
