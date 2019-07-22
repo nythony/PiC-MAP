@@ -18,7 +18,7 @@ socket.on('subtaskCategory', (subtaskCategory) => {
     const html = Mustache.render(subtaskCategoryTemplate, {
         TaskCategory: subtaskCategory.TaskCategory
     })
-    $subtaskCategory.insertAdjacentHTML('beforeend', html)
+    document.querySelector('#subtaskCategory').innerHTML = html
 })
 
 // Definition for subtask event
@@ -31,7 +31,7 @@ socket.on('subtask', (subtask) => {
         TasksLabel: subtask.TasksLabel,
         TasksCategory: subtask.TasksCategory
     })
-    $subtask.insertAdjacentHTML('beforeend', html)
+    document.querySelector('#subtask').innerHTML = html
 })
 
 socket.emit('joinTaskTool', {username, userid, roomNumber, TaskToolName, TaskTool_ID}, (error) => {
