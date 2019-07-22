@@ -2,7 +2,6 @@
 console.log("running UserHomePage.js")
 const socket = io()
 
-var cookieParser = require('cookie-parser');
 
 ////////////////////
 //  Project List  //
