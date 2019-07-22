@@ -9,6 +9,9 @@ const socket = io()
 
 //var rCookie = document.cookie; Returns encoded cookie
 
+const { name, userid, chatname, chatroomid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+console.log("Object ", { name, userid, chatname, chatroomid });
+
 
 // When a user enters a projecthomepage, sends user info to server
 socket.emit('enterUserHomePage', userID, (error) => {
