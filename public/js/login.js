@@ -8,10 +8,11 @@ const $loginFormUsername = $loginForm.querySelector('username')
 const $loginFormPassword = $loginForm.querySelector('password')
 const $loginFormButton = $loginForm.querySelector('button')
 
-const $createLoginForm = document.querySelector('#create-login-form')
-const $createLoginFormUsername = $createLoginForm.querySelector('username')
-const $createLoginFormPassword = $createLoginForm.querySelector('password')
-const $createLoginFormButton = $createLoginForm.querySelector('button')
+//Form is getting submitted to createNewUser/submit. Not using socket.
+// const $createLoginForm = document.querySelector('#create-login-form')
+// const $createLoginFormUsername = $createLoginForm.querySelector('username')
+// const $createLoginFormPassword = $createLoginForm.querySelector('password')
+// const $createLoginFormButton = $createLoginForm.querySelector('button')
 
 
 
@@ -44,16 +45,16 @@ function checkLogin(event) {
 
 
 
-function createNewLogin(event) { //CONVERT TO SOCKET?
-    event.preventDefault()
-    // Retrieve username and password from create-login-form
-    username = event.target.elements.username.value
-    password = event.target.elements.password.value
+// function createNewLogin(event) {
+//     event.preventDefault()
+//     // Retrieve username and password from create-login-form
+//     username = event.target.elements.username.value
+//     password = event.target.elements.password.value
     
-    console.log(username)
-    console.log(password)
+//     console.log(username)
+//     console.log(password)
 
-}
+// }
 
 
 
