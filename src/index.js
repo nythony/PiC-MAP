@@ -154,6 +154,54 @@ io.on('connection', (socket) => {
     })
 
 
+/////////////
+//  Login  //
+/////////////
+
+
+    // Checks if login is successful
+    socket.on('verifyCredentials', ({username, password}, callback) => {
+
+        console.log("Verifying Login Credentials")
+        
+        var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
+        
+        loginMatch.then(function(result) {
+            loginMatch = result.rows[0]["user_pass_match"]
+
+            // successful login
+            if (loginMatch == 1) { 
+                client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
+                    var thisUserID = useridresult["rows"][0]["User_ID"]
+
+                    
+                    //res is not defined
+                    // res.cookie("userInfo",{name:username, userid: thisUserID, chatname: "TestingChatroom", chatroomid: 1})
+                    // res.redirect("/UserHomePage/")
+
+                    //Add recently logged in user to "loggedInUser" array
+                    //const { error, user} = userLoggedIn({ username: username, userid: thisUserID})
+                    const user = {username: username, userid: thisUserID}
+                    socket.emit('toUserHomePage', user) 
+                    //socket.emit('toUserHomePage', {name: username, userid: thisUserID}) 
+
+                    //socket.emit('toUserHomePage', {name:username, userid: thisUserID, chatname: "TestingChatroom", chatroomid: 1})
+
+                })
+
+             //Unsuccessful: We can customize error message if wanted   
+                } else if (loginMatch == 2) { //username exists, bad password
+                    io.sockets.emit('failedLogin', 'Login unsuccessful: Wrong password')
+                }
+                else { // loginMatch == 3, username does not exist
+                    io.sockets.emit('failedLogin', 'Login unsuccessful: Username does not exist')
+                } 
+            callback()
+        })
+
+    })
+
+
 ////////////////////
 //  UserHomePage  //
 ////////////////////
@@ -433,30 +481,35 @@ app.post("/UserHomePage/ProjectHomePage", function (req, res) {
 */
 
 
+
 // When user attempts to sign in
 // If successful, redirects to UserHomePage
-// If unsuccessful, redirects to failedLoginPage
-app.post("/loginPage", function (req, res) { //--EDIT DELETE
-    var username = req.body.username
-    var password = req.body.password
+// // If unsuccessful, redirects to failedLoginPage
+// app.post("/loginPage", function (req, res) { //--EDIT DELETE
+//     var username = req.body.username
+//     var password = req.body.password
     
-    var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
-    loginMatch.then(function(result) {
-        loginMatch = result.rows[0]["user_pass_match"]
-        if (loginMatch == 1) { // successful login
-            client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
-                var thisUserID = useridresult["rows"][0]["User_ID"]
-                res.cookie("userInfo",{name:username, userid: thisUserID, chatname: "TestingChatroom", chatroomid: 1})
-                res.redirect("UserHomePage")
-            })
-        } else if (loginMatch == 2) { //username exists, bad password
-            io.sockets.emit('failedLogin', 'Login unsuccessful: Wrong password')
-        }
-        else { // loginMatch == 3, username does not exist
-            io.sockets.emit('failedLogin', 'Login unsuccessful: Username does not exist')
-        } 
-    })           
-})
+//     var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
+//     loginMatch.then(function(result) {
+//         loginMatch = result.rows[0]["user_pass_match"]
+//         if (loginMatch == 1) { // successful login
+//             client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
+//                 var thisUserID = useridresult["rows"][0]["User_ID"]
+//                 res.cookie("userInfo",{name:username, userid: thisUserID, chatname: "TestingChatroom", chatroomid: 1})
+//                 res.redirect("UserHomePage")
+//             })
+//         } else if (loginMatch == 2) { //username exists, bad password
+//             io.sockets.emit('failedLogin', 'Login unsuccessful: Wrong password')
+//         }
+//         else { // loginMatch == 3, username does not exist
+//             io.sockets.emit('failedLogin', 'Login unsuccessful: Username does not exist')
+//         } 
+//     })           
+// })
+
+
+
+
 
 //PUT VERIFY CREDENTIALS HERE AND ADD SOCKET FOR FAILED LOGIN.
 
