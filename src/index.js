@@ -194,6 +194,8 @@ io.on('connection', (socket) => {
             return callback(error)
         }
 
+        console.log(user)
+
         socket.join(user.roomNumber)
 
         // Display only to connection
