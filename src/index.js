@@ -232,8 +232,6 @@ app.get("/loginPage", function (req, res) { //Redirect to home page/login page, 
 app.get("/UserHomePage/", function (req, res) {
     var username = req.query.username
     var password = req.query.password
-
-    console.log ("In index.js with userHomePage values ", username, password)
     
     var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
     loginMatch.then(function(result) {
