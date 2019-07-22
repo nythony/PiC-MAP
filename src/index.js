@@ -211,11 +211,11 @@ io.on('connection', (socket) => {
 
         // Display subtasks
         client.query('SELECT * FROM "Task" WHERE "TaskTool_ID" = \'' + user.TaskTool_ID + '\' ORDER BY "TaskName";', (error, results) => {
-            for (let foo of results.rows) {
-                //client.query('SELECT ')
-                socket.emit('subtask', foo)
-                //socket.emit('subtask', generateSubtask(foo["TaskName"], foo["TaskDesc"], foo["DueDate"], foo["TasksLabel"], foo["TaskCategory"]))
-            }
+            socket.emit('subtask', results)
+            // for (let foo of results.rows) {
+            //     //client.query('SELECT ')
+            //     socket.emit('subtask', generateSubtask(foo["TaskName"], foo["TaskDesc"], foo["DueDate"], foo["TasksLabel"], foo["TaskCategory"]))
+            // }
         })
     })
 

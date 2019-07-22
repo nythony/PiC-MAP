@@ -7,7 +7,10 @@
     </head>
     <body>
         <h1 align="center">
-            <script>{{TaskToolName}}</script>
+            <script type="text/javascript">
+                var TaskToolName = <%- JSON.stringify(TaskToolName) %>;
+                document.write(TaskToolName)
+            </script>
         </h1>
         <!-- <div id="headerTasktool" class="headerTasktool"></div> -->
         <div id="subtaskCategory" class="tasktool__subtaskCategory"></div>
