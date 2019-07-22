@@ -44,20 +44,14 @@ const getUserTaskTool = (id) => {
     return usersTaskTool.find((user) => user.id === id)
 }
 
-
-
-
-const getUsersInRoomTaskTool= (roomNumber) => {
+const getUsersInRoomTaskTool = (roomNumber) => {
     // room = room.trim().toLowerCase()
     return usersTaskTool.filter((user) => user.roomNumber === roomNumber)
 }
-
-
-
 
 module.exports = {
     addUserTaskTool,
     removeUserTaskTool,
     getUserTaskTool,
-    getUsersInRoomTaskTool,
+    getUsersInRoomTaskTool
 }

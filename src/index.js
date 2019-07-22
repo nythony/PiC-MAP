@@ -23,8 +23,8 @@ const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjec
 
 //Connecting to cloud based database:
 const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+    //connectionString: process.env.DATABASE_URL,
+    connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 })
 client.connect()
@@ -116,6 +116,7 @@ io.on('connection', (socket) => {
     // Disconnect event is built in
     socket.on('disconnect', () => {
         const user = removeUserChat(socket.id)
+
         const userLeavingProjectHomePage = removeUserFromProjectHomePage(socket.id)
         if (user) {
             // io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
@@ -198,31 +199,17 @@ io.on('connection', (socket) => {
 
         socket.join(user.roomNumber)
 
-        // Display only to connection
-        // Display subtaskCategory - PENDING DB STUFF
-        // client.query('SELECT t1."Message", t2."UserName", t1."TimeStamp" FROM "ChatMessage" AS t1 JOIN "User" AS t2 ON t1."User_ID" = t2."User_ID" JOIN "ChatRoom" AS t3 ON t1."ChatRoom_ID" = t3."ChatRoom_ID" WHERE t3."ChatRoom_ID" = \'' + user.chatroomid + '\' ORDER BY "ChatMessage_ID";', (error, results) => {
-        //     for (let foo of results.rows) {
-        //         //console.log(foo["Message"])
-        //         //console.log("we're here")
-        //         //console.log(foo)
-        //         socket.emit('message', generateMessageHistory(foo["UserName"], foo["Message"], foo["TimeStamp"]))
-        //     }
-        // })
-
         // Display subtasks
         client.query('SELECT * FROM "Task" WHERE "TaskTool_ID" = \'' + user.TaskTool_ID + '\' ORDER BY "TaskName";', (error, results) => {
             console.log(results)
-            io.to(user.roomNumber).emit('subtask', {
-                subtasks: results
-            })
-    
-            callback()
-            //socket.emit('subtask', results)
-            // for (let foo of results.rows) {
-            //     //client.query('SELECT ')
-            //     socket.emit('subtask', generateSubtask(foo["TaskName"], foo["TaskDesc"], foo["DueDate"], foo["TasksLabel"], foo["TaskCategory"]))
-            // }
+            const subtasks = []
+            for (let foo of results.rows) {
+                const subtask = { TaskName: foo["TaskName"] , TaskDesc: foo["TaskDesc"], DueDate: foo["DueDate"], TasksLabel: foo["TasksLabel"], TaskCategory: foo["TaskCategory"] }
+                subtasks.push(subtask)
+            }
+            io.to(user.roomNumber).emit('subtask', (subtasks))
         })
+        callback()
     })
 
 })
