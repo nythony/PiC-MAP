@@ -186,16 +186,16 @@ io.on('connection', (socket) => {
     })
 
         // When a user enters a userhomepage--Need change.
-    socket.on('enterUserHomePage',  (userProj, callback) => {
+    socket.on('enterUserHomePage',  (userProj, callback) => { 
         var username = userProj.username;
         var list = []
         console.log("USERNAME: ", username)
-        const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \''+username+'\ ORDER BY "StartDate";'
+        const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \''+username+'\ ORDER BY "StartDate"'
         
         console.log("PROJECT LIST")
         client.query(text, (err, results) => { 
             for (let obj of results.rows){
-                list.push(obj)
+                list.push(obj["Project_ID"])
             }
         })
         console.log("RESULT", list)
