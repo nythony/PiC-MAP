@@ -30,6 +30,16 @@ function checkLogin(event) {
     console.log(username)
     console.log(password)
 
+        //To be heard by index.js
+    socket.emit('verifyCredentials', {username, password}, (error) => {
+    
+        if (error) {
+            console.log("Not able to emit")
+            return console.log(error)
+        }
+
+    })
+
 }
 
 
