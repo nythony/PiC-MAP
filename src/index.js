@@ -230,8 +230,8 @@ app.get("/loginPage", function (req, res) { //Redirect to home page/login page, 
 
 // User Home Page GET request
 app.get("/UserHomePage/", function (req, res) {
-    var username = req.body.username
-    var password = req.body.password
+    var username = req.query.username
+    var password = req.query.password
 
     console.log ("In index.js with userHomePage values ", username, password)
     
