@@ -24,8 +24,16 @@ const generateSubtask = (TaskName, TaskDesc, DueDate, TasksLabel, TaskCategory) 
     }
 }
 
+const generateTaskTool = (taskToolName) => {
+    return {
+        taskToolName,
+        //createdAt: new Date().getTime()
+    }
+}
+
 module.exports = {
     generateMessage,
     generateMessageHistory,
+    generateTaskTool,
     generateSubtask
 }

@@ -10,15 +10,14 @@ var cookieParser = require('cookie-parser');
 const url = require('url')
 
 // Importing all things from other parts of project
-const { generateMessage, generateMessageHistory, generateSubtask} = require('./utils/messages')
+const { generateMessage, generateMessageHistory, generateTaskTool, generateSubtask} = require('./utils/messages')
 const { addUserChat, removeUserChat, getUserChat, getUsersInRoomChat } = require('./utils/usersAtChat')
 const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjectHomePage, getAllUsersInProjectHomePage } = require('./utils/usersAtProjectHomePage')
-const { generateTaskTool } = require('./utils/TaskTools')
 //const project = require('./projectForm.js')
-const requirement = require('./requirementForm.js')
-const task = require('./taskForm.js')
-const taskTool = require('./taskToolForm.js')
-const issue = require('./issueForm.js')
+// const requirement = require('./requirementForm.js')
+// const task = require('./taskForm.js')
+// const taskTool = require('./taskToolForm.js')
+// const issue = require('./issueForm.js')
 //const login = require('./loginTools.js')
 
 //Connecting to cloud based database:
