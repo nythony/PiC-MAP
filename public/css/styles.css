@@ -203,9 +203,9 @@ button:disabled {
 
 .tasktool__subtaskCategory > div {
     background-color: #ffffff;
-    margin: 10px;
-    padding: 20px;
-    font-size: 18px;
+    margin: 4px;
+    padding: 4px;
+    font-size: 12px;
 }
 
 .tasktool__subtask {
@@ -215,9 +215,9 @@ button:disabled {
 
 .tasktool__subtask > div {
     background-color: #ffffff;
-    margin: 10px;
-    padding: 20px;
-    font-size: 18px;
+    margin: 4px;
+    padding: 4px;
+    font-size: 12px;
 }
 
 /* SubtaskCategory Styles */
