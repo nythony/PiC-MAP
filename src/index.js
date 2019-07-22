@@ -195,9 +195,10 @@ io.on('connection', (socket) => {
         client.query(text, (err, results) => { 
             for (let obj of results.rows){
                 var proj = {}
-                proj["projID"] = obj["Project_ID"]
-                proj["projName"] = obj["ProjectName"]
-                proj["projDesc"] = obj["ProjectDesc"]
+                proj['projID'] = obj["Project_ID"]
+                proj['projName'] = obj["ProjectName"]
+                proj['projDesc'] = obj["ProjectDesc"]
+                console.log(proj)
                 list.push(proj);
             }
         })
