@@ -230,6 +230,7 @@ app.get("/loginPage", function (req, res) { //Redirect to home page/login page, 
 
 // User Home Page GET request
 app.get("/UserHomePage/", function (req, res) {
+    console.log(req.cookies.userInfo)
     res.render("UserHomePage", { user: req.cookies.userInfo })
 })
 

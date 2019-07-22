@@ -93,29 +93,8 @@ body {font-family: Arial, Helvetica, sans-serif;}
         <img src="../img/favicon.png" alt="logo" width="200" height="200">
         
         <h2>Please enter your username and password to sign in.</h2>
-        
 
 
-    <div id="joinExisting">
-        <form action="/ProjectHomePage">
-            <input type="hidden" id="usernameVP" name="usernameVP" required />
-            <input type="hidden" id="useridVP" name="useridVP" required />
-            <input type="hidden" id="projectidVP" name="projectidVP" required />
-            <input type="text" id="projectNameVP" name="projectNameVP" placeholder="Project Name" required autocomplete="on"><br>
-            <script type="text/javascript">
-                document.getElementById('usernameVP').value = <%- JSON.stringify(user.name) %>;
-                document.getElementById('useridVP').value = <%- JSON.stringify(user.userid) %>;
-                document.getElementById('projectidVP').value = <%- JSON.stringify(user.chatroomid) %>;
-            </script>
-            <button>View Project</button>
-        </form>
-    </div>
-
-
-
-
-
-        
         <form action="/loginPage" method="post" id="login-form">
             <input type="text" name="username" placeholder="username">
             <input type="password" name="password" placeholder="password">
