@@ -10,10 +10,10 @@ var cookieParser = require('cookie-parser');
 const url = require('url')
 
 // Importing all things from other parts of project
-const { generateMessage, generateMessageHistory} = require('./utils/messages')
-const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/usersAtChat')
+const { generateMessage, generateMessageHistory, generateSubtask} = require('./utils/messages')
+const { addUserChat, removeUserChat, getUserChat, getUsersInRoomChat } = require('./utils/usersAtChat')
 const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjectHomePage, getAllUsersInProjectHomePage } = require('./utils/usersAtProjectHomePage')
-const { generateTaskTool } = require('./utils/taskTools')
+const { generateTaskTool } = require('./utils/TaskTools')
 //const project = require('./projectForm.js')
 const requirement = require('./requirementForm.js')
 const task = require('./taskForm.js')
@@ -55,8 +55,10 @@ app.use(cookieParser());
 io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
+    // ChatApp
+
     socket.on('joinChat', ({ username, userid, room, chatroomid, roomNumber }, callback) => {
-        const { error, user} = addUser({ id: socket.id, username, userid, room, chatroomid, roomNumber })
+        const { error, user} = addUserChat({ id: socket.id, username, userid, room, chatroomid, roomNumber })
         
 
         if (error) {
@@ -81,7 +83,7 @@ io.on('connection', (socket) => {
         // socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined ${room}`))
         io.to(user.roomNumber).emit('roomData', {
             room: user.room,
-            users: getUsersInRoom(user.roomNumber)
+            users: getUsersInRoomChat(user.roomNumber)
         })
 
         callback()
@@ -89,7 +91,7 @@ io.on('connection', (socket) => {
 
     // Display to everyone
     socket.on('sendMessage', (message, callback) => {
-        const user = getUser(socket.id)
+        const user = getUserChat(socket.id)
         const text = 'INSERT INTO "ChatMessage"( "User_ID", "ChatRoom_ID", "Message" ) VALUES($1, $2, $3) RETURNING *'
         const values = [user.userid, user.chatroomid, message]
         client.query(text, values, (err, res) => {
@@ -109,19 +111,22 @@ io.on('connection', (socket) => {
         callback()
     })
 
-        // When a user disconnects
+
+    // When a user disconnects
     // Disconnect event is built in
     socket.on('disconnect', () => {
-        const user = removeUser(socket.id)
+        const user = removeUserChat(socket.id)
         const userLeavingProjectHomePage = removeUserFromProjectHomePage(socket.id)
         if (user) {
             // io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
             io.to(user.roomNumber).emit('roomData', {
                 room: user.room,
-                users: getUsersInRoom(user.roomNumber)
+                users: getUsersInRoomChat(user.roomNumber)
             })
         }
     })
+
+    // Project Home Page
 
     // When a user enters a projecthomepage
     socket.on('enterProjectHomePage',  ({usernameVP, useridVP, projectNameVP, projectidVP}, callback) => {
@@ -178,6 +183,37 @@ io.on('connection', (socket) => {
             console.log('----------------------------------project is created--------------------------------');
         })
         callback()
+    })
+
+    // Task Tool
+
+    socket.on('joinTaskTool', ({ username, userid, roomNumber, TaskToolName, TaskTool_ID }, callback) => {
+        const {error, userTaskTool} = addUserTaskTool({ id: socket.id, username, userid, roomNumber, TaskToolName, TaskTool_ID })
+
+        if (error) {
+            return callback(error)
+        }
+
+        socket.join(user.roomNumber)
+
+        // Display only to connection
+        // Display subtaskCategory - PENDING DB STUFF
+        // client.query('SELECT t1."Message", t2."UserName", t1."TimeStamp" FROM "ChatMessage" AS t1 JOIN "User" AS t2 ON t1."User_ID" = t2."User_ID" JOIN "ChatRoom" AS t3 ON t1."ChatRoom_ID" = t3."ChatRoom_ID" WHERE t3."ChatRoom_ID" = \'' + user.chatroomid + '\' ORDER BY "ChatMessage_ID";', (error, results) => {
+        //     for (let foo of results.rows) {
+        //         //console.log(foo["Message"])
+        //         //console.log("we're here")
+        //         //console.log(foo)
+        //         socket.emit('message', generateMessageHistory(foo["UserName"], foo["Message"], foo["TimeStamp"]))
+        //     }
+        // })
+
+        // Display subtasks
+        client.query('SELECT * FROM "Task" WHERE "TaskTool_ID" = \'' + user.TaskTool_ID + '\' ORDER BY "TaskName";', (error, results) => {
+            for (let foo of results.rows) {
+                //client.query('SELECT ')
+                socket.emit('subtask', generateSubtask(foo["TaskName"], foo["TaskDesc"], foo["DueDate"], foo["TasksLabel"], foo["TaskCategory"]))
+            }
+        })
     })
 
 })
@@ -267,9 +303,6 @@ app.get("/issueform", function (req, res) {
 
 // Current version of chatApp (Must be updated)
 app.get("/chatapp", function (req, res) {
-    // console.log(req)
-    // req.query.username = "Jalapeno"
-    // req.query.room = "Test"
     res.sendFile(publicDirectoryPath + "views/chatApp.html")
 })
 
