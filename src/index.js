@@ -195,7 +195,8 @@ io.on('connection', (socket) => {
         console.log("PROJECT LIST")
         client.query(text, (err, results) => { 
             for (let obj of results.rows){
-                list.push(obj["Project_ID"])
+                console.log("Do Something")
+                //list.push(obj["Project_ID"])
             }
         })
         console.log("RESULT", list)
