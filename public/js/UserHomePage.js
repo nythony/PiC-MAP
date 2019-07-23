@@ -2,16 +2,12 @@
 console.log("running UserHomePage.js")
 const socket = io()
 
-
-////////////////////
-//  Project List  //
-////////////////////
+//////////////////////////
+//  Enter UserHomePage  //
+//////////////////////////
 
 //var rCookie = document.cookie; Returns encoded cookie
-
 const { username, password } = Qs.parse(location.search, { ignoreQueryPrefix: true })
-console.log("Object ", { username, password });
-
 
 // When a user enters a projecthomepage, sends user info to server
 socket.emit('enterUserHomePage', { username, password }, (error) => {
@@ -21,31 +17,31 @@ socket.emit('enterUserHomePage', { username, password }, (error) => {
     }
 })
 
+
+
+////////////////////
+//  Project List  //
+////////////////////
+
+const projectListTemplate = document.querySelector('#projectList-template').innerHTML
+const $projectList = document.querySelector('#project-list')
+
 socket.on('projectList', (projects) => {
-    console.log(projects)
+
+    for (i = 1; i < projects.length(); i++){
+        console.log("AT: ", i)
+        console.log("WITH: ", projects[i])
+        console.log("VALUE: ", projects[i].projName)
+
+        const html = Mustache.render(projectListTemplate, {
+            projectName: projects[i].projName
+            project Description: projects[i].projDesc
+        })
+
+        $projectList.insertAdjacentHTML('beforeend', html)
+    }
+
 })
-
-
-// //Error message
-// const failedLoginTemplate = document.querySelector('#failedLogin-template').innerHTML
-// const $loginFail = document.querySelector('#loginFail')
-
-// socket.on('failedLogin', (eMessage) => {
-
-//     const html = Mustache.render(failedLoginTemplate, {
-//         messageDisplay: eMessage
-//     })
-
-//     $loginFail.insertAdjacentHTML('beforeend', html)
-
-//     var form = document.getElementById("login-form")
-//     form.reset()
-
-//     var timer = setTimeout(function() {
-//         window.location='/'
-//     }, 8000);
-
-// })
 
 
 
