@@ -383,7 +383,7 @@ io.on('connection', (socket) => {
             }
         })
         callback()
-
+    })
         // When a user enters a userhomepage--Need change.
     socket.on('enterUserHomePage',  (userProj, callback) => { 
         var username = userProj.username;
