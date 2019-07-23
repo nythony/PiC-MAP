@@ -14,7 +14,26 @@ const generateMessageHistory = (username, text, createdAt) => {
     }
 }
 
+const generateSubtask = (TaskName, TaskDesc, DueDate, TasksLabel, TaskCategory) => {
+    return {
+        TaskName,
+        TaskDesc,
+        DueDate,
+        TasksLabel,
+        TaskCategory
+    }
+}
+
+const generateTaskTool = (taskToolName) => {
+    return {
+        taskToolName,
+        //createdAt: new Date().getTime()
+    }
+}
+
 module.exports = {
     generateMessage,
-    generateMessageHistory
+    generateMessageHistory,
+    generateTaskTool,
+    generateSubtask
 }

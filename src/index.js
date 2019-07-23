@@ -8,23 +8,24 @@ const { Client } = require('pg')
 const bodyParser = require('body-parser')
 var cookieParser = require('cookie-parser');
 const url = require('url')
+const moment = require('moment')
 
 // Importing all things from other parts of project
-const { generateMessage, generateMessageHistory} = require('./utils/messages')
-const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/usersAtChat')
+const { generateMessage, generateMessageHistory, generateTaskTool, generateSubtask} = require('./utils/messages')
+const { addUserChat, removeUserChat, getUserChat, getUsersInRoomChat } = require('./utils/usersAtChat')
+const { addUserTaskTool, removeUserTaskTool, getUserTaskTool, getUsersInTaskTool } = require('./utils/usersAtTaskTool')
 const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjectHomePage, getAllUsersInProjectHomePage } = require('./utils/usersAtProjectHomePage')
-const { generateTaskTool } = require('./utils/taskTools')
 //const project = require('./projectForm.js')
-const requirement = require('./requirementForm.js')
-const task = require('./taskForm.js')
-const taskTool = require('./taskToolForm.js')
-const issue = require('./issueForm.js')
+// const requirement = require('./requirementForm.js')
+// const task = require('./taskForm.js')
+// const taskTool = require('./taskToolForm.js')
+// const issue = require('./issueForm.js')
 //const login = require('./loginTools.js')
 
 //Connecting to cloud based database:
 const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+    //connectionString: process.env.DATABASE_URL,
+    connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 })
 client.connect()
@@ -55,8 +56,10 @@ app.use(cookieParser());
 io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
+    // ChatApp
+
     socket.on('joinChat', ({ username, userid, room, chatroomid, roomNumber }, callback) => {
-        const { error, user} = addUser({ id: socket.id, username, userid, room, chatroomid, roomNumber })
+        const { error, user} = addUserChat({ id: socket.id, username, userid, room, chatroomid, roomNumber })
         
 
         if (error) {
@@ -81,7 +84,7 @@ io.on('connection', (socket) => {
         // socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined ${room}`))
         io.to(user.roomNumber).emit('roomData', {
             room: user.room,
-            users: getUsersInRoom(user.roomNumber)
+            users: getUsersInRoomChat(user.roomNumber)
         })
 
         callback()
@@ -89,7 +92,7 @@ io.on('connection', (socket) => {
 
     // Display to everyone
     socket.on('sendMessage', (message, callback) => {
-        const user = getUser(socket.id)
+        const user = getUserChat(socket.id)
         const text = 'INSERT INTO "ChatMessage"( "User_ID", "ChatRoom_ID", "Message" ) VALUES($1, $2, $3) RETURNING *'
         const values = [user.userid, user.chatroomid, message]
         client.query(text, values, (err, res) => {
@@ -109,19 +112,23 @@ io.on('connection', (socket) => {
         callback()
     })
 
-        // When a user disconnects
+
+    // When a user disconnects
     // Disconnect event is built in
     socket.on('disconnect', () => {
-        const user = removeUser(socket.id)
+        const user = removeUserChat(socket.id)
+        const userTaskTool = removeUserTaskTool(socket.id)
         const userLeavingProjectHomePage = removeUserFromProjectHomePage(socket.id)
         if (user) {
             // io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
             io.to(user.roomNumber).emit('roomData', {
                 room: user.room,
-                users: getUsersInRoom(user.roomNumber)
+                users: getUsersInRoomChat(user.roomNumber)
             })
         }
     })
+
+    // Project Home Page
 
     // When a user enters a projecthomepage
     socket.on('enterProjectHomePage',  ({usernameVP, useridVP, projectNameVP, projectidVP}, callback) => {
@@ -185,6 +192,198 @@ io.on('connection', (socket) => {
         callback()
     })
 
+
+    // Task Tool
+
+    socket.on('joinTaskTool', ({ username, userid, roomNumber, TaskToolName, TaskTool_ID }, callback) => {
+        const {error, user} = addUserTaskTool({ id: socket.id, username, userid, roomNumber, TaskToolName, TaskTool_ID })
+
+        if (error) {
+            return callback(error)
+        }
+
+        // console.log(user)
+
+        socket.join(user.roomNumber)
+
+        // Display subtasks
+        client.query('SELECT * FROM "Task" WHERE "TaskTool_ID" = \'' + user.TaskTool_ID + '\' ORDER BY "TaskName";', (error, results) => {
+            const subtasks = []
+            var subtaskusers = []
+            var TasksCategory = ""
+            for (let foo of results.rows) {
+                client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserT" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Task_ID" = \'' + foo["Task_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
+                    for (let foo2 of results2.rows) {
+                        subtaskusers.push(foo2["UserName"])
+                    }
+                    if (results2.rows.length < 1)
+                    {
+                        subtaskusers.push("No users assigned")
+                    }
+                    // foo["TasksLabel"], TaskCategory: foo["TaskCategory"]
+                    if (foo["TaskCategory"] == 1) {
+                        TasksCategory = "To-Do"
+                    }
+                    else if (foo["TaskCategory"] == 2) {
+                        TasksCategory = "Doing"
+                    }
+                    else if (foo["TaskCategory"] == 3) {
+                        TasksCategory = "Done"
+                    }
+                    const subtask = { TaskName: foo["TaskName"] , TaskDesc: foo["TaskDesc"], TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:mm'), TasksLabel: foo["TasksLabel"], TaskCategory: TasksCategory, Task_ID: foo["Task_ID"], Task_ID2: foo["Task_ID"] }
+                    subtasks.push(subtask)
+                    subtaskusers.length = 0
+                    //console.log(subtasks)
+                    io.to(user.roomNumber).emit('subtask', (subtasks))
+                })
+            }
+        })
+        callback()
+    })
+
+    socket.on('createSubTask', ({TaskName, TaskDesc, TaskTool_ID}, callback) => {
+        const user = getUserTaskTool(socket.id)
+        const text = 'INSERT INTO "Task"( "TaskName", "TaskDesc", "TaskTool_ID" ) VALUES($1, $2, $3) RETURNING *'
+        const values = [TaskName, TaskDesc, TaskTool_ID]
+        client.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            }
+            else {
+                //console.log(res.rows[0])
+            }
+            console.log('----------------------------------record is created--------------------------------')
+        })
+        client.query('SELECT * FROM "Task" WHERE "TaskTool_ID" = \'' + TaskTool_ID + '\' ORDER BY "TaskCategory";', (error, results) => {
+            const subtasks = []
+            var subtaskusers = []
+            var TasksCategory = ""
+            for (let foo of results.rows) {
+                client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserT" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Task_ID" = \'' + foo["Task_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
+                    for (let foo2 of results2.rows) {
+                        subtaskusers.push(foo2["UserName"])
+                    }
+                    if (results2.rows.length < 1)
+                    {
+                        subtaskusers.push("No users assigned")
+                    }
+                    // foo["TasksLabel"], TaskCategory: foo["TaskCategory"]
+                    if (foo["TaskCategory"] == 1) {
+                        TasksCategory = "To-Do"
+                    }
+                    else if (foo["TaskCategory"] == 2) {
+                        TasksCategory = "Doing"
+                    }
+                    else if (foo["TaskCategory"] == 3) {
+                        TasksCategory = "Done"
+                    }
+
+                    const subtask = { TaskName: foo["TaskName"] , TaskDesc: foo["TaskDesc"], TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:mm'), TasksLabel: foo["TasksLabel"], TaskCategory: TasksCategory, Task_ID: foo["Task_ID"], Task_ID2: foo["Task_ID"] }
+                    subtasks.push(subtask)
+                    subtaskusers.length = 0
+                    //console.log(subtasks)
+                    io.to(user.roomNumber).emit('subtask', (subtasks))
+                })
+            }
+        })
+        callback()
+    })
+
+    socket.on('editSubTask', ({TaskName, TaskDesc, TaskTool_ID, Task_ID}, callback) => {
+        const user = getUserTaskTool(socket.id)
+        const text = 'UPDATE "Task" SET "TaskName"=$1, "TaskDesc"=$2 WHERE "Task_ID" = \'' + Task_ID + '\' RETURNING *'
+        const values = [TaskName, TaskDesc]
+        client.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            }
+            else {
+                //console.log(res.rows[0])
+            }
+            console.log('----------------------------------record is updated--------------------------------')
+        })
+        client.query('SELECT * FROM "Task" WHERE "TaskTool_ID" = \'' + TaskTool_ID + '\' ORDER BY "TaskCategory";', (error, results) => {
+            const subtasks = []
+            var subtaskusers = []
+            var TasksCategory = ""
+            for (let foo of results.rows) {
+                client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserT" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Task_ID" = \'' + foo["Task_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
+                    for (let foo2 of results2.rows) {
+                        subtaskusers.push(foo2["UserName"])
+                    }
+                    if (results2.rows.length < 1)
+                    {
+                        subtaskusers.push("No users assigned")
+                    }
+                    // foo["TasksLabel"], TaskCategory: foo["TaskCategory"]
+                    if (foo["TaskCategory"] == 1) {
+                        TasksCategory = "To-Do"
+                    }
+                    else if (foo["TaskCategory"] == 2) {
+                        TasksCategory = "Doing"
+                    }
+                    else if (foo["TaskCategory"] == 3) {
+                        TasksCategory = "Done"
+                    }
+
+                    const subtask = { TaskName: foo["TaskName"] , TaskDesc: foo["TaskDesc"], TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:mm'), TasksLabel: foo["TasksLabel"], TaskCategory: TasksCategory, Task_ID: foo["Task_ID"], Task_ID2: foo["Task_ID"] }
+                    subtasks.push(subtask)
+                    subtaskusers.length = 0
+                    //console.log(subtasks)
+                    io.to(user.roomNumber).emit('subtask', (subtasks))
+                })
+            }
+        })
+        callback()
+    })
+
+    socket.on('deleteSubTask', ({TaskTool_ID, Task_ID}, callback) => {
+        const user = getUserTaskTool(socket.id)
+        const text = 'DELETE FROM "Task" WHERE "Task_ID"=$1 RETURNING *'
+        const values = [Task_ID]
+        client.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            }
+            else {
+                //console.log(res.rows[0])
+            }
+            console.log('----------------------------------record is deleted--------------------------------')
+        })
+        client.query('SELECT * FROM "Task" WHERE "TaskTool_ID" = \'' + TaskTool_ID + '\' ORDER BY "TaskCategory";', (error, results) => {
+            const subtasks = []
+            var subtaskusers = []
+            var TasksCategory = ""
+            for (let foo of results.rows) {
+                client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserT" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Task_ID" = \'' + foo["Task_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
+                    for (let foo2 of results2.rows) {
+                        subtaskusers.push(foo2["UserName"])
+                    }
+                    if (results2.rows.length < 1)
+                    {
+                        subtaskusers.push("No users assigned")
+                    }
+                    // foo["TasksLabel"], TaskCategory: foo["TaskCategory"]
+                    if (foo["TaskCategory"] == 1) {
+                        TasksCategory = "To-Do"
+                    }
+                    else if (foo["TaskCategory"] == 2) {
+                        TasksCategory = "Doing"
+                    }
+                    else if (foo["TaskCategory"] == 3) {
+                        TasksCategory = "Done"
+                    }
+
+                    const subtask = { TaskName: foo["TaskName"] , TaskDesc: foo["TaskDesc"], TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:mm'), TasksLabel: foo["TasksLabel"], TaskCategory: TasksCategory, Task_ID: foo["Task_ID"], Task_ID2: foo["Task_ID"] }
+                    subtasks.push(subtask)
+                    subtaskusers.length = 0
+                    //console.log(subtasks)
+                    io.to(user.roomNumber).emit('subtask', (subtasks))
+                })
+            }
+        })
+        callback()
+=======
         // When a user enters a userhomepage--Need change.
     socket.on('enterUserHomePage',  (userProj, callback) => { 
         var username = userProj.username;
@@ -324,17 +523,11 @@ app.get("/issueform", function (req, res) {
 
 // Current version of chatApp (Must be updated)
 app.get("/chatapp", function (req, res) {
-    // console.log(req)
-    // req.query.username = "Jalapeno"
-    // req.query.room = "Test"
     res.sendFile(publicDirectoryPath + "views/chatApp.html")
 })
 
-
-
-// Signin page for chatApp (Must be updated)
-app.get("/chatSignIn", function (req, res) {
-    res.sendFile(publicDirectoryPath + "views/chatSignIn.html")
+app.get("/TaskTool", function (req, res) {
+    res.sendFile(publicDirectoryPath + "views/TaskTool.html")
 })
 
 
