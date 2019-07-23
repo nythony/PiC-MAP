@@ -201,9 +201,8 @@ io.on('connection', (socket) => {
                 console.log(proj)
                 list.push(proj);
             }
+            socket.emit('projectList', list)
         })
-
-        socket.emit('projectList', list)
     })
 
 
