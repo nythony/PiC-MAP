@@ -35,7 +35,7 @@ socket.on('projectList', (projects) => {
 
         const html = Mustache.render(projectListTemplate, {
             projectName: projects[i].projName,
-            project Description: projects[i].projDesc
+            projectDescription: projects[i].projDesc
         })
 
         $projectList.insertAdjacentHTML('beforeend', html)
