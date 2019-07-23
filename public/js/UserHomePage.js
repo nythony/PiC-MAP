@@ -34,7 +34,7 @@ socket.on('projectList', (projects) => {
         console.log("VALUE: ", projects[i].projName)
 
         const html = Mustache.render(projectListTemplate, {
-            projectName: projects[i].projName
+            projectName: projects[i].projName,
             project Description: projects[i].projDesc
         })
 
