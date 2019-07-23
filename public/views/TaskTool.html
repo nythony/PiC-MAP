@@ -5,38 +5,155 @@
         <link rel="icon" href="/img/favicon.png">
         <link rel="stylesheet" href="/css/styles.css">
     </head>
-    <body>
-        <!-- <div id="headerTasktool" class="headerTasktool"></div> -->
-        <div id="subtaskCategory" class="tasktool__subtaskCategory"></div>
-        <div id="subtask" class="tasktool__subtask"></div>      
+    <style>
+        /* Button used to open the contact form - fixed at the bottom of the page */
+        .open-button {
+            background-color: #555;
+            color: white;
+            border: none;
+            cursor: pointer;
+            opacity: 0.8;
+        }
 
-        <!-- <script id="headerTasktool" type="text/html">
-            
-        </script> -->
+        /* The popup form - hidden by default */
+        .form-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            margin-left: -150px;
+            margin-top: -150px;
+            border: 3px solid #f1f1f1;
+        }
+
+        /* Add styles to the form container */
+        .form-container {
+            max-width: 300px;
+            padding: 10px;
+            background-color: white;
+        }
+
+        /* Full-width input fields */
+        .form-container input[type=text], .form-container input[type=password] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        /* When the inputs get focus, do something */
+        .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+
+        /* Add some hover effects to buttons */
+        .form-container .btn:hover, .open-button:hover {
+            opacity: 1;
+        }
+    </style>
+    <body>
+        <div id="header" class="header"></div>
+        <div id="subtaskCategory" class="tasktool__subtaskCategory"></div>
+        <div id="subtask" class="tasktool__subtask"></div>
+        <button class="open-button" onclick="openCreateSubTaskForm()" style="position: absolute; left: 25%; display: inline-block;">Create a new Subtask</button>
+        <div style="clear: both;"></div>
+        
+        <div class="form-popup" id="createSubTask">
+            <form class="form-container" id="createSubTaskForm">
+                <h1>Create a new Subtask</h1>
+                <label><b>Name</b></label>
+                <input type="text" name="TaskName" placeholder="Subtask Name" required autocomplete="off">
+                <label><b>Description</b></label>
+                <input type="text" name="TaskDesc" placeholder="Subtask Description" required autocomplete="off">
+                <input type="hidden" id="TaskTool_ID" name="TaskTool_ID" required autocomplete="off">
+                <button class="btn" onclick="closeCreateSubTaskForm()">Create Subtask</button>
+                <button class="btn cancel" onclick="closeCreateSubTaskForm()" type="reset">Close</button>
+            </form>
+        </div>
+
+        <div class="form-popup" id="editSubTask">
+            <form class="form-container" id="editSubTaskForm">
+                <h1>Edit the Subtask</h1>
+                <label><b>Name</b></label>
+                <input type="text" name="TaskName" placeholder="Subtask Name" required autocomplete="off">
+                <label><b>Description</b></label>
+                <input type="text" name="TaskDesc" placeholder="Subtask Description" required autocomplete="off">
+                <button class="btn">Create Subtask</button>
+                <button class="btn cancel" onclick="closeSubTaskForm()" type="reset">Close</button>
+            </form>
+        </div>
+
+        <script>
+            function openCreateSubTaskForm() {
+                document.getElementById("createSubTask").style.display = "block";
+                document.getElementById("TaskTool_ID").value = TaskTool_ID;
+            }
+                
+            function closeCreateSubTaskForm() {
+                document.getElementById("createSubTask").style.display = "none";
+                document.getElementById("editSubTaskForm").reset();
+            }
+
+            function openEditSubTaskForm(TaskName, TaskDesc, Task_ID) {
+                document.getElementById("editSubTask").style.display = "block";
+            }
+
+            function closeEditSubTaskForm() {
+                document.getElementById("editSubTask").style.display = "none";
+            }
+        </script>
+
+
+
+        <script id="header-template" type="text/html">
+            <h1 style="text-align:center;">{{TaskToolName}}</h1>
+            <h1 style="text-align:right;">{{username}}</h1>
+            <form action="/logout" method="post" style="display: inline-block; float:right; padding: 4px;">
+                <button class"button" type="submit">Log Out</button>
+            </form>
+            <form action="/returnToUserHomePage" method="post" style="display: inline-block; float:right; padding: 4px;">
+                <button class"button" type="submit">Return to User Home Page</button>
+            </form><br><br>
+            <div style="clear: both;"></div>
+        </script>
 
         <script id="subtaskCategory-template" type="text/html">
-            <div class="subtaskCategory">
-                {{#subtaskCategories}}
-                    <div><p>
-                            <span>{{TaskCategory}}</span>
-                    </p></div>
-                {{/subtaskCategories}}
-            </div>
+            {{#subtaskCategories}}
+                <div class="subtaskCategory"><p>
+                    {{TaskCategory}}<
+                </p></div>
+            {{/subtaskCategories}}
         </script>
 
         <script id="subtask-template" type="text/html">
-            <div class="subtask">
-                {{#subtasks}}
-                    <div><p>
-                            <span>{{TaskName}}</span>
-                            <span>{{TaskDesc}}</span>
-                            <!-- <span>{{TaskUsers}}</span> -->
-                            <span>{{DueDate}}</span>
-                            <span>{{TasksLabel}}</span>
-                            <span>{{TaskCategory}}</span>
-                    </p></div>
-                {{/subtasks}}
-            </div>
+            {{#subtasks}}
+                <div class="subtask"><p>
+                    <!-- <div class="form-popup" id="registerForm">
+                        <form action="/createNewUser/submit" class="form-container" method = "post" id="create-new-user-form">
+                            <h1>Register</h1>
+                      
+                            <label><b>Username</b></label>
+                            <input type="text" name="username" placeholder="username" required>
+                      
+                            <label><b>Password</b></label>
+                            <input type="password" name="password" placeholder="password" required>
+                      
+                            <button type="submit" class="btn">Register</button>
+                            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+                        </form>
+                    </div> -->
+                    {{TaskName}}
+                    <br>{{TaskDesc}}
+                    <br>{{TaskUsers}}
+                    <br>{{DueDate}}
+                    <!-- <br>{{TasksLabel}} -->
+                    <br>{{TaskCategory}}
+                </p></div>
+            {{/subtasks}}
         </script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
