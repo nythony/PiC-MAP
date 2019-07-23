@@ -21,6 +21,33 @@ socket.emit('enterUserHomePage', { username, password }, (error) => {
     }
 })
 
+socket.on('projectList', (projects) => {
+    console.log(projects)
+})
+
+
+//Error message
+const failedLoginTemplate = document.querySelector('#failedLogin-template').innerHTML
+const $loginFail = document.querySelector('#loginFail')
+
+socket.on('failedLogin', (eMessage) => {
+
+    const html = Mustache.render(failedLoginTemplate, {
+        messageDisplay: eMessage
+    })
+
+    $loginFail.insertAdjacentHTML('beforeend', html)
+
+    var form = document.getElementById("login-form")
+    form.reset()
+
+    var timer = setTimeout(function() {
+        window.location='/'
+    }, 8000);
+
+})
+
+
 
 //////////////////////
 //   Edit Project   //

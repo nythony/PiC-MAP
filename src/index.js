@@ -188,7 +188,7 @@ io.on('connection', (socket) => {
         // When a user enters a userhomepage--Need change.
     socket.on('enterUserHomePage',  (userProj, callback) => { 
         var username = userProj.username;
-        var list = []
+        var list = [username]
 
         const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
 
@@ -202,9 +202,8 @@ io.on('connection', (socket) => {
                 list.push(proj);
             }
         })
-        console.log("RESULT", list)
-        //socket.emit('projectList', )
-        callback()
+
+        socket.emit('projectList', list)
     })
 
 
