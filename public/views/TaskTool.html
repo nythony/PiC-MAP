@@ -77,13 +77,14 @@
 
         <div class="form-popup" id="editSubTask">
             <form class="form-container" id="editSubTaskForm">
-                <h1>Edit the Subtask</h1>
+                <h1>Edit a Subtask</h1>
                 <label><b>Name</b></label>
                 <input type="text" name="TaskName" placeholder="Subtask Name" required autocomplete="off">
                 <label><b>Description</b></label>
                 <input type="text" name="TaskDesc" placeholder="Subtask Description" required autocomplete="off">
-                <button class="btn">Create Subtask</button>
-                <button class="btn cancel" onclick="closeSubTaskForm()" type="reset">Close</button>
+                <input type="hidden" id="TaskTool_ID" name="TaskTool_ID" required autocomplete="off">
+                <button class="btn" onclick="closeEditSubTaskForm()">Create Subtask</button>
+                <button class="btn cancel" onclick="closeEditSubTaskForm()" type="reset">Close</button>
             </form>
         </div>
 
@@ -95,15 +96,17 @@
                 
             function closeCreateSubTaskForm() {
                 document.getElementById("createSubTask").style.display = "none";
-                document.getElementById("editSubTaskForm").reset();
+                document.getElementById("createSubTaskForm").reset();
             }
 
             function openEditSubTaskForm(TaskName, TaskDesc, Task_ID) {
                 document.getElementById("editSubTask").style.display = "block";
+                document.getElementById("TaskTool_ID").value = TaskTool_ID;
             }
 
             function closeEditSubTaskForm() {
                 document.getElementById("editSubTask").style.display = "none";
+                document.getElementById("editSubTaskForm").reset();
             }
         </script>
 
@@ -115,8 +118,9 @@
             <form action="/logout" method="post" style="display: inline-block; float:right; padding: 4px;">
                 <button class"button" type="submit">Log Out</button>
             </form>
-            <form action="/returnToUserHomePage" method="post" style="display: inline-block; float:right; padding: 4px;">
-                <button class"button" type="submit">Return to User Home Page</button>
+            <form action="/backToProjectHomePage" id="backToProjectHomePage" method="post" style="display: inline-block; float:right; padding: 4px;">
+                <input type="hidden" id="projectNameVP" name="projectNameVP" value={{projectNameVP}} required autocomplete="off">
+                <button class"button" type="submit">Return to Project Home Page</button>
             </form><br><br>
             <div style="clear: both;"></div>
         </script>

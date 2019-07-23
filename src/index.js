@@ -214,7 +214,6 @@ io.on('connection', (socket) => {
                     {
                         subtaskusers.push("No users assigned")
                     }
-                    TasksCategory = ""
                     // foo["TasksLabel"], TaskCategory: foo["TaskCategory"]
                     if (foo["TaskCategory"] == 1) {
                         TasksCategory = "To-Do"
@@ -225,7 +224,6 @@ io.on('connection', (socket) => {
                     else if (foo["TaskCategory"] == 3) {
                         TasksCategory = "Done"
                     }
-
                     const subtask = { TaskName: foo["TaskName"] , TaskDesc: foo["TaskDesc"], TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:mm'), TasksLabel: foo["TasksLabel"], TaskCategory: TasksCategory }
                     subtasks.push(subtask)
                     subtaskusers.length = 0
@@ -319,6 +317,7 @@ app.get("/UserHomePage/", function (req, res) {
 // Project Home Page GET request
 app.get("/ProjectHomePage/", function (req, res) {
     var projectName = req.query.projectNameVP
+    console.log(projectName)
     client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
         var newCookie = req.cookies.userInfo // duplicate cookie
         const projectid = projectidresult["rows"][0]["Project_ID"]

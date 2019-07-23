@@ -12,7 +12,7 @@ const subtaskCategoryTemplate = document.querySelector('#subtaskCategory-templat
 const subtaskTemplate = document.querySelector('#subtask-template').innerHTML
 
 // Options
-const {username, userid, roomNumber, TaskToolName, TaskTool_ID} = Qs.parse(location.search, { ignoreQueryPrefix: true })
+const {username, userid, roomNumber, TaskToolName, TaskTool_ID, projectNameVP} = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
 // Definition for header
 const headerhtml = Mustache.render(headerTemplate, {
