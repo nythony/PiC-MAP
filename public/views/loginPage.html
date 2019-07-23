@@ -93,13 +93,12 @@ body {font-family: Arial, Helvetica, sans-serif;}
         <img src="../img/favicon.png" alt="logo" width="200" height="200">
         
         <h2>Please enter your username and password to sign in.</h2>
-        
-        <form action="loginPage" method="post" id="login-form">
-            <input type="text" name="username" placeholder="username">
-            <input type="password" name="password" placeholder="password">
-            <button class="open-button" type="submit">Sign In</button>
-        </form>
 
+        <form id="login-form" action = "/UserHomePage">
+            <input type="text" name="username" placeholder="username" value = "" required>
+            <input type="password" name="password" placeholder="password" value = "" required>
+            <button type="submit">Sign In</button>
+        </form>
 
         <br><br><br>
         <h3>New? Click the button below to create an account.</h3>

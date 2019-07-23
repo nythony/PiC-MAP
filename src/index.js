@@ -160,6 +160,11 @@ io.on('connection', (socket) => {
         })
     })
 
+
+////////////////////
+//  UserHomePage  //
+////////////////////
+
  	// Creating a new project in the userHomePage
     socket.on('createProject', ({name, desc, start, due, id}, callback) => {
         const userCreate = id; //This is hardcoded as Alina's ID
@@ -186,6 +191,7 @@ io.on('connection', (socket) => {
         })
         callback()
     })
+
 
     // Task Tool
 
@@ -377,6 +383,38 @@ io.on('connection', (socket) => {
             }
         })
         callback()
+=======
+        // When a user enters a userhomepage--Need change.
+    socket.on('enterUserHomePage',  (userProj, callback) => { 
+        var username = userProj.username;
+        var list = [username]
+
+        const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
+
+        client.query(text, (err, results) => { 
+            for (let obj of results.rows){
+                var proj = {}
+                proj['projID'] = obj["Project_ID"]
+                proj['projName'] = obj["ProjectName"]
+                proj['projDesc'] = obj["ProjectDesc"]
+                
+                list.push(proj);
+            }
+            socket.emit('projectList', list)
+        })
+    })
+
+
+
+
+    // When a new task tool is created with in ProjectHomePage
+    socket.on('newTaskTool', ({taskToolProjectID, taskToolProjectName, taskTool}, callback) => {
+        const text = 'INSERT INTO "TaskTool"( "Project_ID", "TaskToolName" ) VALUES($1, $2) RETURNING *'
+        const values = [taskToolProjectID, taskTool]
+        client.query(text, values, (err, res) => { // add taskTool to database
+            io.in(taskToolProjectID.toString()+taskToolProjectName).emit('taskTool', generateTaskTool(taskTool)) // emit the new task tool to all user in room (room identifier is projectid+projectname)
+            callback()
+        })
     })
 
 })
@@ -407,7 +445,26 @@ app.get("/loginPage", function (req, res) { //Redirect to home page/login page, 
 
 // User Home Page GET request
 app.get("/UserHomePage/", function (req, res) {
-    res.render("UserHomePage", { user: req.cookies.userInfo })
+    var username = req.query.username
+    var password = req.query.password
+    
+    var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
+    loginMatch.then(function(result) {
+        loginMatch = result.rows[0]["user_pass_match"]
+        if (loginMatch == 1) { // successful login
+            client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
+                var thisUserID = useridresult["rows"][0]["User_ID"]
+                res.cookie("userInfo",{name:username, userid: thisUserID, chatname: "TestingChatroom", chatroomid: 1})
+                res.render("UserHomePage", { user: req.cookies.userInfo })
+               //res.redirect("UserHomePage")
+            })
+        } else if (loginMatch == 2) { //username exists, bad password
+            io.sockets.emit('failedLogin', 'Login unsuccessful: Wrong password')
+        }
+        else { // loginMatch == 3, username does not exist
+            io.sockets.emit('failedLogin', 'Login unsuccessful: Username does not exist')
+        } 
+    })    
 })
 
 // Project Home Page GET request
@@ -604,29 +661,33 @@ app.post("/UserHomePage/ProjectHomePage", function (req, res) {
 
 
 // When user attempts to sign in
-// If successful, redirects to UserHomePage
-// If unsuccessful, redirects to failedLoginPage
-app.post("/loginPage", function (req, res) { //--EDIT DELETE
-    var username = req.body.username
-    var password = req.body.password
+// // If successful, redirects to UserHomePage
+// // If unsuccessful, redirects to failedLoginPage
+// app.post("/loginPage", function (req, res) { //--EDIT DELETE
+//     var username = req.body.username
+//     var password = req.body.password
     
-    var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
-    loginMatch.then(function(result) {
-        loginMatch = result.rows[0]["user_pass_match"]
-        if (loginMatch == 1) { // successful login
-            client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
-                var thisUserID = useridresult["rows"][0]["User_ID"]
-                res.cookie("userInfo",{name:username, userid: thisUserID, chatname: "TestingChatroom", chatroomid: 1})
-                res.redirect("/UserHomePage/")
-            })
-        } else if (loginMatch == 2) { //username exists, bad password
-            io.sockets.emit('failedLogin', 'Login unsuccessful: Wrong password')
-        }
-        else { // loginMatch == 3, username does not exist
-            io.sockets.emit('failedLogin', 'Login unsuccessful: Username does not exist')
-        } 
-    })           
-})
+//     var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
+//     loginMatch.then(function(result) {
+//         loginMatch = result.rows[0]["user_pass_match"]
+//         if (loginMatch == 1) { // successful login
+//             client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
+//                 var thisUserID = useridresult["rows"][0]["User_ID"]
+//                 res.cookie("userInfo",{name:username, userid: thisUserID, chatname: "TestingChatroom", chatroomid: 1})
+//                 res.redirect("UserHomePage")
+//             })
+//         } else if (loginMatch == 2) { //username exists, bad password
+//             io.sockets.emit('failedLogin', 'Login unsuccessful: Wrong password')
+//         }
+//         else { // loginMatch == 3, username does not exist
+//             io.sockets.emit('failedLogin', 'Login unsuccessful: Username does not exist')
+//         } 
+//     })           
+// })
+
+
+
+
 
 //PUT VERIFY CREDENTIALS HERE AND ADD SOCKET FOR FAILED LOGIN.
 
