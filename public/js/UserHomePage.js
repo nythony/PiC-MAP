@@ -28,7 +28,7 @@ const $projectList = document.querySelector('#project-list')
 
 socket.on('projectList', (projects) => {
 
-    for (i = 1; i < projects.length(); i++){
+    for (i = 1; i < projects.length; i++){
         console.log("AT: ", i)
         console.log("WITH: ", projects[i])
         console.log("VALUE: ", projects[i].projName)
