@@ -1,4 +1,4 @@
-<! DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <title>PiC-MAP Task Tool</title>
@@ -63,35 +63,48 @@
         <div style="clear: both;"></div>
         
         <div class="form-popup" id="createSubTask">
-            <form class="form-container" id="createSubTaskForm">
+            <form class="form-container" id="createSubTaskForm" name="createSubTaskForm">
                 <h1>Create a new Subtask</h1>
                 <label><b>Name</b></label>
                 <input type="text" name="TaskName" placeholder="Subtask Name" required autocomplete="off">
                 <label><b>Description</b></label>
                 <input type="text" name="TaskDesc" placeholder="Subtask Description" required autocomplete="off">
-                <input type="hidden" id="TaskTool_ID" name="TaskTool_ID" required autocomplete="off">
-                <button class="btn" onclick="closeCreateSubTaskForm()">Create Subtask</button>
-                <button class="btn cancel" onclick="closeCreateSubTaskForm()" type="reset">Close</button>
+                <input type="hidden" id="createTaskTool_ID" name="TaskTool_ID" autocomplete="off"/>
+                <button class="btn" type="submit">Create Subtask</button>
+                <button class="btn cancel" onclick="closeCreateSubTaskForm()" type="reset">Cancel</button>
             </form>
         </div>
 
         <div class="form-popup" id="editSubTask">
-            <form class="form-container" id="editSubTaskForm">
+            <form class="form-container" id="editSubTaskForm" name="editSubTaskForm">
                 <h1>Edit a Subtask</h1>
                 <label><b>Name</b></label>
                 <input type="text" name="TaskName" placeholder="Subtask Name" required autocomplete="off">
                 <label><b>Description</b></label>
                 <input type="text" name="TaskDesc" placeholder="Subtask Description" required autocomplete="off">
-                <input type="hidden" id="TaskTool_ID" name="TaskTool_ID" required autocomplete="off">
-                <button class="btn" onclick="closeEditSubTaskForm()">Create Subtask</button>
-                <button class="btn cancel" onclick="closeEditSubTaskForm()" type="reset">Close</button>
+                <input type="hidden" id="editTaskTool_ID" name="TaskTool_ID" autocomplete="off"/>
+                <input type="hidden" id="editTask_ID" name="Task_ID" autocomplete="off"/>
+                <button class="btn" type="submit">Update Subtask</button>
+                <button class="btn cancel" onclick="closeEditSubTaskForm()" type="reset">Cancel</button>
+            </form>
+        </div>
+
+        <div class="form-popup" id="deleteSubTask">
+            <form class="form-container" id="deleteSubTaskForm" name="deleteSubTaskForm">
+                <h1>Delete a Subtask</h1>
+                <p><b>Are you sure you wish to delete this subtask?</b></p>
+                <p><b>This can not be undone once deleted.</b></p>
+                <input type="hidden" id="deleteTaskTool_ID" name="TaskTool_ID" autocomplete="off"/>
+                <input type="hidden" id="deleteTask_ID" name="Task_ID" autocomplete="off"/>
+                <button class="btn" type="submit">Delete</button>
+                <button class="btn cancel" onclick="closeDeleteSubTaskForm()" type="reset">Cancel</button>
             </form>
         </div>
 
         <script>
             function openCreateSubTaskForm() {
                 document.getElementById("createSubTask").style.display = "block";
-                document.getElementById("TaskTool_ID").value = TaskTool_ID;
+                document.getElementById("createTaskTool_ID").value = TaskTool_ID;
             }
                 
             function closeCreateSubTaskForm() {
@@ -99,18 +112,28 @@
                 document.getElementById("createSubTaskForm").reset();
             }
 
-            function openEditSubTaskForm(TaskName, TaskDesc, Task_ID) {
+            function openEditSubTaskForm(Task_ID) {
                 document.getElementById("editSubTask").style.display = "block";
-                document.getElementById("TaskTool_ID").value = TaskTool_ID;
+                document.getElementById("editTaskTool_ID").value = TaskTool_ID;
+                document.getElementById("editTask_ID").value = Task_ID;
             }
 
             function closeEditSubTaskForm() {
                 document.getElementById("editSubTask").style.display = "none";
                 document.getElementById("editSubTaskForm").reset();
             }
+
+            function openDeleteSubTaskForm(Task_ID) {
+                document.getElementById("deleteSubTask").style.display = "block";
+                document.getElementById("deleteTaskTool_ID").value = TaskTool_ID;
+                document.getElementById("deleteTask_ID").value = Task_ID;
+            }
+
+            function closeDeleteSubTaskForm() {
+                document.getElementById("deleteSubTask").style.display = "none";
+                document.getElementById("deleteSubTaskForm").reset();
+            }
         </script>
-
-
 
         <script id="header-template" type="text/html">
             <h1 style="text-align:center;">{{TaskToolName}}</h1>
@@ -118,7 +141,7 @@
             <form action="/logout" method="post" style="display: inline-block; float:right; padding: 4px;">
                 <button class"button" type="submit">Log Out</button>
             </form>
-            <form action="/backToProjectHomePage" id="backToProjectHomePage" method="post" style="display: inline-block; float:right; padding: 4px;">
+            <form action="/ProjectHomePage" id="backToProjectHomePage" method="get" style="display: inline-block; float:right; padding: 4px;">
                 <input type="hidden" id="projectNameVP" name="projectNameVP" value={{projectNameVP}} required autocomplete="off">
                 <button class"button" type="submit">Return to Project Home Page</button>
             </form><br><br>
@@ -136,26 +159,13 @@
         <script id="subtask-template" type="text/html">
             {{#subtasks}}
                 <div class="subtask"><p>
-                    <!-- <div class="form-popup" id="registerForm">
-                        <form action="/createNewUser/submit" class="form-container" method = "post" id="create-new-user-form">
-                            <h1>Register</h1>
-                      
-                            <label><b>Username</b></label>
-                            <input type="text" name="username" placeholder="username" required>
-                      
-                            <label><b>Password</b></label>
-                            <input type="password" name="password" placeholder="password" required>
-                      
-                            <button type="submit" class="btn">Register</button>
-                            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-                        </form>
-                    </div> -->
-                    {{TaskName}}
+                    <button class="open-button" onclick=openEditSubTaskForm({{Task_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
+                    <br><br>{{TaskName}}
                     <br>{{TaskDesc}}
                     <br>{{TaskUsers}}
                     <br>{{DueDate}}
-                    <!-- <br>{{TasksLabel}} -->
-                    <br>{{TaskCategory}}
+                    <br>{{TaskCategory}}<br><br>
+                    <button class="open-button" onclick=openDeleteSubTaskForm({{Task_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
                 </p></div>
             {{/subtasks}}
         </script>

@@ -224,7 +224,7 @@ io.on('connection', (socket) => {
                     else if (foo["TaskCategory"] == 3) {
                         TasksCategory = "Done"
                     }
-                    const subtask = { TaskName: foo["TaskName"] , TaskDesc: foo["TaskDesc"], TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:mm'), TasksLabel: foo["TasksLabel"], TaskCategory: TasksCategory }
+                    const subtask = { TaskName: foo["TaskName"] , TaskDesc: foo["TaskDesc"], TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:mm'), TasksLabel: foo["TasksLabel"], TaskCategory: TasksCategory, Task_ID: foo["Task_ID"], Task_ID2: foo["Task_ID"] }
                     subtasks.push(subtask)
                     subtaskusers.length = 0
                     //console.log(subtasks)
@@ -272,7 +272,103 @@ io.on('connection', (socket) => {
                         TasksCategory = "Done"
                     }
 
-                    const subtask = { TaskName: foo["TaskName"] , TaskDesc: foo["TaskDesc"], TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:mm'), TasksLabel: foo["TasksLabel"], TaskCategory: TasksCategory }
+                    const subtask = { TaskName: foo["TaskName"] , TaskDesc: foo["TaskDesc"], TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:mm'), TasksLabel: foo["TasksLabel"], TaskCategory: TasksCategory, Task_ID: foo["Task_ID"], Task_ID2: foo["Task_ID"] }
+                    subtasks.push(subtask)
+                    subtaskusers.length = 0
+                    //console.log(subtasks)
+                    io.to(user.roomNumber).emit('subtask', (subtasks))
+                })
+            }
+        })
+        callback()
+    })
+
+    socket.on('editSubTask', ({TaskName, TaskDesc, TaskTool_ID, Task_ID}, callback) => {
+        const user = getUserTaskTool(socket.id)
+        const text = 'UPDATE "Task" SET "TaskName"=$1, "TaskDesc"=$2 WHERE "Task_ID" = \'' + Task_ID + '\' RETURNING *'
+        const values = [TaskName, TaskDesc]
+        client.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            }
+            else {
+                //console.log(res.rows[0])
+            }
+            console.log('----------------------------------record is updated--------------------------------')
+        })
+        client.query('SELECT * FROM "Task" WHERE "TaskTool_ID" = \'' + TaskTool_ID + '\' ORDER BY "TaskCategory";', (error, results) => {
+            const subtasks = []
+            var subtaskusers = []
+            var TasksCategory = ""
+            for (let foo of results.rows) {
+                client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserT" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Task_ID" = \'' + foo["Task_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
+                    for (let foo2 of results2.rows) {
+                        subtaskusers.push(foo2["UserName"])
+                    }
+                    if (results2.rows.length < 1)
+                    {
+                        subtaskusers.push("No users assigned")
+                    }
+                    // foo["TasksLabel"], TaskCategory: foo["TaskCategory"]
+                    if (foo["TaskCategory"] == 1) {
+                        TasksCategory = "To-Do"
+                    }
+                    else if (foo["TaskCategory"] == 2) {
+                        TasksCategory = "Doing"
+                    }
+                    else if (foo["TaskCategory"] == 3) {
+                        TasksCategory = "Done"
+                    }
+
+                    const subtask = { TaskName: foo["TaskName"] , TaskDesc: foo["TaskDesc"], TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:mm'), TasksLabel: foo["TasksLabel"], TaskCategory: TasksCategory, Task_ID: foo["Task_ID"], Task_ID2: foo["Task_ID"] }
+                    subtasks.push(subtask)
+                    subtaskusers.length = 0
+                    //console.log(subtasks)
+                    io.to(user.roomNumber).emit('subtask', (subtasks))
+                })
+            }
+        })
+        callback()
+    })
+
+    socket.on('deleteSubTask', ({TaskTool_ID, Task_ID}, callback) => {
+        const user = getUserTaskTool(socket.id)
+        const text = 'DELETE FROM "Task" WHERE "Task_ID"=$1 RETURNING *'
+        const values = [Task_ID]
+        client.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            }
+            else {
+                //console.log(res.rows[0])
+            }
+            console.log('----------------------------------record is deleted--------------------------------')
+        })
+        client.query('SELECT * FROM "Task" WHERE "TaskTool_ID" = \'' + TaskTool_ID + '\' ORDER BY "TaskCategory";', (error, results) => {
+            const subtasks = []
+            var subtaskusers = []
+            var TasksCategory = ""
+            for (let foo of results.rows) {
+                client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserT" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Task_ID" = \'' + foo["Task_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
+                    for (let foo2 of results2.rows) {
+                        subtaskusers.push(foo2["UserName"])
+                    }
+                    if (results2.rows.length < 1)
+                    {
+                        subtaskusers.push("No users assigned")
+                    }
+                    // foo["TasksLabel"], TaskCategory: foo["TaskCategory"]
+                    if (foo["TaskCategory"] == 1) {
+                        TasksCategory = "To-Do"
+                    }
+                    else if (foo["TaskCategory"] == 2) {
+                        TasksCategory = "Doing"
+                    }
+                    else if (foo["TaskCategory"] == 3) {
+                        TasksCategory = "Done"
+                    }
+
+                    const subtask = { TaskName: foo["TaskName"] , TaskDesc: foo["TaskDesc"], TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:mm'), TasksLabel: foo["TasksLabel"], TaskCategory: TasksCategory, Task_ID: foo["Task_ID"], Task_ID2: foo["Task_ID"] }
                     subtasks.push(subtask)
                     subtaskusers.length = 0
                     //console.log(subtasks)
@@ -317,7 +413,6 @@ app.get("/UserHomePage/", function (req, res) {
 // Project Home Page GET request
 app.get("/ProjectHomePage/", function (req, res) {
     var projectName = req.query.projectNameVP
-    console.log(projectName)
     client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
         var newCookie = req.cookies.userInfo // duplicate cookie
         const projectid = projectidresult["rows"][0]["Project_ID"]
