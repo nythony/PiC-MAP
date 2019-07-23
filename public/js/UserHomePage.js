@@ -26,26 +26,26 @@ socket.on('projectList', (projects) => {
 })
 
 
-//Error message
-const failedLoginTemplate = document.querySelector('#failedLogin-template').innerHTML
-const $loginFail = document.querySelector('#loginFail')
+// //Error message
+// const failedLoginTemplate = document.querySelector('#failedLogin-template').innerHTML
+// const $loginFail = document.querySelector('#loginFail')
 
-socket.on('failedLogin', (eMessage) => {
+// socket.on('failedLogin', (eMessage) => {
 
-    const html = Mustache.render(failedLoginTemplate, {
-        messageDisplay: eMessage
-    })
+//     const html = Mustache.render(failedLoginTemplate, {
+//         messageDisplay: eMessage
+//     })
 
-    $loginFail.insertAdjacentHTML('beforeend', html)
+//     $loginFail.insertAdjacentHTML('beforeend', html)
 
-    var form = document.getElementById("login-form")
-    form.reset()
+//     var form = document.getElementById("login-form")
+//     form.reset()
 
-    var timer = setTimeout(function() {
-        window.location='/'
-    }, 8000);
+//     var timer = setTimeout(function() {
+//         window.location='/'
+//     }, 8000);
 
-})
+// })
 
 
 
