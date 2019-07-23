@@ -198,7 +198,7 @@ io.on('connection', (socket) => {
                 proj['projID'] = obj["Project_ID"]
                 proj['projName'] = obj["ProjectName"]
                 proj['projDesc'] = obj["ProjectDesc"]
-                console.log(proj)
+                
                 list.push(proj);
             }
             socket.emit('projectList', list)
