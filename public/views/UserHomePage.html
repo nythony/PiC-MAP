@@ -158,8 +158,8 @@
                         <p>{{projectDescription}}</p>
                     </span>
               
-                    <button class="open-button" onclick=openEditProjectForm({{projectName}})>Edit Project</button>
-                    <button class="open-button" onclick=openDeleteProjectForm({{projectName}})>Delete Project</button>
+                    <button class="open-button" onclick=openForm('editProjectForm', {{projectName}})>Edit Project</button>
+                    <button class="open-button" onclick="openForm('deleteProjectForm')">Delete Project</button>
                 </div>
              </script>
 
@@ -170,7 +170,7 @@
                     <h1>Edit Your Project</h1>
 
                     <label><b>Name</b></label>
-                    <input type="text" id="projectName" name="projectName" required>
+                    <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" required>
 
                     <label><b>Description</b> <i>(optional)</i></label>
                     <input type="text" id="projectDescription" name="projectDescription" placeholder="Enter the project description" value = "">
@@ -202,7 +202,7 @@
 
                     <!--Display project name for associated project-->
                     <label><b>Enter project name to confirm</b></label>
-                    <input type="text" id="projectName" name="projectName" autocomplete="off" required>
+                    <input type="text" id="projectName" name="projectName" placeholder="Enter the project name"required>
 
                     <input type="hidden" id="userid" name="userid" required />
                     <script type="text/javascript">
@@ -252,40 +252,33 @@
 
 
         <script>
-            function openCreateProjectForm() {
-                document.getElementById("projectForm").style.display = "block";
-                //document.getElementById("createTaskTool_ID").value = TaskTool_ID;
-            }
-                
-            function closeCreateProjectForm() {
-                document.getElementById("projectForm").style.display = "none";
-                document.getElementById("create-project-form").reset();
-            }
+        function openForm(formID, projName) {
+          document.getElementById(formID).style.display = "block";
+          document.getElementById(projectName).placeholder = projName;
+        }
 
-            function openEditProjectForm(projName) {
-                document.getElementById("editProjectForm").style.display = "block";
-                document.getElementByID("edit-project-form").placeholder = projName;
-            }
-
-            function closeEditProjectForm() {
-                document.getElementById("editProjectForm").style.display = "none";
-                document.getElementById("edit-project-form").reset();
-            }
-
-            function openDeleteProjectForm(projName) {
-                document.getElementById("deleteProjectForm").style.display = "block";
-                document.getElementByID("edit-project-form").placeholder = projName;
-
-            }
-
-            function closeDeleteProjectForm() {
-                document.getElementById("deleteProjectForm").style.display = "none";
-                document.getElementById("delete-project-form").reset();
-            }
+        function closeForm(formID) {
+          document.getElementById(formID).style.display = "none";
+        }
         </script>
 
     </div>
 
+    <!-- <div id="chatApp">
+        <form action="/chatapp">
+            <input type="hidden" id="username" name="username" required />
+            <input type="hidden" id="userid" name="userid" required />
+            <input type="hidden" id="room" name="room" required />
+            <input type="hidden" id="chatroomid" name="chatroomid" required />
+            <script type="text/javascript">
+                document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
+                document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
+                document.getElementById('room').value = <%- JSON.stringify(user.chatname) %>;
+                document.getElementById('chatroomid').value = <%- JSON.stringify(user.chatroomid) %>;
+            </script>
+            <button>ChatApp</button>
+        </form>
+    </div> -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
