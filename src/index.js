@@ -525,7 +525,7 @@ app.get("/UserHomePage/", function (req, res) {
                 var thisUserID = useridresult["rows"][0]["User_ID"]
                 res.cookie("userInfo",{name:username, userid: thisUserID, chatname: "TestingChatroom", chatroomid: 1})
                 res.render("UserHomePage", { user: req.cookies.userInfo })
-               //res.redirect("UserHomePage")
+               //Are we only using cookie to display username?
             })
         } else if (loginMatch == 2) { //username exists, bad password
             io.sockets.emit('failedLogin', 'Login unsuccessful: Wrong password')

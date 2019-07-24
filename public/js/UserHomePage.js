@@ -30,17 +30,28 @@ const $projectList = document.querySelector('#project-list')
 socket.on('projectList', (projects) => {
 
     localProjects = projects;
+    console.log("in socket for projectList at userHomePage.js for iD: ", projects[1].projID)
 
     for (i = 1; i < projects.length; i++){
 
         const html = Mustache.render(projectListTemplate, {
             projectName: projects[i].projName,
-            projectDescription: projects[i].projDesc
+            projectDescription: projects[i].projDesc,
+            Project_ID: projects[i].projID
         })
 
         $projectList.insertAdjacentHTML('beforeend', html)
     }
 
+})
+
+// Definition for subtask event
+socket.on('subtask', (subtasks) => {
+    const html = Mustache.render(subtaskTemplate, {
+        subtasks
+    })
+    //console.log(subtasks)
+    document.querySelector('#subtask').innerHTML = html
 })
 
 

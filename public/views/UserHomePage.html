@@ -156,9 +156,10 @@
                     <span class="projectElement">
                         <h2><b> {{projectName}} </b></h2>
                         <p>{{projectDescription}}</p>
+                        <p>{{Project_ID}}</p>
                     </span>
-              
-                    <button class="open-button" onclick="openForm('editProjectForm')">Edit Project</button>
+                    
+                    <button class="open-button" onclick=openEditProjectForm({{Project_ID}})>Edit Project</button>
                     <button class="open-button" onclick="openForm('deleteProjectForm')">Delete Project</button>
                 </div>
              </script>
@@ -187,6 +188,8 @@
 
                     <label><b>Due Date</b> <i>(optional)</i></label>
                     <input type="date" id="dueDate" name="dueDate">
+
+                    <input type="hidden" id="editProject_ID" name="Project_ID" autocomplete="off"/>
                     
                     <!--The array of users get parsed an should create appropriate AttachUserP-->
                     <button type="submit" class="btn">Edit: not functional</button> 
@@ -252,6 +255,12 @@
 
 
         <script>
+
+        function openEditProjectForm(Project_ID){
+            document.getElementById("editProjectForm").style.display = "block";
+            document.getElementById("editTask_ID").value = Project_ID;
+        }
+
         function openForm(formID) {
           document.getElementById(formID).style.display = "block";
         }
