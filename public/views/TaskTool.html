@@ -69,6 +69,8 @@
                 <input type="text" name="TaskName" placeholder="Subtask Name" required autocomplete="off">
                 <label><b>Description</b></label>
                 <input type="text" name="TaskDesc" placeholder="Subtask Description" required autocomplete="off">
+                <label><b>Due date</b></label>
+                <input type="date" name="DueDate" id="createDueDate" required autocomplete="off"><br>
                 <input type="hidden" id="createTaskTool_ID" name="TaskTool_ID" autocomplete="off"/>
                 <button class="btn" type="submit">Create Subtask</button>
                 <button class="btn cancel" onclick="closeCreateSubTaskForm()" type="reset">Cancel</button>
@@ -82,6 +84,8 @@
                 <input type="text" name="TaskName" placeholder="Subtask Name" required autocomplete="off">
                 <label><b>Description</b></label>
                 <input type="text" name="TaskDesc" placeholder="Subtask Description" required autocomplete="off">
+                <label><b>Due date</b></label>
+                <input type="date" name="DueDate" id="editDueDate" required autocomplete="off"><br>
                 <input type="hidden" id="editTaskTool_ID" name="TaskTool_ID" autocomplete="off"/>
                 <input type="hidden" id="editTask_ID" name="Task_ID" autocomplete="off"/>
                 <button class="btn" type="submit">Update Subtask</button>

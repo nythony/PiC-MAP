@@ -24,8 +24,8 @@ const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjec
 
 //Connecting to cloud based database:
 const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+    //connectionString: process.env.DATABASE_URL,
+    connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 })
 client.connect()
@@ -241,10 +241,10 @@ io.on('connection', (socket) => {
         callback()
     })
 
-    socket.on('createSubTask', ({TaskName, TaskDesc, TaskTool_ID}, callback) => {
+    socket.on('createSubTask', ({TaskName, TaskDesc, DueDate, TaskTool_ID}, callback) => {
         const user = getUserTaskTool(socket.id)
-        const text = 'INSERT INTO "Task"( "TaskName", "TaskDesc", "TaskTool_ID" ) VALUES($1, $2, $3) RETURNING *'
-        const values = [TaskName, TaskDesc, TaskTool_ID]
+        const text = 'INSERT INTO "Task"( "TaskName", "TaskDesc", "DueDate", "TaskTool_ID" ) VALUES($1, $2, $3, $4) RETURNING *'
+        const values = [TaskName, TaskDesc, DueDate, TaskTool_ID]
         client.query(text, values, (err, res) => {
             if (err) {
                 console.log(err.stack)
@@ -289,10 +289,10 @@ io.on('connection', (socket) => {
         callback()
     })
 
-    socket.on('editSubTask', ({TaskName, TaskDesc, TaskTool_ID, Task_ID}, callback) => {
+    socket.on('editSubTask', ({TaskName, TaskDesc, DueDate, TaskTool_ID, Task_ID}, callback) => {
         const user = getUserTaskTool(socket.id)
-        const text = 'UPDATE "Task" SET "TaskName"=$1, "TaskDesc"=$2 WHERE "Task_ID" = \'' + Task_ID + '\' RETURNING *'
-        const values = [TaskName, TaskDesc]
+        const text = 'UPDATE "Task" SET "TaskName"=$1, "TaskDesc"=$2, "DueDate"=$3 WHERE "Task_ID" = \'' + Task_ID + '\' RETURNING *'
+        const values = [TaskName, TaskDesc, DueDate]
         client.query(text, values, (err, res) => {
             if (err) {
                 console.log(err.stack)

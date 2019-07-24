@@ -48,9 +48,10 @@ $createSubTaskForm.addEventListener('submit', (e) => {
     // Retrieve values of createSubTaskForm form
     const TaskName = e.target.elements.TaskName.value
     const TaskDesc = e.target.elements.TaskDesc.value
+    const DueDate = e.target.elements.DueDate.value
     const TaskTool_ID = e.target.elements.TaskTool_ID.value
 
-    socket.emit('createSubTask', {TaskName, TaskDesc, TaskTool_ID} , (error) => {
+    socket.emit('createSubTask', {TaskName, TaskDesc, DueDate, TaskTool_ID} , (error) => {
         // Enable form
 
         if (error) {
@@ -70,9 +71,10 @@ $editSubTaskForm.addEventListener('submit', (e) => {
     // Retrieve values of editSubTaskForm form
     const TaskName = e.target.elements.TaskName.value
     const TaskDesc = e.target.elements.TaskDesc.value
+    const DueDate = e.target.elements.DueDate.value
     const Task_ID = e.target.elements.Task_ID.value
 
-    socket.emit('editSubTask', {TaskName, TaskDesc, TaskTool_ID, Task_ID} , (error) => {
+    socket.emit('editSubTask', {TaskName, TaskDesc, DueDate, TaskTool_ID, Task_ID} , (error) => {
         // Enable form
 
         if (error) {
