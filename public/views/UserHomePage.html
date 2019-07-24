@@ -158,7 +158,7 @@
                         <p>{{projectDescription}}</p>
                     </span>
               
-                    <button class="open-button" onclick=openEditProjectForm({{projectName}})>Edit Project</button>
+                    <button class="open-button" onclick="openForm('editProjectForm')">Edit Project</button>
                     <button class="open-button" onclick="openForm('deleteProjectForm')">Delete Project</button>
                 </div>
              </script>
@@ -252,9 +252,8 @@
 
 
         <script>
-        function openEditProjectForm(projName) {
-          document.getElementById('editProjectForm').style.display = "block";
-          document.getElementById("projectName").placeholder = projName;
+        function openForm(formID) {
+          document.getElementById(formID).style.display = "block";
         }
 
         function closeForm(formID) {
