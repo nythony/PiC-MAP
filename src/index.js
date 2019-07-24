@@ -165,6 +165,26 @@ io.on('connection', (socket) => {
 //  UserHomePage  //
 ////////////////////
 
+    // When a user enters a userhomepage--Need change.
+    socket.on('enterUserHomePage',  (userProj, callback) => { 
+        var username = userProj.username;
+        var list = [username]
+
+        const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
+
+        client.query(text, (err, results) => { 
+            for (let obj of results.rows){
+                var proj = {}
+                proj['projID'] = obj["Project_ID"]
+                proj['projName'] = obj["ProjectName"]
+                proj['projDesc'] = obj["ProjectDesc"]
+                
+                list.push(proj);
+            }
+            socket.emit('projectList', list)
+        })
+    })
+
  	// Creating a new project in the userHomePage
     socket.on('createProject', ({name, desc, start, due, id}, callback) => {
         const userCreate = id; //This is hardcoded as Alina's ID
@@ -384,28 +404,6 @@ io.on('connection', (socket) => {
         })
         callback()
     })
-        // When a user enters a userhomepage--Need change.
-    socket.on('enterUserHomePage',  (userProj, callback) => { 
-        var username = userProj.username;
-        var list = [username]
-
-        const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
-
-        client.query(text, (err, results) => { 
-            for (let obj of results.rows){
-                var proj = {}
-                proj['projID'] = obj["Project_ID"]
-                proj['projName'] = obj["ProjectName"]
-                proj['projDesc'] = obj["ProjectDesc"]
-                
-                list.push(proj);
-            }
-            socket.emit('projectList', list)
-        })
-    })
-
-
-
 
     // When a new task tool is created with in ProjectHomePage
     socket.on('newTaskTool', ({taskToolProjectID, taskToolProjectName, taskTool}, callback) => {
