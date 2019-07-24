@@ -227,7 +227,7 @@ io.on('connection', (socket) => {
                 } else {
                     console.log(res.rows[0])
                     console.log('----------------------------------project is created--------------------------------');
-                    //socket.emit("projectList")
+                    //socket.emit("projectList") --NEED TO UPDATE LIST SHOWN
                 }
 
            });

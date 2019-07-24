@@ -158,7 +158,7 @@
                         <p>{{projectDescription}}</p>
                     </span>
               
-                    <button class="open-button" onclick="openForm('editProjectForm', 'TRY EDIT')">Edit Project</button>
+                    <button class="open-button" onclick="openForm('editProjectForm', {{projectName}})">Edit Project</button>
                     <button class="open-button" onclick="openForm('deleteProjectForm', 'TRY DELETE')">Delete Project</button>
                 </div>
              </script>
@@ -264,21 +264,6 @@
 
     </div>
 
-    <!-- <div id="chatApp">
-        <form action="/chatapp">
-            <input type="hidden" id="username" name="username" required />
-            <input type="hidden" id="userid" name="userid" required />
-            <input type="hidden" id="room" name="room" required />
-            <input type="hidden" id="chatroomid" name="chatroomid" required />
-            <script type="text/javascript">
-                document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
-                document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
-                document.getElementById('room').value = <%- JSON.stringify(user.chatname) %>;
-                document.getElementById('chatroomid').value = <%- JSON.stringify(user.chatroomid) %>;
-            </script>
-            <button>ChatApp</button>
-        </form>
-    </div> -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
