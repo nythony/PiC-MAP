@@ -160,12 +160,14 @@ io.on('connection', (socket) => {
         })
     })
 
+    
 
 ////////////////////
 //  UserHomePage  //
 ////////////////////
 
-    // When a user enters a userhomepage--Need change.
+
+    // When a user enters a userhomepage
     socket.on('enterUserHomePage',  (userProj, callback) => { 
         var username = userProj.username;
         var list = [username]
@@ -185,32 +187,101 @@ io.on('connection', (socket) => {
         })
     })
 
- 	// Creating a new project in the userHomePage
-    socket.on('createProject', ({name, desc, start, due, id}, callback) => {
-        const userCreate = id; //This is hardcoded as Alina's ID
-        
-        //Converting empty date to null values to enter into date type values in DB
-        if (start == ""){
-        	start = null
-        }
+    // Creating a new project in the userHomePage
+    socket.on('createProject', ({name, desc, start, due, user}, callback) => {
 
-        if (due == ""){
-        	due = null
-        }
+        //Convert username to userID
+        var promise1 = new Promise(function(resolve, reject) {
+            
+           
+            client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \''+user+'\';', (err, res) => {
+                if (err) {
+                    console.log(err.stack)
+                } else {
+                    const userCreate = res.rows[0].User_ID;
+                    resolve(userCreate)
+                }
+            })
+        });
 
-        const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate") VALUES($1,$2,$3,$4,$5) RETURNING *';
-        const values = [name, desc, userCreate, start, due];
-        // callback
-        client.query(text, values, (err, res) => {
-            if (err) {
-                console.log(err.stack)
-            } else {
-                console.log(res.rows[0])
+        //Creating new project
+        promise1.then(function(userCreate) {
+
+
+            //Converting empty date to null values to enter into date type values in DB
+            if (start == ""){
+                start = null
             }
-            console.log('----------------------------------project is created--------------------------------');
+
+            if (due == ""){
+                due = null
+            }
+
+            //Inserting into database
+            const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate") VALUES($1,$2,$3,$4,$5) RETURNING *';
+            const values = [name, desc, userCreate, start, due];
+
+            client.query(text, values, (err, res) => {
+                if (err) {
+                    console.log(err.stack)
+                } else {
+                    console.log(res.rows[0])
+                    console.log('----------------------------------project is created--------------------------------');
+                    //socket.emit("projectList")
+                }
+
+           });
         })
         callback()
     })
+
+    // Editing a project from the userHomePage
+    socket.on('editProject', (proj, callback) => {
+
+          //Convert username to userID
+        var promise1 = new Promise(function(resolve, reject) {
+            
+           
+            client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \''+proj.user+'\';', (err, res) => {
+                if (err) {
+                    console.log(err.stack)
+                } else {
+                    const userCreate = res.rows[0].User_ID;
+                    resolve(userCreate)
+                }
+            })
+        });
+
+        promise1.then(function(userCreate) {
+
+            //Converting empty date to null values to enter into date type values in DB
+            if (start == ""){
+                start = null
+            }
+
+            if (due == ""){
+                due = null
+            }
+
+            // //MAKE THE CHANGES APPROPRIATE FOR EDITING
+            // const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate") VALUES($1,$2,$3,$4,$5) RETURNING *';
+            // const values = [name, desc, userCreate, start, due];
+            // // callback
+            // client.query(text, values, (err, res) => {
+            //     if (err) {
+            //         console.log(err.stack)
+            //     } else {
+            //         console.log(res.rows[0])
+            //     }
+            //     console.log('----------------------------------project is modified--------------------------------');
+            // })
+
+            
+        });
+
+        callback()
+    })
+
 
 
     // Task Tool
