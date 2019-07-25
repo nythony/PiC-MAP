@@ -199,13 +199,15 @@ $deleteProjectForm.addEventListener('submit', (e) => {
     // Retrieve inputs
     const name = e.target.elements.projectName.value
     const id = e.target.elements.deleteProject_ID.value
+    const user = username
 
     console.log("Name: ", name)
     console.log("ProjectID (hidden): ", id)
+    console.log("Username (hidden): ", user)
 
 
     //To be heard by index.js
-    socket.emit('deleteProject', {name, id}, (error) => {
+    socket.emit('deleteProject', {name, id, user}, (error) => {
 
         if (error) {
             return console.log(error)

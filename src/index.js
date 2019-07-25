@@ -169,6 +169,8 @@ io.on('connection', (socket) => {
 
     // When a user enters a userhomepage
     socket.on('enterUserHomePage',  (userProj, callback) => { 
+
+        console.log("In eneterUserHome @ index: ", userProj)
         var username = userProj.username;
         var list = [username]
 
@@ -186,7 +188,6 @@ io.on('connection', (socket) => {
             socket.emit('projectList', list)
         })
     })
-
 
 
     // Creating a new project in the userHomePage
@@ -279,10 +280,11 @@ io.on('connection', (socket) => {
 
 
     // Deleting project from the userHomePage
-    socket.on('deleteProject', ({name, id}, callback) => {
+    socket.on('deleteProject', ({name, id, user}, callback) => {
 
         console.log("IN DELETE PROJECT ", name)
         console.log("IN DELETE PROJECT ", id)
+
 
         
         //Convert username to userID
@@ -293,9 +295,17 @@ io.on('connection', (socket) => {
                     console.log(err.stack)
                 } else {
 
-                    if (res.rows != [] && res.rows.Project_ID == id){
-                        resolve(id)
+                    if (res.rows.length != 0){
+                        console.log(res.rows.length)
+                        if (res.rows[0].Project_ID == id){ //Project_ID does not exist in res.rows if no match, so cannot combine with above statement
+                            resolve(id, user)
+                        } else {
+                            //Entered a project name, but with the wrong button
+                            socket.emit("deleteProjectFail", "Invalid Project Name"); 
+                            //Message should be kept the same because we query by projectID, which could be another user's project if mistyped
+                        }
                     } else {
+                        //Project name does not exist
                         socket.emit("deleteProjectFail", "Invalid Project Name");
                     }
 
@@ -304,24 +314,22 @@ io.on('connection', (socket) => {
         });
 
         //Creating new project
-        promise1.then(function(id) {
+        promise1.then(function(id, user) {
 
-        //     //Inserting into database
-        //     const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate") VALUES($1,$2,$3,$4,$5) RETURNING *';
-        //     const values = [name, desc, userCreate, start, due];
+            socket.emit("enterUserHomePage", {user})
 
-        //     client.query(text, values, (err, res) => {
-        //         if (err) {
-        //             console.log(err.stack)
-        //         } else {
-        //             console.log(res.rows[0])
-        //             console.log('----------------------------------project is created--------------------------------');
-        //             //socket.emit("projectList") --NEED TO UPDATE LIST SHOWN
-        //         }
+         //    const text = 'DELETE FROM "Project" WHERE "Project_ID"= \'' + id + '\';'
+         //    client.query(text, (err, res) => {
+         //        if (err) {
+         //            console.log(err.stack)
+         //        } else {
+         //            //console.log('----------------------------------project has been deleted--------------------------------');
+         //            socket.emit("enterUserHomePage", {username})
+         //            //All those subsequent users inside project need to be redirected
+         //        }
 
-        //    });
+         //   });
 
-            console.log("Entered correct project name to be deleted")
          })
 
         callback()
@@ -472,26 +480,6 @@ io.on('connection', (socket) => {
             }
         })
         callback()
-    })
-  
-        // When a user enters a userhomepage--Need change.
-    socket.on('enterUserHomePage',  (userProj, callback) => { 
-        var username = userProj.username;
-        var list = [username]
-
-        const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
-
-        client.query(text, (err, results) => { 
-            for (let obj of results.rows){
-                var proj = {}
-                proj['projID'] = obj["Project_ID"]
-                proj['projName'] = obj["ProjectName"]
-                proj['projDesc'] = obj["ProjectDesc"]
-                
-                list.push(proj);
-            }
-            socket.emit('projectList', list)
-        })
     })
 
 })
