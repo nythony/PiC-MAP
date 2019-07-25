@@ -267,15 +267,18 @@
 
 
         function closeCreateProjectForm() {
-          document.getElementById("create-project-form").style.display = "none";
+          document.getElementById("projectForm").style.display = "none";
+          document.getElementById("create-project-form").reset();
         }
 
         function closeEditProjectForm() {
-          document.getElementById("edit-project-form").style.display = "none";
+          document.getElementById("editProjectForm").style.display = "none";
+          document.getElementById("edit-project-form").reset();
         }
 
         function closeDeleteProjectForm() {
-          document.getElementById("delete-project-form").style.display = "none";
+          document.getElementById("deleteProjectForm").style.display = "none";
+          document.getElementById("delete-project-form").reset();
         }
 
         </script>
