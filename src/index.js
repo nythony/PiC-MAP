@@ -24,8 +24,8 @@ const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjec
 
 //Connecting to cloud based database:
 const client = new Client({
-    //connectionString: process.env.DATABASE_URL,
-    connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+    connectionString: process.env.DATABASE_URL,
+    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 })
 client.connect()
@@ -160,37 +160,120 @@ io.on('connection', (socket) => {
         })
     })
 
+    
 
 ////////////////////
 //  UserHomePage  //
 ////////////////////
 
- 	// Creating a new project in the userHomePage
-    socket.on('createProject', ({name, desc, start, due, id}, callback) => {
-        const userCreate = id; //This is hardcoded as Alina's ID
-        
-        //Converting empty date to null values to enter into date type values in DB
-        if (start == ""){
-        	start = null
-        }
 
-        if (due == ""){
-        	due = null
-        }
+    // When a user enters a userhomepage
+    socket.on('enterUserHomePage',  (userProj, callback) => { 
+        var username = userProj.username;
+        var list = [username]
 
-        const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate") VALUES($1,$2,$3,$4,$5) RETURNING *';
-        const values = [name, desc, userCreate, start, due];
-        // callback
-        client.query(text, values, (err, res) => {
-            if (err) {
-                console.log(err.stack)
-            } else {
-                console.log(res.rows[0])
+        const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
+
+        client.query(text, (err, results) => { 
+            for (let obj of results.rows){
+                var proj = {}
+                proj['projID'] = obj["Project_ID"]
+                proj['projName'] = obj["ProjectName"]
+                proj['projDesc'] = obj["ProjectDesc"]
+                
+                list.push(proj);
             }
-            console.log('----------------------------------project is created--------------------------------');
+            socket.emit('projectList', list)
+        })
+    })
+
+    // Creating a new project in the userHomePage
+    socket.on('createProject', ({name, desc, start, due, user}, callback) => {
+
+        //Convert username to userID
+        var promise1 = new Promise(function(resolve, reject) {
+            
+           
+            client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \''+user+'\';', (err, res) => {
+                if (err) {
+                    console.log(err.stack)
+                } else {
+                    const userCreate = res.rows[0].User_ID;
+                    resolve(userCreate)
+                }
+            })
+        });
+
+        //Creating new project
+        promise1.then(function(userCreate) {
+
+
+            //Converting empty date to null values to enter into date type values in DB
+            if (start == ""){
+                start = null
+            }
+
+            if (due == ""){
+                due = null
+            }
+
+            //Inserting into database
+            const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate") VALUES($1,$2,$3,$4,$5) RETURNING *';
+            const values = [name, desc, userCreate, start, due];
+
+            client.query(text, values, (err, res) => {
+                if (err) {
+                    console.log(err.stack)
+                } else {
+                    console.log(res.rows[0])
+                    console.log('----------------------------------project is created--------------------------------');
+                    //socket.emit("projectList") --NEED TO UPDATE LIST SHOWN
+                }
+
+           });
         })
         callback()
     })
+
+    // Editing a project from the userHomePage
+    socket.on('editProject', (proj, callback) => {
+        var start = proj.start;
+        var due = proj.due;
+
+        console.log("IN EDIT PROJECT ", proj.name)
+        console.log("IN EDIT PROJECT ", proj.desc)
+        console.log("IN EDIT PROJECT ", start)
+        console.log("IN EDIT PROJECT ", start)
+        console.log("IN EDIT PROJECT ", proj.id)
+        //TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:m
+
+        //Converting empty date to null values to enter into date type values in DB
+        if (start == ""){
+            start = null
+        }
+
+        if (due == ""){
+            due = null
+        }
+
+        //MAKE THE CHANGES APPROPRIATE FOR EDITING
+        const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+        
+        // const text = 'UPDATE "Project" SET "ProjectName"=$1, "ProjectDesc"=$2, "StartDate"=$2, "DueDate"=$3 WHERE "Project_ID" = \'' + proj.Project_ID + '\' RETURNING *'
+        // const values = [proj.name, proj.desc, start, due]
+
+        client.query(text, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            } else {
+                console.log('----------------------------------project is modified--------------------------------');
+            }
+            
+        })
+
+        callback()
+    })
+
 
 
     // Task Tool
@@ -337,7 +420,7 @@ io.on('connection', (socket) => {
         })
         callback()
     })
-
+  
         // When a user enters a userhomepage--Need change.
     socket.on('enterUserHomePage',  (userProj, callback) => { 
         var username = userProj.username;
@@ -397,7 +480,7 @@ app.get("/UserHomePage/", function (req, res) {
                 var thisUserID = useridresult["rows"][0]["User_ID"]
                 res.cookie("userInfo",{name:username, userid: thisUserID, chatname: "TestingChatroom", chatroomid: 1})
                 res.render("UserHomePage", { user: req.cookies.userInfo })
-               //res.redirect("UserHomePage")
+               //Are we only using cookie to display username?
             })
         } else if (loginMatch == 2) { //username exists, bad password
             io.sockets.emit('failedLogin', 'Login unsuccessful: Wrong password')

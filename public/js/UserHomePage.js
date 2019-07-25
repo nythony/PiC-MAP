@@ -8,6 +8,7 @@ const socket = io()
 
 //var rCookie = document.cookie; Returns encoded cookie
 const { username, password } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+var localProjects = [];
 
 // When a user enters a projecthomepage, sends user info to server
 socket.emit('enterUserHomePage', { username, password }, (error) => {
@@ -28,11 +29,15 @@ const $projectList = document.querySelector('#project-list')
 
 socket.on('projectList', (projects) => {
 
+    localProjects = projects;
+    console.log("in socket for projectList at userHomePage.js for iD: ", projects[1].projID)
+
     for (i = 1; i < projects.length; i++){
 
         const html = Mustache.render(projectListTemplate, {
             projectName: projects[i].projName,
-            projectDescription: projects[i].projDesc
+            projectDescription: projects[i].projDesc,
+            Project_ID: projects[i].projID
         })
 
         $projectList.insertAdjacentHTML('beforeend', html)
@@ -40,11 +45,67 @@ socket.on('projectList', (projects) => {
 
 })
 
+// Definition for subtask event
+socket.on('subtask', (subtasks) => {
+    const html = Mustache.render(subtaskTemplate, {
+        subtasks
+    })
+    //console.log(subtasks)
+    document.querySelector('#subtask').innerHTML = html
+})
+
 
 
 //////////////////////
 //   Edit Project   //
 //////////////////////
+
+
+const $editProjectForm = document.querySelector('#edit-project-form')
+
+
+// Listen for submission of create-project-form
+$editProjectForm.addEventListener('submit', (e) => {
+    console.log("A project is being edited")
+
+    e.preventDefault()
+
+    // Retrieve inputs
+    const name = e.target.elements.projectName.value
+    const desc = e.target.elements.projectDescription.value
+    const start = e.target.elements.startDate.value
+    const due = e.target.elements.dueDate.value
+    const id = e.target.elements.editProject_ID.value
+    const user = username
+
+    console.log("Name: ", name)
+    console.log("Desc: ", desc)
+    console.log("Start: ", start)
+    console.log("Due: ", due)
+    console.log("Username (hidden): ", user)
+    console.log("ProjectID (hidden): ", id)
+
+
+
+    //
+    //WORKING ON GETTING EDIT FORM TO WORK. Get Query on editing
+    //
+
+
+    //To be heard by index.js
+    socket.emit('editProject', {name, desc, start, due, user, id}, (error) => {
+    //localProjects contains [username, {P1}, {P2}, {P...}]
+        console.log(user) //works
+
+        if (error) {
+            return console.log(error)
+        }
+
+        var form = document.getElementById("edit-project-form")
+        document.getElementById("editProjectForm").style.display = "none";
+        form.reset()
+    })
+})
 
 
 
@@ -84,8 +145,8 @@ socket.on('projectList', (projects) => {
 //////////////////////
 
 const $createProjectForm = document.querySelector('#create-project-form')
-const $createProjectFormInput = $createProjectForm.querySelector('input')
-const $createProjectFormButton = $createProjectForm.querySelector('button')
+// const $createProjectFormInput = $createProjectForm.querySelector('input')
+// const $createProjectFormButton = $createProjectForm.querySelector('button')
 
 
 // Listen for submission of create-project-form
@@ -99,18 +160,18 @@ $createProjectForm.addEventListener('submit', (e) => {
     const desc = e.target.elements.projectDescription.value
     const start = e.target.elements.startDate.value
     const due = e.target.elements.dueDate.value
-    const id = e.target.elements.userid.value
+    const user = username 
 
     console.log("Name: ", name)
     console.log("Desc: ", desc)
     console.log("Start: ", start)
     console.log("Due: ", due)
-    console.log("ID (hidden): ", )
+    console.log("Username: ", user)
 
 
 
     //To be heard by index.js
-    socket.emit('createProject', {name, desc, start, due, id}, (error) => {
+    socket.emit('createProject', {name, desc, start, due, user}, (error) => {
   
         if (error) {
             return console.log(error)
