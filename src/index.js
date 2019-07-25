@@ -24,8 +24,8 @@ const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjec
 
 //Connecting to cloud based database:
 const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+    //connectionString: process.env.DATABASE_URL,
+    connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 })
 client.connect()
@@ -187,13 +187,14 @@ io.on('connection', (socket) => {
         })
     })
 
+
+
     // Creating a new project in the userHomePage
     socket.on('createProject', ({name, desc, start, due, user}, callback) => {
 
         //Convert username to userID
         var promise1 = new Promise(function(resolve, reject) {
             
-           
             client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \''+user+'\';', (err, res) => {
                 if (err) {
                     console.log(err.stack)
@@ -207,14 +208,13 @@ io.on('connection', (socket) => {
         //Creating new project
         promise1.then(function(userCreate) {
 
-
             //Converting empty date to null values to enter into date type values in DB
             if (start == ""){
-                start = null
+                start = new Date().getTime() 
             }
 
             if (due == ""){
-                due = null
+                due = new Date().getTime()
             }
 
             //Inserting into database
@@ -235,6 +235,8 @@ io.on('connection', (socket) => {
         callback()
     })
 
+
+
     // Editing a project from the userHomePage
     socket.on('editProject', (proj, callback) => {
         var start = proj.start;
@@ -249,11 +251,11 @@ io.on('connection', (socket) => {
 
         //Converting empty date to null values to enter into date type values in DB
         if (start == ""){
-            start = null
+            start = new Date().getTime()
         }
 
         if (due == ""){
-            due = null
+            due = new Date().getTime()
         }
 
         //MAKE THE CHANGES APPROPRIATE FOR EDITING
@@ -270,6 +272,57 @@ io.on('connection', (socket) => {
             }
             
         })
+
+        callback()
+    })
+
+
+
+    // Deleting project from the userHomePage
+    socket.on('deleteProject', ({name, id}, callback) => {
+
+        console.log("IN DELETE PROJECT ", name)
+        console.log("IN DELETE PROJECT ", id)
+
+        
+        //Convert username to userID
+        var promise1 = new Promise(function(resolve, reject) {
+            
+            client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+name+'\';', (err, res) => {
+                if (err) {
+                    console.log(err.stack)
+                } else {
+
+                    if (res.rows != [] && res.rows.Project_ID == id){
+                        resolve(id)
+                    } else {
+                        socket.emit("deleteProjectFail", "Invalid Project Name");
+                    }
+
+                }
+            })
+        });
+
+        //Creating new project
+        promise1.then(function(id) {
+
+        //     //Inserting into database
+        //     const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate") VALUES($1,$2,$3,$4,$5) RETURNING *';
+        //     const values = [name, desc, userCreate, start, due];
+
+        //     client.query(text, values, (err, res) => {
+        //         if (err) {
+        //             console.log(err.stack)
+        //         } else {
+        //             console.log(res.rows[0])
+        //             console.log('----------------------------------project is created--------------------------------');
+        //             //socket.emit("projectList") --NEED TO UPDATE LIST SHOWN
+        //         }
+
+        //    });
+
+            console.log("Entered correct project name to be deleted")
+         })
 
         callback()
     })

@@ -57,6 +57,51 @@ socket.on('subtask', (subtasks) => {
 
 
 //////////////////////
+//  Create Project  //
+//////////////////////
+
+const $createProjectForm = document.querySelector('#create-project-form')
+// const $createProjectFormInput = $createProjectForm.querySelector('input')
+// const $createProjectFormButton = $createProjectForm.querySelector('button')
+
+
+// Listen for submission of create-project-form
+$createProjectForm.addEventListener('submit', (e) => {
+    console.log("A project is being created")
+
+    e.preventDefault()
+
+    // Retrieve inputs
+    const name = e.target.elements.projectName.value
+    const desc = e.target.elements.projectDescription.value
+    const start = e.target.elements.startDate.value
+    const due = e.target.elements.dueDate.value
+    const user = username 
+
+    console.log("Name: ", name)
+    console.log("Desc: ", desc)
+    console.log("Start: ", start)
+    console.log("Due: ", due)
+    console.log("Username: ", user)
+
+
+
+    //To be heard by index.js
+    socket.emit('createProject', {name, desc, start, due, user}, (error) => {
+  
+        if (error) {
+            return console.log(error)
+        }
+
+        var form = document.getElementById("create-project-form")
+        document.getElementById("projectForm").style.display = "none";
+        form.reset()
+    })
+})
+
+
+
+//////////////////////
 //   Edit Project   //
 //////////////////////
 
@@ -111,7 +156,6 @@ $editProjectForm.addEventListener('submit', (e) => {
 
 
 
-
 // var projectMemberList = [] //do not need to add creator, because create button should automatically create AttachUserP for creator --Might not need
 // // Elements
 // const $addMembers = document.querySelector('#add-project-members')
@@ -139,48 +183,58 @@ $editProjectForm.addEventListener('submit', (e) => {
 
 
 
-
 //////////////////////
-//	Create Project  //
+//  Delete Project  //
 //////////////////////
 
-const $createProjectForm = document.querySelector('#create-project-form')
-// const $createProjectFormInput = $createProjectForm.querySelector('input')
-// const $createProjectFormButton = $createProjectForm.querySelector('button')
 
+const $deleteProjectForm = document.querySelector('#delete-project-form')
 
 // Listen for submission of create-project-form
-$createProjectForm.addEventListener('submit', (e) => {
-	console.log("A project is being created")
+$deleteProjectForm.addEventListener('submit', (e) => {
+    console.log("A project is being deleted")
 
     e.preventDefault()
 
     // Retrieve inputs
     const name = e.target.elements.projectName.value
-    const desc = e.target.elements.projectDescription.value
-    const start = e.target.elements.startDate.value
-    const due = e.target.elements.dueDate.value
-    const user = username 
+    const id = e.target.elements.deleteProject_ID.value
 
     console.log("Name: ", name)
-    console.log("Desc: ", desc)
-    console.log("Start: ", start)
-    console.log("Due: ", due)
-    console.log("Username: ", user)
-
+    console.log("ProjectID (hidden): ", id)
 
 
     //To be heard by index.js
-    socket.emit('createProject', {name, desc, start, due, user}, (error) => {
-  
+    socket.emit('deleteProject', {name, id}, (error) => {
+
         if (error) {
             return console.log(error)
         }
 
-        var form = document.getElementById("create-project-form")
-        document.getElementById("projectForm").style.display = "none";
+        var form = document.getElementById("delete-project-form")
+        document.getElementById("deleteProjectForm").style.display = "none";
         form.reset()
     })
 })
 
+
+
+//Error message
+const deleteProjectTemplate = document.querySelector('#deleteProjectFail-template').innerHTML
+const $deleteProjectFail = document.querySelector('#deleteProjectFail')
+
+
+socket.on('deleteProjectFail', (eMessage) => {
+
+    document.getElementById("deleteProjectForm").style.display = "block";
+
+    const html = Mustache.render(deleteProjectTemplate, {
+        messageDisplay: eMessage
+    })
+
+    $deleteProjectFail.insertAdjacentHTML('beforeend', html)
+
+
+
+})
 

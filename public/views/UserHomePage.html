@@ -203,6 +203,14 @@
                   <form class="form-container" id="delete-project-form">
                     <h1>Are you sure you want to delete this project?</h1>
 
+                      <!--Error message template-->
+                       <div id="deleteProjectFail"></div>
+                        <script id="deleteProjectFail-template" type="text/html">
+                            <div class="errorMessage">
+                              <h4 style="color:red"><center>{{messageDisplay}}</center></h4>
+                            </div>
+                        </script>
+
                     <!--Display project name for associated project-->
                     <label><b>Enter project name to confirm</b></label>
                     <input type="text" id="projectName" name="projectName" placeholder="Enter the project name"required>
