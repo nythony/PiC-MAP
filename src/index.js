@@ -237,47 +237,39 @@ io.on('connection', (socket) => {
 
     // Editing a project from the userHomePage
     socket.on('editProject', (proj, callback) => {
+        var start = proj.start;
+        var due = proj.due;
 
-          //Convert username to userID
-        var promise1 = new Promise(function(resolve, reject) {
-            
-           
-            client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \''+proj.user+'\';', (err, res) => {
-                if (err) {
-                    console.log(err.stack)
-                } else {
-                    const userCreate = res.rows[0].User_ID;
-                    resolve(userCreate)
-                }
-            })
-        });
+        console.log("IN EDIT PROJECT ", proj.name)
+        console.log("IN EDIT PROJECT ", proj.desc)
+        console.log("IN EDIT PROJECT ", start)
+        console.log("IN EDIT PROJECT ", start)
+        console.log("IN EDIT PROJECT ", proj.id)
+        //TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:m
 
-        promise1.then(function(userCreate) {
+        //Converting empty date to null values to enter into date type values in DB
+        if (start == ""){
+            start = null
+        }
 
-            //Converting empty date to null values to enter into date type values in DB
-            if (start == ""){
-                start = null
+        if (due == ""){
+            due = null
+        }
+
+        //MAKE THE CHANGES APPROPRIATE FOR EDITING
+        const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = to_timestamp(\'' + start + '\'), "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+        
+        // const text = 'UPDATE "Project" SET "ProjectName"=$1, "ProjectDesc"=$2, "StartDate"=$2, "DueDate"=$3 WHERE "Project_ID" = \'' + proj.Project_ID + '\' RETURNING *'
+        // const values = [proj.name, proj.desc, start, due]
+
+        client.query(text, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            } else {
+                console.log('----------------------------------project is modified--------------------------------');
             }
-
-            if (due == ""){
-                due = null
-            }
-
-            // //MAKE THE CHANGES APPROPRIATE FOR EDITING
-            // const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate") VALUES($1,$2,$3,$4,$5) RETURNING *';
-            // const values = [name, desc, userCreate, start, due];
-            // // callback
-            // client.query(text, values, (err, res) => {
-            //     if (err) {
-            //         console.log(err.stack)
-            //     } else {
-            //         console.log(res.rows[0])
-            //     }
-            //     console.log('----------------------------------project is modified--------------------------------');
-            // })
-
             
-        });
+        })
 
         callback()
     })

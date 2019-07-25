@@ -75,6 +75,7 @@ $editProjectForm.addEventListener('submit', (e) => {
     const desc = e.target.elements.projectDescription.value
     const start = e.target.elements.startDate.value
     const due = e.target.elements.dueDate.value
+    const id = e.target.elements.editProject_ID.value
     const user = username
 
     console.log("Name: ", name)
@@ -82,6 +83,7 @@ $editProjectForm.addEventListener('submit', (e) => {
     console.log("Start: ", start)
     console.log("Due: ", due)
     console.log("Username (hidden): ", user)
+    console.log("ProjectID (hidden): ", id)
 
 
 
@@ -91,7 +93,7 @@ $editProjectForm.addEventListener('submit', (e) => {
 
 
     //To be heard by index.js
-    socket.emit('editProject', {name, desc, start, due, user}, (error) => {
+    socket.emit('editProject', {name, desc, start, due, user, id}, (error) => {
     //localProjects contains [username, {P1}, {P2}, {P...}]
         console.log(user) //works
 

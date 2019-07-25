@@ -160,7 +160,7 @@
                     </span>
                     
                     <button class="open-button" onclick=openEditProjectForm({{Project_ID}})>Edit Project</button>
-                    <button class="open-button" onclick="openForm('deleteProjectForm')">Delete Project</button>
+                    <button class="open-button" onclick=openDeleteProjectForm({{Project_ID}})>Delete Project</button>
                 </div>
              </script>
 
@@ -193,7 +193,7 @@
                     
                     <!--The array of users get parsed an should create appropriate AttachUserP-->
                     <button type="submit" class="btn">Edit: not functional</button> 
-                    <button type="button" class="btn cancel" onclick="closeForm('editProjectForm')">Close</button>
+                    <button type="button" class="btn cancel" onclick="closeEditProjectForm()">Close</button>
                   </form>
             </div>
 
@@ -207,13 +207,10 @@
                     <label><b>Enter project name to confirm</b></label>
                     <input type="text" id="projectName" name="projectName" placeholder="Enter the project name"required>
 
-                    <input type="hidden" id="userid" name="userid" required />
-                    <script type="text/javascript">
-                        document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
-                    </script>
+                    <input type="hidden" id="deleteProject_ID" name="Project_ID" autocomplete="off"/>
 
                     <button type="submit" class="btn">Confirm: not functional</button>
-                    <button type="button" class="btn cancel" onclick="closeForm('deleteProjectForm')">Close</button>
+                    <button type="button" class="btn cancel" onclick="closeDeleteProjectForm()">Close</button>
                   </form>
             </div>
 
@@ -223,7 +220,7 @@
 
 
     <!--POP UP FOR CREATING A PROJECT-->
-    <button class="open-button" onclick="openForm('projectForm')">Create Project</button>
+    <button class="open-button" onclick="openCreateProjectForm()">Create Project</button>
 
     <div id="newItems">
 
@@ -243,50 +240,47 @@
             <label><b>Due Date</b> <i>(optional)</i></label>
             <input type="date" id="dueDate" name="dueDate">
 
-            <input type="hidden" id="userid" name="userid" required />
-            <script type="text/javascript">
-                document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
-            </script>
+            <input type="hidden" id="createProject_ID" name="Project_ID" autocomplete="off"/>
 
             <button type="submit" class="btn">Create</button> <!--The array of users get parsed an should create appropriate AttachUserP-->
-            <button type="button" class="btn cancel" onclick="closeForm('projectForm')">Close</button>
+            <button type="button" class="btn cancel" onclick="closeCreateProjectForm()">Close</button>
           </form>
         </div>
 
 
         <script>
 
+        function openCreateProjectForm(Project_ID){
+            document.getElementById("projectForm").style.display = "block";
+            document.getElementById("createProject_ID").value = Project_ID;
+        }
+
         function openEditProjectForm(Project_ID){
             document.getElementById("editProjectForm").style.display = "block";
             document.getElementById("editProject_ID").value = Project_ID;
         }
 
-        function openForm(formID) {
-          document.getElementById(formID).style.display = "block";
+        function openDeleteProjectForm(Project_ID){
+            document.getElementById("deleteProjectForm").style.display = "block";
+            document.getElementById("deleteProject_ID").value = Project_ID;
         }
 
-        function closeForm(formID) {
-          document.getElementById(formID).style.display = "none";
+
+        function closeCreateProjectForm() {
+          document.getElementById("create-project-form").style.display = "none";
         }
+
+        function closeEditProjectForm() {
+          document.getElementById("edit-project-form").style.display = "none";
+        }
+
+        function closeDeleteProjectForm() {
+          document.getElementById("delete-project-form").style.display = "none";
+        }
+
         </script>
 
     </div>
-
-    <!-- <div id="chatApp">
-        <form action="/chatapp">
-            <input type="hidden" id="username" name="username" required />
-            <input type="hidden" id="userid" name="userid" required />
-            <input type="hidden" id="room" name="room" required />
-            <input type="hidden" id="chatroomid" name="chatroomid" required />
-            <script type="text/javascript">
-                document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
-                document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
-                document.getElementById('room').value = <%- JSON.stringify(user.chatname) %>;
-                document.getElementById('chatroomid').value = <%- JSON.stringify(user.chatroomid) %>;
-            </script>
-            <button>ChatApp</button>
-        </form>
-    </div> -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
