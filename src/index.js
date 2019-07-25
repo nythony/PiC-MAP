@@ -247,14 +247,14 @@ io.on('connection', (socket) => {
         console.log("IN EDIT PROJECT ", proj.id)
         //TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:m
 
-        // //Converting empty date to null values to enter into date type values in DB
-        // if (start == ""){
-        //     start = null
-        // }
+        //Converting empty date to null values to enter into date type values in DB
+        if (start == ""){
+            start = null
+        }
 
-        // if (due == ""){
-        //     due = null
-        // }
+        if (due == ""){
+            due = null
+        }
 
         //MAKE THE CHANGES APPROPRIATE FOR EDITING
         const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
