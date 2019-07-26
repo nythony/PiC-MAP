@@ -169,8 +169,6 @@ io.on('connection', (socket) => {
 
     // When a user enters a userhomepage
     socket.on('enterUserHomePage',  (userProj, callback) => { 
-
-        console.log("In eneterUserHome @ index: ", userProj)
         var username = userProj.username;
         var list = [username]
 
@@ -282,8 +280,8 @@ io.on('connection', (socket) => {
     // Deleting project from the userHomePage
     socket.on('deleteProject', ({name, id, user}, callback) => {
 
-        console.log("IN DELETE PROJECT ", name)
-        console.log("IN DELETE PROJECT ", id)
+        var obj = []
+        obj.push(user)
 
 
         
@@ -296,9 +294,10 @@ io.on('connection', (socket) => {
                 } else {
 
                     if (res.rows.length != 0){
-                        console.log(res.rows.length)
                         if (res.rows[0].Project_ID == id){ //Project_ID does not exist in res.rows if no match, so cannot combine with above statement
-                            resolve(id, user)
+                            obj.push(id)
+                            console.log("Before resolve", id, obj)
+                            resolve(obj)
                         } else {
                             //Entered a project name, but with the wrong button
                             socket.emit("deleteProjectFail", "Invalid Project Name"); 
@@ -314,23 +313,37 @@ io.on('connection', (socket) => {
         });
 
         //Creating new project
-        promise1.then(function(id, user) {
+        promise1.then(function(obj) {
 
-            socket.emit("enterUserHomePage", {user})
+            //Needs to delete references to Project_ID PK
+            // const text = 'DELETE FROM "Project" WHERE "Project_ID"= \'' + id + '\';'
+            // client.query(text, (err, res) => {
+            //     if (err) {
+            //         console.log(err.stack)
+            //     } else {
+            //         console.log('----------------------------------project has been deleted--------------------------------');
+                    
+                    //Displaying project list again
+                    var username = obj[0]
+                    var list = [username]
+                    const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
+                    client.query(text, (err, results) => { 
+                        for (let obj of results.rows){
+                            var proj = {}
+                            proj['projID'] = obj["Project_ID"]
+                            proj['projName'] = obj["ProjectName"]
+                            proj['projDesc'] = obj["ProjectDesc"]
+                            
+                            list.push(proj);
+                        }
+                        socket.emit('projectList', list)
+                        //All those subsequent users inside project need to be redirected
+                    })
+                //}
 
-         //    const text = 'DELETE FROM "Project" WHERE "Project_ID"= \'' + id + '\';'
-         //    client.query(text, (err, res) => {
-         //        if (err) {
-         //            console.log(err.stack)
-         //        } else {
-         //            //console.log('----------------------------------project has been deleted--------------------------------');
-         //            socket.emit("enterUserHomePage", {username})
-         //            //All those subsequent users inside project need to be redirected
-         //        }
+           });
 
-         //   });
-
-         })
+    //})
 
         callback()
     })

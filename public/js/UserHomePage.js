@@ -30,7 +30,7 @@ const $projectList = document.querySelector('#project-list')
 socket.on('projectList', (projects) => {
 
     localProjects = projects;
-    console.log("in socket for projectList at userHomePage.js for iD: ", projects[1].projID)
+    console.log("in socket for projectList at userHomePage.js: ", projects)
 
     for (i = 1; i < projects.length; i++){
 
