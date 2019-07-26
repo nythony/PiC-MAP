@@ -104,17 +104,18 @@
 
 <body>
     <div id="header">
-        <h1>
-            Welcome
-            <script type="text/javascript">
-                var userN = <%- JSON.stringify(user.name) %>;
-                document.write(userN)
-            </script>
-            !
-        </h1>
+        <!--Welcome user template-->
+       <div id="welcomeUser"></div>
+        <script id="welcomeUser-template" type="text/html">
+            <div class="message">
+              <h1> Welcome {{messageDisplay}}! </h1>
+        </script>
+
+
         <form action="/logout" method="post">
             <button type="submit">Log Out</button>
         </form>
+
     </div>
     <div id="joinExisting">
         <form action="joinProject" method="post">

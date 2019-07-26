@@ -209,11 +209,11 @@ io.on('connection', (socket) => {
 
             //Converting empty date to null values to enter into date type values in DB
             if (start == ""){
-                start = new Date().getTime() 
+                start = null //Inserting allows for null entry. DB trigger to automatically set start date as current date. Due date is null
             }
 
             if (due == ""){
-                due = new Date().getTime()
+                due = null
             }
 
             //Inserting into database
@@ -241,11 +241,6 @@ io.on('connection', (socket) => {
         var start = proj.start;
         var due = proj.due;
 
-        console.log("IN EDIT PROJECT ", proj.name)
-        console.log("IN EDIT PROJECT ", proj.desc)
-        console.log("IN EDIT PROJECT ", start)
-        console.log("IN EDIT PROJECT ", start)
-        console.log("IN EDIT PROJECT ", proj.id)
         //TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:m
 
         //Converting empty date to null values to enter into date type values in DB
@@ -257,11 +252,8 @@ io.on('connection', (socket) => {
             due = new Date().getTime()
         }
 
-        //MAKE THE CHANGES APPROPRIATE FOR EDITING
+        //NEED TO MAKE DATE WORK
         const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
-        
-        // const text = 'UPDATE "Project" SET "ProjectName"=$1, "ProjectDesc"=$2, "StartDate"=$2, "DueDate"=$3 WHERE "Project_ID" = \'' + proj.Project_ID + '\' RETURNING *'
-        // const values = [proj.name, proj.desc, start, due]
 
         client.query(text, (err, res) => {
             if (err) {
@@ -285,8 +277,6 @@ io.on('connection', (socket) => {
                         socket.emit('projectList', list)
                     })
 
-
-
             }
             
         })
@@ -302,9 +292,8 @@ io.on('connection', (socket) => {
         var obj = []
         obj.push(user)
 
-
         
-        //Convert username to userID
+        //Verification of project name entry
         var promise1 = new Promise(function(resolve, reject) {
             
             client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+name+'\';', (err, res) => {
@@ -315,7 +304,7 @@ io.on('connection', (socket) => {
                     if (res.rows.length != 0){
                         if (res.rows[0].Project_ID == id){ //Project_ID does not exist in res.rows if no match, so cannot combine with above statement
                             obj.push(id)
-                            console.log("Before resolve", id, obj)
+console.log("Before resolve", id, obj)
                             resolve(obj)
                         } else {
                             //Entered a project name, but with the wrong button
@@ -334,7 +323,7 @@ io.on('connection', (socket) => {
         //Creating new project
         promise1.then(function(obj) {
 
-            //Needs to delete references to Project_ID PK
+            //NEED TO DELETE REFERENCES TO PROJECT Project_ID PK BEFORE WE CAN ACTUALLY DELETE
             // const text = 'DELETE FROM "Project" WHERE "Project_ID"= \'' + id + '\';'
             // client.query(text, (err, res) => {
             //     if (err) {

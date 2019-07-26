@@ -10,12 +10,24 @@ const socket = io()
 const { username, password } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 var localProjects = [];
 
+//UserName Display
+const welcomeUserTemplate = document.querySelector('#welcomeUser-template').innerHTML
+const $welcomeUser = document.querySelector('#welcomeUser')
+
+const html = Mustache.render(welcomeUserTemplate, {
+messageDisplay: username
+
+})
+
+$welcomeUser.insertAdjacentHTML('beforeend', html)
+
 // When a user enters a projecthomepage, sends user info to server
 socket.emit('enterUserHomePage', { username, password }, (error) => {
     if (error) {
         alert(error)
         location.href = '/'
     }
+
 })
 
 
