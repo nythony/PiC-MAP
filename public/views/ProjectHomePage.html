@@ -6,74 +6,165 @@
     <link rel="icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
+<style>
+        /* Button used to open the contact form - fixed at the bottom of the page */
+        .open-button {
+            background-color: #555;
+            color: white;
+            border: none;
+            cursor: pointer;
+            opacity: 0.8;
+        }
 
+        /* The popup form - hidden by default */
+        .form-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            margin-left: -150px;
+            margin-top: -150px;
+            border: 3px solid #f1f1f1;
+        }
+
+        /* Add styles to the form container */
+        .form-container {
+            max-width: 300px;
+            padding: 10px;
+            background-color: white;
+        }
+
+        /* Full-width input fields */
+        .form-container input[type=text], .form-container input[type=password] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        /* When the inputs get focus, do something */
+        .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+
+        /* Add some hover effects to buttons */
+        .form-container .btn:hover, .open-button:hover {
+            opacity: 1;
+        }
+</style>
 <body>
-    <div class="chat">
-        <div id="sidebar" class="chat__sidebar">
-            <center>
-            <form action="/logout" method="post">
-                <button type="submit">Log Out</button>
-            </form><br>
-            <form action="/returnToUserHomePage" method="post">
-                <button type="submit">Return to Home Screen</button>
-            </form>
-            <div id="chatApp">
-                <form action="/chatapp">
-                    <input type="hidden" id="username" name="username" required />
-                    <input type="hidden" id="userid" name="userid" required />
-                    <input type="hidden" id="room" name="room" required />
-                    <input type="hidden" id="chatroomid" name="chatroomid" required />
-                    <input type="hidden" id="roomNumber" name="roomNumber" required />
-                    <script type="text/javascript">
-                        document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
-                        document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
-                        document.getElementById('room').value = <%- JSON.stringify(user.chatname) %>;
-                        document.getElementById('chatroomid').value = <%- JSON.stringify(user.chatroomid) %>;
-                        document.getElementById('roomNumber').value = <%- JSON.stringify(user.roomNumber) %>;
-                    </script>
-                    <button>ChatApp</button>
-                </form>
-            </div><br>
-            <form id="taskTool-form">
-                <input type="hidden" id="newTaskProjectID" name="newTaskProjectID"/>
-                <input type="hidden" id="newTaskProjectName" name="newTaskProjectName"/>
-                <script type="text/javascript">
-                    document.getElementById('newTaskProjectID').value = <%- JSON.stringify(user.currProjectID) %>;
-                    document.getElementById('newTaskProjectName').value = <%- JSON.stringify(user.currProjectName) %>;
-                </script>
-                <input name="newTaskToolName" placeholder="New Task Tool" required autocomplete="on"/>
-                <button type="submit">Create new Task Tool</button>
-            </form><br>
-            </center>
-        </div>
-        <div class="chat__main">
-            <div id="taskTools" class="chat__messages"></div>
-            <h1>
-                <script type="text/javascript">
-                var userN = <%- JSON.stringify(user.name) %>;
-                document.write(userN)
-                </script>
-            </h1>
-        </div>
+    <div id="header" class="header"></div>
+    <div id="taskTool" class="tasktool__subtask"></div>
+    <button class="open-button" onclick="openCreateTaskToolForm()" style="position: absolute; left: 25%; display: inline-block;">Create a new Task Tool</button>
+    <div style="clear: both;"></div>
+
+    <div class="form-popup" id="createTaskTool">
+        <form class="form-container" id="createTaskToolForm" name="createTaskToolForm">
+            <h1>Create a new Task Tool</h1>
+            <label><b>Task Tool Name</b></label>
+            <input type="text" name="TaskToolName" placeholder="new task tool name" required autocomplete="on">
+            <input type="hidden" id="createTaskTool_ProjectID" name="createTaskTool_ProjectID" autocomplete="off" />
+            <button class="btn" type="submit">Create Task Tool</button>
+            <button class="btn cancel" onclick="closeCreateTaskToolForm()" type="reset">Cancel</button>
+        </form>
     </div>
-    <script id="taskTools-template" type="text/html">
-        <div class="message">
-            <p>{{tasktoolname}}</p>
+
+    <div class="form-popup" id="editTaskTool">
+        <form class="form-container" id="editTaskToolForm" name="editTaskToolForm">
+            <h1>Edit a Task Tool</h1>
+            <label><b>Name</b></label>
+            <input type="text" name="TaskToolName" placeholder="new task tool name" required autocomplete="on">
+            <input type="hidden" id="editTaskTool_ProjectID" name="editTaskTool_ProjectID" autocomplete="off" />
+            <input type="hidden" id="editTaskTool_TaskToolID" name="editTaskTool_TaskToolID" autocomplete="off" />
+            <button class="btn" type="submit">Update Task Tool</button>
+            <button class="btn cancel" onclick="closeEditTaskToolForm()" type="reset">Cancel</button>
+        </form>
+    </div>
+
+    <div class="form-popup" id="deleteTaskTool">
+        <form class="form-container" id="deleteTaskToolForm" name="deleteTaskToolForm">
+            <h1>Delete a Task Tool</h1>
+            <p><b>Are you sure you wish to delete this task tool?</b></p>
+            <p><b>This can not be undone once deleted.</b></p>
+            <input type="hidden" id="deleteTaskTool_ProjectID" name="deleteTaskTool_ProjectID" autocomplete="off" />
+            <input type="hidden" id="deleteTaskTool_TaskToolID" name="deleteTaskTool_TaskToolID" autocomplete="off" />
+            <button class="btn" type="submit">Delete</button>
+            <button class="btn cancel" onclick="closeDeleteTaskToolForm()" type="reset">Cancel</button>
+        </form>
+    </div>
+
+    <script>
+            function openCreateTaskToolForm() {
+                document.getElementById("createTaskTool").style.display = "block";
+                document.getElementById("createTaskTool_ProjectID").value = TaskTool_ID; /*here*/
+            }
+
+            function closeCreateTaskToolForm() {
+                document.getElementById("createTaskTool").style.display = "none";
+                document.getElementById("createTaskToolForm").reset();
+            }
+
+            function openEditTaskToolForm(Task_ID) {
+                document.getElementById("editTaskTool").style.display = "block";
+                document.getElementById("editTaskTool_ProjectID").value = TaskTool_ID;/*here*/
+                document.getElementById("editTaskTool_TaskToolID").value = Task_ID;/*here*/
+            }
+
+            function closeEditTaskToolForm() {
+                document.getElementById("editTaskTool").style.display = "none";
+                document.getElementById("editTaskToolForm").reset();
+            }
+
+            function openDeleteTaskToolForm(Task_ID) {
+                document.getElementById("deleteTaskTool").style.display = "block";
+                document.getElementById("deleteTaskTool_ProjectID").value = TaskTool_ID;/*here*/
+                document.getElementById("deleteTaskTool_TaskToolID").value = Task_ID;/*here*/
+            }
+
+            function closeDeleteTaskToolForm() {
+                document.getElementById("deleteTaskTool").style.display = "none";
+                document.getElementById("deleteTaskToolForm").reset();
+            }
+    </script>
+
+    <script id="header-template" type="text/html">
+        <h1 style="text-align:center;">{{ProjectName}}</h1>
+        <h1 style="text-align:right;">{{username}}</h1>
+        <form action="/logout" method="post" style="display: inline-block; float:right; padding: 4px;">
+            <button class"button" type="submit">Log Out</button>
+        </form>
+        <form action="/UserHomePage" id="backToUserHomePage" method="get" style="display: inline-block; float:right; padding: 4px;">
+            <button class"button" type="submit">Return to Project Home Page</button>
+        </form>
+        <br>
+        <br>
+        <div style="clear: both;"></div>
+    </script>
+
+    <script id="tasktool-template" type="text/html">
+        {{#tasktools}}
+        <div class="subtask">
+            <p>
+                <button class="open-button" onclick=openEditTaskToolForm({{Task_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
+                <br><br>{{TaskName}}
+                <br>{{TaskDesc}}
+                <br>{{TaskUsers}}
+                <br>{{DueDate}}
+                <br>{{TaskCategory}}<br><br>
+                <button class="open-button" onclick=openDeleteTaskToolForm({{Task_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
+            </p>
         </div>
+        {{/subtasks}}
     </script>
-    <script id="sidebar-template" type="text/html">
-        <h2 class="room-title">{{projectname}}</h2>
-        <h3 class="list-title">Team Members</h3>
-        <ul class="users">
-            {{#users}}
-            <li>{{username}}</li>
-            {{/users}}
-        </ul>
-    </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/ProjectHomePage.js"></script>
+    <script src="/js/TaskTool.js"></script>
 </body>
 </html>

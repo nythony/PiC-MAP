@@ -1,22 +1,18 @@
 // ProjectHomePage socket.io
 
-console.log("running ProjectHomePage.js")
 const socket = io()
 
 // Elements
-/*
-const $newProjectForm = document.querySelector('#message-form')
-const $messageFormInput = $messageForm.querySelector('input')
-const $messageFormButton = $messageForm.querySelector('button')
-*/
-const $taskToolForm = document.querySelector('#taskTool-form')
-const $taskToolFormInput = $taskToolForm.querySelector('tasktoolname-createTaskTool')
-const $taskToolFormButton = $taskToolForm.querySelector('button')
-const $taskTools = document.querySelector('#taskTools')
-
+const $header = document.querySelector('#header')
+const $taskTool = document.querySelecter('#taskTool')
+const $createTaskToolForm = document.querySelector('#createTaskToolForm')
+const $editTaskToolForm = document.querySelector('#editTaskToolForm')
+const $deleteTaskToolForm = document.querySelector('#deleteTaskToolForm')
 
 // Templates
-const taskToolsTemplate = document.querySelector('#taskTools-template').innerHTML
+const headerTemplate = document.querySelector('#header-template').innerHTML
+const taskToolTemplate = document.querySelector('#tasktool-template').innerHTML
+
 
 
 // Get user data
