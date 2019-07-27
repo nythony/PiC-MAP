@@ -31,7 +31,6 @@ document.querySelector('#header').innerHTML = headerhtml
 
 // Definition for task tool event
 socket.on('taskTool', (tasktools) => {
-    console.log("TASK TOOLS: ", tasktools)
     const html = Mustache.render(taskToolTemplate, {
         tasktools
     })
@@ -75,7 +74,7 @@ $editTaskToolForm.addEventListener('submit', (e) => {
     // Retrieve values of editSubTaskForm form
     const taskTool = e.target.elements.TaskToolName.value
     const Project_ID = e.target.elements.editTaskTool_ProjectID.value
-    const TaskTool_ID = e.target.elements.editTaskTool_TaskToolID.value
+    const TaskTool_ID = e.target.elements.TaskTool_ID.value
     console.log("edit:" ,{taskTool, Project_ID, TaskTool_ID})
 
     socket.emit('editTaskTool', {taskTool, Project_ID, TaskTool_ID} , (error) => {
@@ -96,7 +95,7 @@ $deleteTaskToolForm.addEventListener('submit', (e) => {
     e.preventDefault()
 
     // Retrieve values of createSubTaskForm form
-    const TaskTool_ID = e.target.elements.deleteTaskTool_TaskToolID.value
+    const TaskTool_ID = e.target.elements.TaskTool_ID.value
     console.log("delete:" ,{projectidVP, TaskTool_ID})
     socket.emit('deleteTaskTool', {projectidVP, TaskTool_ID} , (error) => {
         // Enable form

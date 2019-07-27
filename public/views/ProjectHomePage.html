@@ -79,7 +79,7 @@
             <label><b>Name</b></label>
             <input type="text" name="TaskToolName" placeholder="new task tool name" required autocomplete="on">
             <input type="hidden" id="editTaskTool_ProjectID" name="editTaskTool_ProjectID" autocomplete="off" />
-            <input type="hidden" id="editTaskTool_TaskToolID" name="editTaskTool_TaskToolID" autocomplete="off" />
+            <input type="hidden" id="editTaskTool_TaskToolID" name="TaskTool_ID" autocomplete="off" />
             <button class="btn" type="submit">Update Task Tool</button>
             <button class="btn cancel" onclick="closeEditTaskToolForm()" type="reset">Cancel</button>
         </form>
@@ -91,7 +91,7 @@
             <p><b>Are you sure you wish to delete this task tool?</b></p>
             <p><b>This can not be undone once deleted.</b></p>
             <input type="hidden" id="deleteTaskTool_ProjectID" name="deleteTaskTool_ProjectID" autocomplete="off" />
-            <input type="hidden" id="deleteTaskTool_TaskToolID" name="deleteTaskTool_TaskToolID" autocomplete="off" />
+            <input type="hidden" id="deleteTaskTool_TaskToolID" name="TaskTool_ID" autocomplete="off" />
             <button class="btn" type="submit">Delete</button>
             <button class="btn cancel" onclick="closeDeleteTaskToolForm()" type="reset">Cancel</button>
         </form>
