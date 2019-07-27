@@ -36,36 +36,40 @@ socket.emit('enterUserHomePage', { username, password }, (error) => {
 //  Project List  //
 ////////////////////
 
+//"subtask-template" = "projectList-template"
+// {{#subtasks}} =  {{#projectList}}
+// "subtask" = "projectElement"
+
 const projectListTemplate = document.querySelector('#projectList-template').innerHTML
-const $projectList = document.querySelector('#project-list')
+const $projectElement = document.querySelector('#projectElement')
 
-socket.on('projectList', (projects) => {
+// const subtaskTemplate = document.querySelector('#subtask-template').innerHTML
+// const $subtask = document.querySelector('#subtask')
 
-    localProjects = projects;
-    console.log("in socket for projectList at userHomePage.js: ", projects)
+socket.on('projectList', (projectList) => {
 
-    for (i = 1; i < projects.length; i++){
+    localProjects = projectList;
+    console.log("in socket for projectList at userHomePage.js: ", projectList)
+    
+        //     // Definition for subtask event
+        // socket.on('subtask', (subtasks) => {
+        //     const html = Mustache.render(subtaskTemplate, {
+        //         subtasks
+        //     })
+        //     //console.log(subtasks)
+        //     document.querySelector('#subtask').innerHTML = html
+        // })
+
+
 
         const html = Mustache.render(projectListTemplate, {
-            projectName: projects[i].projName,
-            projectDescription: projects[i].projDesc,
-            Project_ID: projects[i].projID
+           
+            projectList
+
         })
-
-        $projectList.insertAdjacentHTML('beforeend', html)
-    }
+        document.querySelector('#projectElement').innerHTML = html
 
 })
-
-// Definition for subtask event
-socket.on('subtask', (subtasks) => {
-    const html = Mustache.render(subtaskTemplate, {
-        subtasks
-    })
-    //console.log(subtasks)
-    document.querySelector('#subtask').innerHTML = html
-})
-
 
 
 //////////////////////

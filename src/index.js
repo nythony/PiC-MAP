@@ -170,16 +170,16 @@ io.on('connection', (socket) => {
     // When a user enters a userhomepage
     socket.on('enterUserHomePage',  (userProj, callback) => { 
         var username = userProj.username;
-        var list = [username]
+        var list = []//[username]
 
         const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
 
         client.query(text, (err, results) => { 
             for (let obj of results.rows){
                 var proj = {}
-                proj['projID'] = obj["Project_ID"]
-                proj['projName'] = obj["ProjectName"]
-                proj['projDesc'] = obj["ProjectDesc"]
+                proj['Project_ID'] = obj["Project_ID"]
+                proj['projectName'] = obj["ProjectName"]
+                proj['projectDesc'] = obj["ProjectDesc"]
                 
                 list.push(proj);
             }
@@ -243,17 +243,25 @@ io.on('connection', (socket) => {
 
         //TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:m
 
-        //Converting empty date to null values to enter into date type values in DB
-        if (start == ""){
-            start = new Date().getTime()
-        }
+        //Do not edit start and due date
+        if ((start == "") && (due == "")){
+            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\' WHERE "Project_ID" = \'' + proj.id + '\';'
 
-        if (due == ""){
-            due = new Date().getTime()
+        //Do not edit start, edit due
+        } else if ( start == ""){
+            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+
+        //Edit start, do not edit due  
+        } else if (due == ""){
+            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+
+        //Edit both start and due
+        } else { 
+            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
         }
 
         //NEED TO MAKE DATE WORK
-        const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+        
 
         client.query(text, (err, res) => {
             if (err) {
@@ -323,13 +331,13 @@ console.log("Before resolve", id, obj)
         //Creating new project
         promise1.then(function(obj) {
 
-            //NEED TO DELETE REFERENCES TO PROJECT Project_ID PK BEFORE WE CAN ACTUALLY DELETE
-            // const text = 'DELETE FROM "Project" WHERE "Project_ID"= \'' + id + '\';'
-            // client.query(text, (err, res) => {
-            //     if (err) {
-            //         console.log(err.stack)
-            //     } else {
-            //         console.log('----------------------------------project has been deleted--------------------------------');
+
+            const text = 'DELETE FROM "Project" WHERE "Project_ID"= \'' + id + '\';'
+            client.query(text, (err, res) => {
+                if (err) {
+                    console.log(err.stack)
+                } else {
+                    console.log('----------------------------------project has been deleted--------------------------------');
                     
                     //Displaying project list again
                     var username = obj[0]
@@ -347,11 +355,11 @@ console.log("Before resolve", id, obj)
                         socket.emit('projectList', list)
                         //All those subsequent users inside project need to be redirected
                     })
-                //}
+                }
 
            });
 
-    //})
+        })
 
         callback()
     })

@@ -149,21 +149,42 @@
 
 
     <!--Change #projects to change layout of project list-->
-    <div id="projects">
 
-        <div id = "project-list"></div>
+
+    <div id="projects">
+        <!--div id = "project-list"></div-->
+
             <script id="projectList-template" type="text/html">
+                {{#projectList}}
                 <div class="projectElement">
-                    <span class="projectElement">
                         <h2><b> {{projectName}} </b></h2>
-                        <p>{{projectDescription}}</p>
+                        <p>{{projectDesc}}</p>
                         <p>Project ID  <i>(temporary)</i>: {{Project_ID}}</p>
-                    </span>
                     
                     <button class="open-button" onclick=openEditProjectForm({{Project_ID}})>Edit Project</button>
                     <button class="open-button" onclick=openDeleteProjectForm({{Project_ID}})>Delete Project</button>
+                    <br><br>
+
                 </div>
+                {{/projectList}}
              </script>
+
+
+
+            <!--script id="subtask-template" type="text/html">
+                {{#subtasks}}
+                    <div class="subtask"><p>
+                        <button class="open-button" onclick=openEditSubTaskForm({{Task_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
+                        <br><br>{{TaskName}}
+                        <br>{{TaskDesc}}
+                        <br>{{TaskUsers}}
+                        <br>{{DueDate}}
+                        <br>{{TaskCategory}}<br><br>
+                        <button class="open-button" onclick=openDeleteSubTaskForm({{Task_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
+                    </p></div>
+                {{/subtasks}}
+            </script-->
+
 
         <!--POP UP FOR EDITING A PROJECT-->   
             <div class="form-popup" id="editProjectForm">
@@ -177,12 +198,12 @@
                     <label><b>Description</b> <i>(optional)</i></label>
                     <input type="text" id="projectDescription" name="projectDescription" placeholder="Enter the project description" value = "">
 
-                    <label><b>Add Members</b></label>
+                    <!--label><b>Add Members</b></label>
                     <div class="add-project-members">
                         <button style="position: absolute; right: 0;">Add</button> 
                         <input type = "text" name="project-member" placeholder="Enter the username of a member" autocomplete="off">
 
-                    </div>
+                    </div TO BE CONTROLLED THROUGH JOIN EXISTING PROJECT INSTEAD-->
 
                     <label><b>Start Date</b> <i>(optional)</i></label>
                     <input type="date" id="startDate" name="startDate"> <!--Defaulted to creation timestamp-->
