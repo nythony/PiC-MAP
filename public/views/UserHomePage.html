@@ -152,11 +152,11 @@
 
 
     <div id="projects">
-        <!--div id = "project-list"></div-->
+
+            <div id = "projectElement"></div>
 
             <script id="projectList-template" type="text/html">
                 {{#projectList}}
-                <div class="projectElement">
                         <h2><b> {{projectName}} </b></h2>
                         <p>{{projectDesc}}</p>
                         <p>Project ID  <i>(temporary)</i>: {{Project_ID}}</p>
@@ -165,25 +165,8 @@
                     <button class="open-button" onclick=openDeleteProjectForm({{Project_ID}})>Delete Project</button>
                     <br><br>
 
-                </div>
                 {{/projectList}}
              </script>
-
-
-
-            <!--script id="subtask-template" type="text/html">
-                {{#subtasks}}
-                    <div class="subtask"><p>
-                        <button class="open-button" onclick=openEditSubTaskForm({{Task_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
-                        <br><br>{{TaskName}}
-                        <br>{{TaskDesc}}
-                        <br>{{TaskUsers}}
-                        <br>{{DueDate}}
-                        <br>{{TaskCategory}}<br><br>
-                        <button class="open-button" onclick=openDeleteSubTaskForm({{Task_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
-                    </p></div>
-                {{/subtasks}}
-            </script-->
 
 
         <!--POP UP FOR EDITING A PROJECT-->   

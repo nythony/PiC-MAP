@@ -241,7 +241,8 @@ io.on('connection', (socket) => {
         var start = proj.start;
         var due = proj.due;
 
-        //TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY HH:m
+        //Can just require each field and use last const text query statement
+
 
         //Do not edit start and due date
         if ((start == "") && (due == "")){
@@ -259,8 +260,6 @@ io.on('connection', (socket) => {
         } else { 
             const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
         }
-
-        //NEED TO MAKE DATE WORK
         
 
         client.query(text, (err, res) => {
@@ -341,14 +340,14 @@ console.log("Before resolve", id, obj)
                     
                     //Displaying project list again
                     var username = obj[0]
-                    var list = [username]
+                    var list = []//[username]
                     const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
                     client.query(text, (err, results) => { 
                         for (let obj of results.rows){
                             var proj = {}
-                            proj['projID'] = obj["Project_ID"]
-                            proj['projName'] = obj["ProjectName"]
-                            proj['projDesc'] = obj["ProjectDesc"]
+                            proj['Project_ID'] = obj["Project_ID"]
+                            proj['ProjName'] = obj["ProjectName"]
+                            proj['ProjDesc'] = obj["ProjectDesc"]
                             
                             list.push(proj);
                         }

@@ -36,29 +36,15 @@ socket.emit('enterUserHomePage', { username, password }, (error) => {
 //  Project List  //
 ////////////////////
 
-//"subtask-template" = "projectList-template"
-// {{#subtasks}} =  {{#projectList}}
-// "subtask" = "projectElement"
 
 const projectListTemplate = document.querySelector('#projectList-template').innerHTML
 const $projectElement = document.querySelector('#projectElement')
 
-// const subtaskTemplate = document.querySelector('#subtask-template').innerHTML
-// const $subtask = document.querySelector('#subtask')
 
 socket.on('projectList', (projectList) => {
 
     localProjects = projectList;
     console.log("in socket for projectList at userHomePage.js: ", projectList)
-    
-        //     // Definition for subtask event
-        // socket.on('subtask', (subtasks) => {
-        //     const html = Mustache.render(subtaskTemplate, {
-        //         subtasks
-        //     })
-        //     //console.log(subtasks)
-        //     document.querySelector('#subtask').innerHTML = html
-        // })
 
 
 
