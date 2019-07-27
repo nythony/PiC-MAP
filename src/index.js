@@ -163,12 +163,12 @@ io.on('connection', (socket) => {
         const text = 'INSERT INTO "TaskTool"( "Project_ID", "TaskToolName" ) VALUES($1, $2) RETURNING *'
         const values = [taskToolProjectID, taskTool]
         client.query(text, values, (err, res) => { // add taskTool to database
-            client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+taskToolProjectID+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+            client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
                 const tasktools = []
                 for (let foo of tasktoolresult.rows) {
-                    const tasktool = {TaskToolName: foo["TaskToolName"]}
+                    const tasktool = {TaskToolName: foo["TaskToolName"], TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
                     tasktools.push(tasktool)
-                    io.to(user.roomNumber).emit('taskTool', (tasktools)) // display all task tools to user who just joined
+                    io.to(user.roomNumber).emit('taskTool', (tasktools))
                 }
             })
         })
@@ -190,15 +190,14 @@ io.on('connection', (socket) => {
             }
             console.log('----------------------------------record is updated--------------------------------')
         })
-        client.query(text, values, (err, res) => { // add taskTool to database
-            client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+Project_ID+';', (err3, tasktoolresult) => { // get all task tools for that project ID
-                const tasktools = []
-                for (let foo of tasktoolresult.rows) {
-                    const tasktool = {TaskToolName: foo["TaskToolName"]}
-                    tasktools.push(tasktool)
-                    io.to(user.roomNumber).emit('taskTool', (tasktools)) // display all task tools to user who just joined
-                }
-            })
+        // redisplay task tools
+        client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+            const tasktools = []
+            for (let foo of tasktoolresult.rows) {
+                const tasktool = {TaskToolName: foo["TaskToolName"], TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
+                tasktools.push(tasktool)
+                io.to(user.roomNumber).emit('taskTool', (tasktools))
+            }
         })
         callback()
     })
@@ -217,15 +216,13 @@ io.on('connection', (socket) => {
             }
             console.log('----------------------------------record is deleted--------------------------------')
         })
-        client.query(text, values, (err, res) => { // add taskTool to database
-            client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
-                const tasktools = []
-                for (let foo of tasktoolresult.rows) {
-                    const tasktool = {TaskToolName: foo["TaskToolName"]}
-                    tasktools.push(tasktool)
-                    io.to(user.roomNumber).emit('taskTool', (tasktools)) // display all task tools to user who just joined
-                }
-            })
+        client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+            const tasktools = []
+            for (let foo of tasktoolresult.rows) {
+                const tasktool = {TaskToolName: foo["TaskToolName"], TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
+                tasktools.push(tasktool)
+                io.to(user.roomNumber).emit('taskTool', (tasktools))
+            }
         })
         callback()
     })
