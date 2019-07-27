@@ -596,6 +596,7 @@ app.get("/ProjectHomePage/", function (req, res) {
             newCookie["roomNumber"] = roomNumber
             res.cookie("userInfo", newCookie)
             req.query.projectidVP = projectid
+            console.log("ID: ", req.query.projectidVP)
             res.render(publicDirectoryPath + "views/ProjectHomePage.html", { user: req.cookies.userInfo })
         })
         
