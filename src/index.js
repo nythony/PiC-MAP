@@ -175,6 +175,34 @@ io.on('connection', (socket) => {
         callback()
     })
 
+
+    // When a task tool is edited within ProjectHomePage
+    socket.on('editTaskTool', ({taskTool, Project_ID, TaskTool_ID}, callback) => {
+        const user = getUserInProjectHomePage(socket.id)
+        const text = 'UPDATE "TaskTool" SET "TaskToolName"=$1 WHERE "Task_ID"=$2 RETURNING *'
+        const values = [taskTool, TaskTool_ID]
+        client.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            }
+            else {
+                //console.log(res.rows[0])
+            }
+            console.log('----------------------------------record is updated--------------------------------')
+        })
+        client.query(text, values, (err, res) => { // add taskTool to database
+            client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+Project_ID+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+                const tasktools = []
+                for (let foo of tasktoolresult.rows) {
+                    const tasktool = {TaskToolName: foo["TaskToolName"]}
+                    tasktools.push(tasktool)
+                    io.to(user.roomNumber).emit('taskTool', (tasktools)) // display all task tools to user who just joined
+                }
+            })
+        })
+        callback()
+    })
+
     
 
 ////////////////////

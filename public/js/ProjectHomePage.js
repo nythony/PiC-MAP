@@ -49,7 +49,7 @@ socket.on('projectData', ({ projectname, users }) => {
 
 
 
-// Listen for task tool form submit
+// Listen for create task tool
 $createTaskToolForm.addEventListener('submit', (e) => {
     e.preventDefault()
 
@@ -63,6 +63,49 @@ $createTaskToolForm.addEventListener('submit', (e) => {
         }
         // clear task tool form
         var form = document.getElementById("createTaskToolForm")
+        form.reset()
+    })
+})
+
+
+// Listen for edit task tool
+$editSubTaskForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+
+    // Retrieve values of editSubTaskForm form
+    const taskTool = e.target.elements.TaskToolName.value
+    const Project_ID = e.target.elements.editTaskTool_ProjectID.value
+    const TaskTool_ID = e.target.elements.editTaskTool_TaskToolID.value
+
+    socket.emit('editTaskTool', {taskTool, Project_ID, TaskTool_ID} , (error) => {
+        // Enable form
+
+        if (error) {
+            return console.log(error)
+        }
+
+        console.log('Subtask edited!')
+        var form = document.getElementById("editTaskToolForm")
+        form.reset()
+    })
+})
+
+// Listen for delete task tool
+$deleteSubTaskForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+
+    // Retrieve values of createSubTaskForm form
+    const Task_ID = e.target.elements.Task_ID.value
+
+    socket.emit('deleteSubTask', {TaskTool_ID, Task_ID} , (error) => {
+        // Enable form
+
+        if (error) {
+            return console.log(error)
+        }
+
+        console.log('Subtask deleted!')
+        var form = document.getElementById("deleteSubTaskForm")
         form.reset()
     })
 })
