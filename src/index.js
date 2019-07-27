@@ -203,6 +203,33 @@ io.on('connection', (socket) => {
         callback()
     })
 
+    // When a task tool is deleted within ProjectHomePage
+    socket.on('deleteTaskTool', ({projectidVP, TaskTool_ID}, callback) => {
+        const user = getUserInProjectHomePage(socket.id)
+        const text = 'DELETE FROM "TaskTool" WHERE "TaskTool_ID"=$1 RETURNING *'
+        const values = [TaskTool_ID]
+        client.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            }
+            else {
+                //console.log(res.rows[0])
+            }
+            console.log('----------------------------------record is deleted--------------------------------')
+        })
+        client.query(text, values, (err, res) => { // add taskTool to database
+            client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+                const tasktools = []
+                for (let foo of tasktoolresult.rows) {
+                    const tasktool = {TaskToolName: foo["TaskToolName"]}
+                    tasktools.push(tasktool)
+                    io.to(user.roomNumber).emit('taskTool', (tasktools)) // display all task tools to user who just joined
+                }
+            })
+        })
+        callback()
+    })
+
     
 
 ////////////////////

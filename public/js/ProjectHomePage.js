@@ -69,7 +69,7 @@ $createTaskToolForm.addEventListener('submit', (e) => {
 
 
 // Listen for edit task tool
-$editSubTaskForm.addEventListener('submit', (e) => {
+$editTaskToolForm.addEventListener('submit', (e) => {
     e.preventDefault()
 
     // Retrieve values of editSubTaskForm form
@@ -91,13 +91,13 @@ $editSubTaskForm.addEventListener('submit', (e) => {
 })
 
 // Listen for delete task tool
-$deleteSubTaskForm.addEventListener('submit', (e) => {
+$deleteTaskToolForm.addEventListener('submit', (e) => {
     e.preventDefault()
 
     // Retrieve values of createSubTaskForm form
-    const Task_ID = e.target.elements.Task_ID.value
+    const TaskTool_ID = e.target.elements.deleteTaskTool_TaskToolID.value
 
-    socket.emit('deleteSubTask', {TaskTool_ID, Task_ID} , (error) => {
+    socket.emit('deleteTaskTool', {projectidVP, TaskTool_ID} , (error) => {
         // Enable form
 
         if (error) {
@@ -105,7 +105,7 @@ $deleteSubTaskForm.addEventListener('submit', (e) => {
         }
 
         console.log('Subtask deleted!')
-        var form = document.getElementById("deleteSubTaskForm")
+        var form = document.getElementById("deleteTaskToolForm")
         form.reset()
     })
 })
