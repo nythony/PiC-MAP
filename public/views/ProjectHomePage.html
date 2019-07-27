@@ -140,19 +140,6 @@
         <form action="/UserHomePage" id="backToUserHomePage" method="get" style="display: inline-block; float:right; padding: 4px;">
             <button class"button" type="submit">Return to User Home Page</button>
         </form>
-        <form action="/chatapp" style="display: inline-block; float:right; padding: 4px">
-            <input type="hidden" id="username" name="username" required />
-            <input type="hidden" id="userid" name="userid" required />
-            <input type="hidden" id="room" name="room" required />
-            <input type="hidden" id="chatroomid" name="chatroomid" required />
-            <script type="text/javascript">
-                        document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
-                        document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
-                        document.getElementById('room').value = <%- JSON.stringify(user.chatname) %>;
-                        document.getElementById('chatroomid').value = <%- JSON.stringify(user.chatroomid) %>;
-            </script>
-            <button>ChatApp</button>
-        </form>
         <br>
         <br>
         <div style="clear: both;"></div>
