@@ -128,21 +128,28 @@ io.on('connection', (socket) => {
         }
     })
 
-    // Project Home Page
+
+    ///////////////////////
+    //  ProjectHomePage  //
+    ///////////////////////
+
 
     // When a user enters a projecthomepage
     socket.on('enterProjectHomePage',  ({usernameVP, useridVP, projectNameVP, projectidVP}, callback) => {
         // Display only to connection
         client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectNameVP+'\';', (err, projectidresult) => { // get project ID of input project
-            projectidVP = projectidresult["rows"][0]["Project_ID"]
+            projectidVP = projectidresult["rows"][0]["Project_ID"] // get project ID (this might get deleted if VP button is added
             const { error, user} = addUserToProjectHomePage({ id: socket.id, usernameVP, useridVP, projectNameVP, projectidVP }) // register user on page
             if (error) {
                 return callback(error)
             }
-            socket.join((user.projectidVP).toString() + user.projectNameVP) // CHATROOM NAMING CONVENTION - ID + name (e.g. 8Twitter)
+            socket.join('C'+(user.projectidVP).toString()) // CHATROOM NAMING CONVENTION - C+ID (e.g. C8)
             client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+                const tasktools = []
                 for (let foo of tasktoolresult.rows) {
-                    socket.emit('taskTool', generateTaskTool(foo["TaskToolName"])) // display all task tools to user who just joined
+                    const tasktool = {TaskToolName: foo["TaskToolName"]}
+                    tasktools.push(tasktool)
+                    socket.emit('taskTool', (tasktools)) // display all task tools to user who just joined
                 }
             })
         })

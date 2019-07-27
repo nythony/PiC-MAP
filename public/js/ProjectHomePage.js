@@ -20,13 +20,21 @@ const taskToolTemplate = document.querySelector('#tasktool-template').innerHTML
 const { usernameVP, useridVP, room, chatroomid, projectNameVP, projectidVP } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
 
+// Definition for header
+const headerhtml = Mustache.render(headerTemplate, {
+    username: usernameVP,
+    projectName: projectNameVP,
+})
+document.querySelector('#header').innerHTML = headerhtml
+
+
 
 // Definition for task tool event
-socket.on('taskTool', (newTaskTool) => {
-    const html = Mustache.render(taskToolsTemplate, {
-        tasktoolname: newTaskTool.taskToolName // package the new task tool
+socket.on('taskTool', (tasktools) => {
+    const html = Mustache.render(taskToolTemplate, {
+        tasktools
     })
-    taskTools.insertAdjacentHTML('beforeend', html) // insert into html
+    document.querySelector('#taskTool').innerHTML = html
 })
 
 // load the project data (this is not in use yet, but i plan on making this show team members on project)
