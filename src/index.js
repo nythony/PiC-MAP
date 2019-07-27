@@ -226,7 +226,26 @@ io.on('connection', (socket) => {
                 } else {
                     console.log(res.rows[0])
                     console.log('----------------------------------project is created--------------------------------');
-                    //socket.emit("projectList") --NEED TO UPDATE LIST SHOWN
+                    
+                    //updating list shown
+                var list = []//[username]
+
+                const text = 'SELECT "Project_ID", "ProjectName", "ProjectDesc" FROM "Project"  WHERE "UserCreate" = \'' + userCreate + '\' ORDER BY "StartDate"'
+
+                client.query(text, (err, results) => { 
+                    for (let obj of results.rows){
+                        var proj = {}
+                        proj['Project_ID'] = obj["Project_ID"]
+                        proj['projectName'] = obj["ProjectName"]
+                        proj['projectDesc'] = obj["ProjectDesc"]
+                        
+                        list.push(proj);
+                    }
+                    socket.emit('projectList', list)
+                })
+
+
+
                 }
 
            });
@@ -270,14 +289,14 @@ io.on('connection', (socket) => {
 
 
                 var username = proj.user
-                    var list = [username]
+                    var list = []
                     const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
                     client.query(text, (err, results) => { 
                         for (let obj of results.rows){
                             var proj = {}
-                            proj['projID'] = obj["Project_ID"]
-                            proj['projName'] = obj["ProjectName"]
-                            proj['projDesc'] = obj["ProjectDesc"]
+                            proj['Project_ID'] = obj["Project_ID"]
+                            proj['ProjectName'] = obj["ProjectName"]
+                            proj['ProjectDesc'] = obj["ProjectDesc"]
                             
                             list.push(proj);
                         }
@@ -311,7 +330,6 @@ io.on('connection', (socket) => {
                     if (res.rows.length != 0){
                         if (res.rows[0].Project_ID == id){ //Project_ID does not exist in res.rows if no match, so cannot combine with above statement
                             obj.push(id)
-console.log("Before resolve", id, obj)
                             resolve(obj)
                         } else {
                             //Entered a project name, but with the wrong button
@@ -339,15 +357,14 @@ console.log("Before resolve", id, obj)
                     console.log('----------------------------------project has been deleted--------------------------------');
                     
                     //Displaying project list again
-                    var username = obj[0]
-                    var list = []//[username]
-                    const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
+                    var list = []
+                    const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + obj[0] + '\' ORDER BY "StartDate"'
                     client.query(text, (err, results) => { 
                         for (let obj of results.rows){
                             var proj = {}
                             proj['Project_ID'] = obj["Project_ID"]
-                            proj['ProjName'] = obj["ProjectName"]
-                            proj['ProjDesc'] = obj["ProjectDesc"]
+                            proj['projectName'] = obj["ProjectName"]
+                            proj['projectDesc'] = obj["ProjectDesc"]
                             
                             list.push(proj);
                         }
@@ -355,8 +372,7 @@ console.log("Before resolve", id, obj)
                         //All those subsequent users inside project need to be redirected
                     })
                 }
-
-           });
+           })
 
         })
 
