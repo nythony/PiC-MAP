@@ -50,13 +50,12 @@ socket.on('projectData', ({ projectname, users }) => {
 
 
 // Listen for task tool form submit
-$taskToolForm.addEventListener('submit', (e) => {
+$createTaskToolForm.addEventListener('submit', (e) => {
     e.preventDefault()
 
     // Retrieve values (hidden and not hidden) of task tool form
-    const taskTool = e.target.elements.newTaskToolName.value
-    const taskToolProjectID = e.target.elements.newTaskProjectID.value
-    const taskToolProjectName = e.target.elements.newTaskProjectName.value
+    const taskTool = e.target.elements.TaskToolName.value
+    const taskToolProjectID = e.target.elements.createTaskTool_ProjectID.value
     socket.emit('newTaskTool', {taskToolProjectID, taskToolProjectName, taskTool}, (error) => { // send newTaskTool event to server
         // Enable form
         if (error) {
