@@ -4,7 +4,7 @@ const socket = io()
 
 // Elements
 const $header = document.querySelector('#header')
-const $taskTool = document.querySelecter('#taskTool')
+const $taskTool = document.querySelector('#taskTool')
 const $createTaskToolForm = document.querySelector('#createTaskToolForm')
 const $editTaskToolForm = document.querySelector('#editTaskToolForm')
 const $deleteTaskToolForm = document.querySelector('#deleteTaskToolForm')
