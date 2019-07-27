@@ -76,6 +76,7 @@ $editTaskToolForm.addEventListener('submit', (e) => {
     const taskTool = e.target.elements.TaskToolName.value
     const Project_ID = e.target.elements.editTaskTool_ProjectID.value
     const TaskTool_ID = e.target.elements.editTaskTool_TaskToolID.value
+    console.log("edit:" ,{taskTool, Project_ID, TaskTool_ID})
 
     socket.emit('editTaskTool', {taskTool, Project_ID, TaskTool_ID} , (error) => {
         // Enable form
@@ -96,7 +97,7 @@ $deleteTaskToolForm.addEventListener('submit', (e) => {
 
     // Retrieve values of createSubTaskForm form
     const TaskTool_ID = e.target.elements.deleteTaskTool_TaskToolID.value
-
+    console.log("delete:" ,{projectidVP, TaskTool_ID})
     socket.emit('deleteTaskTool', {projectidVP, TaskTool_ID} , (error) => {
         // Enable form
 
