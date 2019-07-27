@@ -31,7 +31,7 @@ document.querySelector('#header').innerHTML = headerhtml
 
 // Definition for task tool event
 socket.on('taskTool', (tasktools) => {
-    console.log(tasktools)
+    console.log("TASK TOOLS: ", tasktools)
     const html = Mustache.render(taskToolTemplate, {
         tasktools
     })
