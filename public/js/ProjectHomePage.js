@@ -56,13 +56,13 @@ $createTaskToolForm.addEventListener('submit', (e) => {
     // Retrieve values (hidden and not hidden) of task tool form
     const taskTool = e.target.elements.TaskToolName.value
     const taskToolProjectID = e.target.elements.createTaskTool_ProjectID.value
-    socket.emit('newTaskTool', {taskToolProjectID, taskToolProjectName, taskTool}, (error) => { // send newTaskTool event to server
+    socket.emit('createTaskTool', {taskToolProjectID, taskTool}, (error) => { // send newTaskTool event to server
         // Enable form
         if (error) {
             return console.log(error)
         }
         // clear task tool form
-        var form = document.getElementById("taskTool-form")
+        var form = document.getElementById("createTaskToolForm")
         form.reset()
     })
 })

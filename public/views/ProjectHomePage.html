@@ -100,7 +100,7 @@
     <script>
             function openCreateTaskToolForm() {
                 document.getElementById("createTaskTool").style.display = "block";
-                document.getElementById("createTaskTool_ProjectID").value = TaskTool_ID; /*here*/
+                document.getElementById("createTaskTool_ProjectID").value = projectidVP;
             }
 
             function closeCreateTaskToolForm() {
@@ -110,7 +110,7 @@
 
             function openEditTaskToolForm(Task_ID) {
                 document.getElementById("editTaskTool").style.display = "block";
-                document.getElementById("editTaskTool_ProjectID").value = TaskTool_ID;/*here*/
+                document.getElementById("editTaskTool_ProjectID").value = projectidVP;
                 document.getElementById("editTaskTool_TaskToolID").value = Task_ID;/*here*/
             }
 
@@ -121,7 +121,7 @@
 
             function openDeleteTaskToolForm(Task_ID) {
                 document.getElementById("deleteTaskTool").style.display = "block";
-                document.getElementById("deleteTaskTool_ProjectID").value = TaskTool_ID;/*here*/
+                document.getElementById("deleteTaskTool_ProjectID").value = projectidVP;
                 document.getElementById("deleteTaskTool_TaskToolID").value = Task_ID;/*here*/
             }
 

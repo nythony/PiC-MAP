@@ -143,13 +143,13 @@ io.on('connection', (socket) => {
             if (error) {
                 return callback(error)
             }
-            socket.join('C'+(user.projectidVP).toString()) // CHATROOM NAMING CONVENTION - C+ID (e.g. C8)
+            socket.join(user.roomNumber) // PHP + projectid
             client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
                 const tasktools = []
                 for (let foo of tasktoolresult.rows) {
                     const tasktool = {TaskToolName: foo["TaskToolName"]}
                     tasktools.push(tasktool)
-                    socket.emit('taskTool', (tasktools)) // display all task tools to user who just joined
+                    io.to(user.roomNumber).emit('taskTool', (tasktools))
                 }
             })
         })
@@ -158,13 +158,21 @@ io.on('connection', (socket) => {
     })
 
     // When a new task tool is created with in ProjectHomePage
-    socket.on('newTaskTool', ({taskToolProjectID, taskToolProjectName, taskTool}, callback) => {
+    socket.on('createTaskTool', ({taskToolProjectID, taskTool}, callback) => {
+        const user = getUserInProjectHomePage(socket.id)
         const text = 'INSERT INTO "TaskTool"( "Project_ID", "TaskToolName" ) VALUES($1, $2) RETURNING *'
         const values = [taskToolProjectID, taskTool]
         client.query(text, values, (err, res) => { // add taskTool to database
-            io.in(taskToolProjectID.toString()+taskToolProjectName).emit('taskTool', generateTaskTool(taskTool)) // emit the new task tool to all user in room (room identifier is projectid+projectname)
-            callback()
+            client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+                const tasktools = []
+                for (let foo of tasktoolresult.rows) {
+                    const tasktool = {TaskToolName: foo["TaskToolName"]}
+                    tasktools.push(tasktool)
+                    io.to(user.roomNumber).emit('taskTool', (tasktools)) // display all task tools to user who just joined
+                }
+            })
         })
+        callback()
     })
 
     
