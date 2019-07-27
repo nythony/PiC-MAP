@@ -84,7 +84,7 @@ $editTaskToolForm.addEventListener('submit', (e) => {
             return console.log(error)
         }
 
-        console.log('Subtask edited!')
+        console.log('Task tool edited!')
         var form = document.getElementById("editTaskToolForm")
         form.reset()
     })
@@ -104,7 +104,7 @@ $deleteTaskToolForm.addEventListener('submit', (e) => {
             return console.log(error)
         }
 
-        console.log('Subtask deleted!')
+        console.log('Task tool deleted!')
         var form = document.getElementById("deleteTaskToolForm")
         form.reset()
     })
