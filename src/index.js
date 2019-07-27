@@ -179,7 +179,7 @@ io.on('connection', (socket) => {
     // When a task tool is edited within ProjectHomePage
     socket.on('editTaskTool', ({taskTool, Project_ID, TaskTool_ID}, callback) => {
         const user = getUserInProjectHomePage(socket.id)
-        const text = 'UPDATE "TaskTool" SET "TaskToolName"=$1 WHERE "Task_ID"=$2 RETURNING *'
+        const text = 'UPDATE "TaskTool" SET "TaskToolName"=$1 WHERE "TaskTool_ID"=$2 RETURNING *'
         const values = [taskTool, TaskTool_ID]
         client.query(text, values, (err, res) => {
             if (err) {
