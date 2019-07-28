@@ -132,20 +132,6 @@
         </form>
     </div>
 
-    <div id="joinExisting">
-        <form action="/ProjectHomePage">
-            <input type="hidden" id="usernameVP" name="usernameVP" required />
-            <input type="hidden" id="useridVP" name="useridVP" required />
-            <input type="hidden" id="projectidVP" name="projectidVP" required />
-            <input type="text" id="projectNameVP" name="projectNameVP" placeholder="Project Name" required autocomplete="on"><br>
-            <script type="text/javascript">
-                document.getElementById('usernameVP').value = <%- JSON.stringify(user.name) %>;
-                document.getElementById('useridVP').value = <%- JSON.stringify(user.userid) %>;
-                document.getElementById('projectidVP').value = <%- JSON.stringify(user.currProjectID) %>;
-            </script>
-            <button>View Project</button>
-        </form>
-    </div>
 
 
     <!--Change #projects to change layout of project list-->
@@ -165,6 +151,19 @@
                     
                     <button class="open-button" onclick=openEditProjectForm({{Project_ID}})>Edit</button>
                     <button class="open-button" onclick=openDeleteProjectForm({{Project_ID}})>Delete</button>
+
+                    <form action="/ProjectHomePage">
+                        <input type="hidden" id="usernameVP" name="usernameVP" value= "{{username}}" required />
+                        <input type="hidden" id="useridVP" name="useridVP" value="{{userid}}" required />
+                        <input type="hidden" id="projectidVP" name="projectidVP" value = "{{Project_ID}}"required />
+                        <input type="hidden" id="projectNameVP" name="projectNameVP" value = "{{projectName}}" required><br>
+                        <button>View</button>
+                    </form>
+
+
+
+                </form>
+
                     <br><br>
 
                 {{/projectList}}

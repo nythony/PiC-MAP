@@ -7,8 +7,9 @@ const socket = io()
 //////////////////////////
 
 //var rCookie = document.cookie; Returns encoded cookie
-const { username, password, userid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+const { username, password } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 var localProjects = [];
+
 
 //UserName Display
 const welcomeUserTemplate = document.querySelector('#welcomeUser-template').innerHTML
@@ -22,7 +23,7 @@ messageDisplay: username
 $welcomeUser.insertAdjacentHTML('beforeend', html)
 
 // When a user enters a projecthomepage, sends user info to server
-socket.emit('enterUserHomePage', { username, password }, (error) => {
+socket.emit('enterUserHomePage', { username, password}, (error) => {
     if (error) {
         alert(error)
         location.href = '/'
