@@ -244,7 +244,7 @@ io.on('connection', (socket) => {
         var username = userProj.username;
         var list = []//[username]
 
-        const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
+        const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
 
         client.query(text, (err, results) => { 
             for (let obj of results.rows){
@@ -252,6 +252,8 @@ io.on('connection', (socket) => {
                 proj['Project_ID'] = obj["Project_ID"]
                 proj['projectName'] = obj["ProjectName"]
                 proj['projectDesc'] = obj["ProjectDesc"]
+                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
+                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')
                 
                 list.push(proj);
             }
@@ -302,7 +304,7 @@ io.on('connection', (socket) => {
                     //updating list shown
                 var list = []//[username]
 
-                const text = 'SELECT "Project_ID", "ProjectName", "ProjectDesc" FROM "Project"  WHERE "UserCreate" = \'' + userCreate + '\' ORDER BY "StartDate"'
+                const text = 'SELECT "Project_ID", "ProjectName", "ProjectDesc", "StartDate", "DueDate" FROM "Project"  WHERE "UserCreate" = \'' + userCreate + '\' ORDER BY "StartDate"'
 
                 client.query(text, (err, results) => { 
                     for (let obj of results.rows){
@@ -310,6 +312,8 @@ io.on('connection', (socket) => {
                         proj['Project_ID'] = obj["Project_ID"]
                         proj['projectName'] = obj["ProjectName"]
                         proj['projectDesc'] = obj["ProjectDesc"]
+		                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
+		                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                       
                         
                         list.push(proj);
                     }
@@ -331,53 +335,63 @@ io.on('connection', (socket) => {
     socket.on('editProject', (proj, callback) => {
         var start = proj.start;
         var due = proj.due;
+         
+         //Determining SQL query statement
+        var promise1 = new Promise(function(resolve, reject) {
+    
+	        //Can just require each field and use last const text query statement
 
-        //Can just require each field and use last const text query statement
+	        //Do not edit start and due date
+	        if ((start == "") && (due == "")){
+	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+	            resolve(text);
+	        //Do not edit start, edit due
+	        } else if ( start == ""){
+	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+	            resolve(text);
+	        //Edit start, do not edit due  
+	        } else if (due == ""){
+	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+	            resolve(text);
+	        //Edit both start and due
+	        } else { 
+	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+	        	resolve(text);
+	        }
+
+        })
+  		
+  		promise1.then(function(text) {
+	        client.query(text, (err, res) => {
+	            if (err) {
+	                console.log(err.stack)
+	            } else {
+	                console.log('----------------------------------project is modified--------------------------------');
 
 
-        //Do not edit start and due date
-        if ((start == "") && (due == "")){
-            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+	                //Displaying project list again
+	                var username = proj.user;
 
-        //Do not edit start, edit due
-        } else if ( start == ""){
-            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
-
-        //Edit start, do not edit due  
-        } else if (due == ""){
-            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
-
-        //Edit both start and due
-        } else { 
-            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
-        }
-        
-
-        client.query(text, (err, res) => {
-            if (err) {
-                console.log(err.stack)
-            } else {
-                console.log('----------------------------------project is modified--------------------------------');
-
-
-                var username = proj.user
                     var list = []
-                    const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
+                    const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
                     client.query(text, (err, results) => { 
                         for (let obj of results.rows){
                             var proj = {}
                             proj['Project_ID'] = obj["Project_ID"]
-                            proj['ProjectName'] = obj["ProjectName"]
-                            proj['ProjectDesc'] = obj["ProjectDesc"]
+                            proj['projectName'] = obj["ProjectName"]
+                            proj['projectDesc'] = obj["ProjectDesc"]
+			                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
+			                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                            
                             
                             list.push(proj);
                         }
                         socket.emit('projectList', list)
                     })
 
-            }
+	            }
             
-        })
+       		 })
+	    })
 
         callback()
     })
@@ -430,13 +444,15 @@ io.on('connection', (socket) => {
                     
                     //Displaying project list again
                     var list = []
-                    const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + obj[0] + '\' ORDER BY "StartDate"'
+                    const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + obj[0] + '\' ORDER BY "StartDate"'
                     client.query(text, (err, results) => { 
                         for (let obj of results.rows){
                             var proj = {}
                             proj['Project_ID'] = obj["Project_ID"]
                             proj['projectName'] = obj["ProjectName"]
                             proj['projectDesc'] = obj["ProjectDesc"]
+			                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
+			                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                          
                             
                             list.push(proj);
                         }
