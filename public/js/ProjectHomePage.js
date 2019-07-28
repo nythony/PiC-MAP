@@ -17,13 +17,13 @@ const taskToolTemplate = document.querySelector('#tasktool-template').innerHTML
 
 // Get user data
 // some of these aren't used as this passes through the query, not cookie
-const { usernameVP, useridVP, room, chatroomid, projectNameVP, projectidVP } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+const { usernameVP, useridVP, projectidVP, projectNameVP } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
 
 // Definition for header
 const headerhtml = Mustache.render(headerTemplate, {
     username: usernameVP,
-    projectName: projectNameVP,
+    projectName: projectNameVP
 })
 document.querySelector('#header').innerHTML = headerhtml
 
@@ -113,6 +113,7 @@ $deleteTaskToolForm.addEventListener('submit', (e) => {
 
 // When a user enters a projecthomepage, sends user info to server
 socket.emit('enterProjectHomePage', { usernameVP, useridVP, projectNameVP, projectidVP }, (error) => {
+    console.log("entering: ", { usernameVP, useridVP, projectNameVP, projectidVP })
     if (error) {
         alert(error)
         location.href = '/'
