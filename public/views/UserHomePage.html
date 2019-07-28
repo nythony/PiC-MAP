@@ -163,8 +163,8 @@
                         <p>Due: {{DueDate}}</p>
                         <p>Project ID  <i>(temporary)</i>: {{Project_ID}}</p>
                     
-                    <button class="open-button" onclick=openEditProjectForm({{Project_ID}})>Edit Project</button>
-                    <button class="open-button" onclick=openDeleteProjectForm({{Project_ID}})>Delete Project</button>
+                    <button class="open-button" onclick=openEditProjectForm({{Project_ID}})>Edit</button>
+                    <button class="open-button" onclick=openDeleteProjectForm({{Project_ID}})>Delete</button>
                     <br><br>
 
                 {{/projectList}}
@@ -199,7 +199,7 @@
                     <input type="hidden" id="editProject_ID" name="Project_ID" autocomplete="off"/>
                     
                     <!--The array of users get parsed an should create appropriate AttachUserP-->
-                    <button type="submit" class="btn">Edit: Must Enter Start/Date</button> 
+                    <button type="submit" class="btn">Edit:</button> 
                     <button type="button" class="btn cancel" onclick="closeEditProjectForm()">Close</button>
                   </form>
             </div>
