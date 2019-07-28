@@ -7,7 +7,7 @@ const socket = io()
 //////////////////////////
 
 //var rCookie = document.cookie; Returns encoded cookie
-const { username, password } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+const { username, password, userid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 var localProjects = [];
 
 // When a user enters a projecthomepage, sends user info to server

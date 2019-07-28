@@ -153,6 +153,9 @@
             <button class"button" type="submit">Log Out</button>
         </form>
         <form action="/UserHomePage" id="backToUserHomePage" method="get" style="display: inline-block; float:right; padding: 4px;">
+            <input type="hidden" id="username" name="username" value="{{username}}" required />
+            <input type="hidden" id="password" name="password" value="" required />
+            <input type="hidden" id="userid" name="userid" value="{{userid}}" required />
             <button class"button" type="submit">Return to User Home Page</button>
         </form>
         <br>
