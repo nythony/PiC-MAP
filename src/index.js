@@ -311,7 +311,10 @@ io.on('connection', (socket) => {
 
                 client.query(text, (err, results) => { 
                     for (let obj of results.rows){
-                        var proj = {}
+		                var proj = {
+		                	username: userCreate
+		                }
+		                proj['userid'] = userCreate
                         proj['Project_ID'] = obj["Project_ID"]
                         proj['projectName'] = obj["ProjectName"]
                         proj['projectDesc'] = obj["ProjectDesc"]
@@ -376,10 +379,13 @@ io.on('connection', (socket) => {
 	                var username = proj.user;
 
                     var list = []
-                    const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
+                    const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
                     client.query(text, (err, results) => { 
                         for (let obj of results.rows){
-                            var proj = {}
+                          	var proj = {
+			                	username: username, 
+			                }
+			                proj['userid'] = obj["User_ID"]
                             proj['Project_ID'] = obj["Project_ID"]
                             proj['projectName'] = obj["ProjectName"]
                             proj['projectDesc'] = obj["ProjectDesc"]
@@ -447,10 +453,13 @@ io.on('connection', (socket) => {
                     
                     //Displaying project list again
                     var list = []
-                    const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + obj[0] + '\' ORDER BY "StartDate"'
+                    const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + obj[0] + '\' ORDER BY "StartDate"'
                     client.query(text, (err, results) => { 
                         for (let obj of results.rows){
-                            var proj = {}
+                            var proj = {
+			                	username: obj[0] 
+			                }
+			                proj['userid'] = obj["User_ID"]
                             proj['Project_ID'] = obj["Project_ID"]
                             proj['projectName'] = obj["ProjectName"]
                             proj['projectDesc'] = obj["ProjectDesc"]
