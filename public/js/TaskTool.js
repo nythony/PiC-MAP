@@ -25,6 +25,7 @@ const headerhtml = Mustache.render(headerTemplate, {
     projectidVP: projectidVP
 })
 document.querySelector('#header').innerHTML = headerhtml
+console.log("headerhtml: ", headerhtml)
 
 // Definition for subtaskCategory event
 socket.on('subtaskCategory', (subtaskCategory) => {
