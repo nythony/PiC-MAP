@@ -19,8 +19,10 @@ const {username, userid, roomNumber, TaskToolName, TaskTool_ID, projectNameVP, p
 // Definition for header
 const headerhtml = Mustache.render(headerTemplate, {
     username: username,
+    userid: userid,
     TaskToolName: TaskToolName,
-    projectNameVP: projectNameVP
+    projectNameVP: projectNameVP,
+    projectidVP: projectidVP
 })
 document.querySelector('#header').innerHTML = headerhtml
 

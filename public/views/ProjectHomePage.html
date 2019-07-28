@@ -81,7 +81,7 @@
         <form class="form-container" id="createTaskToolForm" name="createTaskToolForm">
             <h1>Create a new Task Tool</h1>
             <label><b>Task Tool Name</b></label>
-            <input type="text" name="TaskToolName" placeholder="new task tool name" required autocomplete="on">
+            <input type="text" name="TaskToolName" placeholder="new task tool name" required autocomplete="off">
             <input type="hidden" id="createTaskTool_ProjectID" name="createTaskTool_ProjectID" autocomplete="off" />
             <button class="btn" type="submit">Create Task Tool</button>
             <button class="btn cancel" onclick="closeCreateTaskToolForm()" type="reset">Cancel</button>
@@ -92,7 +92,7 @@
         <form class="form-container" id="editTaskToolForm" name="editTaskToolForm">
             <h1>Edit a Task Tool</h1>
             <label><b>Name</b></label>
-            <input type="text" name="TaskToolName" placeholder="new task tool name" required autocomplete="on">
+            <input type="text" name="TaskToolName" placeholder="new task tool name" required autocomplete="onoff
             <input type="hidden" id="editTaskTool_ProjectID" name="editTaskTool_ProjectID" autocomplete="off" />
             <input type="hidden" id="editTaskTool_TaskToolID" name="TaskTool_ID" autocomplete="off" />
             <button class="btn" type="submit">Update Task Tool</button>
