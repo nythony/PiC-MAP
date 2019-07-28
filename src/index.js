@@ -686,6 +686,7 @@ app.get("/issueform", function (req, res) {
 
 // Current version of chatApp (Must be updated)
 app.get("/chatapp", function (req, res) {
+    console.log(req.query)
     res.sendFile(publicDirectoryPath + "views/chatApp.html")
 })
 
