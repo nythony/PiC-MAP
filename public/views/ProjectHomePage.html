@@ -164,7 +164,21 @@
         {{#tasktools}}
         <div class="subtask">
             <p>
-                
+                <form action="/chatapp" style="display: inline; float:left; padding: 4px;">
+                    <input type="hidden" id="username" name="username" required />
+                    <input type="hidden" id="userid" name="userid" required />
+                    <input type="hidden" id="TaskToolName" name="TaskToolName" value="{{TaskToolName}}" required />
+                    <input type="hidden" id="TaskTool_ID" name="TaskTool_ID" value="{{TaskTool_ID}}" required />
+                    <input type="hidden" id="currProjectName" name="currProjectName" required />
+                    <input type="hidden" id="currProjectID" name="currProjectID" required />
+                    <script type="text/javascript">
+                        document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
+                        document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
+                        document.getElementById('currProjectName').value = <%- JSON.stringify(user.currProjectName) %>;
+                        document.getElementById('currProjectID').value = <%- JSON.stringify(user.currProjectID) %>;
+                    </script>
+                    <button type="button">View</button>
+                </form>
                 <button class="open-button" onclick=openEditTaskToolForm({{TaskTool_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
                 <br><br>{{TaskToolName}}
                 <button class="open-button" onclick=openDeleteTaskToolForm({{TaskTool_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
