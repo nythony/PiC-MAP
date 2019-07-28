@@ -95,6 +95,7 @@ $messageForm.addEventListener('submit', (e) => {
     })
 })
 
+console.log("joining chat: ", {username, userid, room, chatroomid, roomNumber})
 socket.emit('joinChat', { username, userid, room, chatroomid, roomNumber }, (error) => {
     if (error) {
         alert(error)
