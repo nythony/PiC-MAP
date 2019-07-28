@@ -67,13 +67,22 @@
         <input type="hidden" id="chatroomid" name="chatroomid" required />
         <input type="hidden" id="roomNumber" name="roomNumber" required />
         <script type="text/javascript">
-                        document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
-                        document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
-                        document.getElementById('room').value = <%- JSON.stringify(user.chatname) %>;
-                        document.getElementById('chatroomid').value = <%- JSON.stringify(user.chatroomid) %>;
-                        document.getElementById('roomNumber').value = 'C'+<%- JSON.stringify(user.currProjectID) %>;
+            document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
+            document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
+            document.getElementById('room').value = <%- JSON.stringify(user.chatname) %>;
+            document.getElementById('chatroomid').value = <%- JSON.stringify(user.chatroomid) %>;
+            document.getElementById('roomNumber').value = 'C'+<%- JSON.stringify(user.currProjectID) %>;
         </script>
         <button>ChatApp</button>
+    </form>
+    <form action="/UserHomePage" id="backToUserHomePage" method="get" style="display: inline-block; float:right; padding: 4px;">
+        <input type="hidden" id="username" name="username" value="{{username}}" required />
+        <input type="hidden" id="password" name="password" required />
+        <script type="text/javascript">
+            document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
+            document.getElementById('password').value = <%- JSON.stringify(user.password) %>;
+        </script>
+        <button class"button" type="submit">Return to User Home Page</button>
     </form>
     <div style="clear: both;"></div>
 
@@ -151,15 +160,6 @@
         <h1 style="text-align:right;">{{username}}</h1>
         <form action="/logout" method="post" style="display: inline-block; float:right; padding: 4px;">
             <button class"button" type="submit">Log Out</button>
-        </form>
-        <form action="/UserHomePage" id="backToUserHomePage" method="get" style="display: inline-block; float:right; padding: 4px;">
-            <input type="hidden" id="username" name="username" value="{{username}}" required />
-            <input type="hidden" id="password" name="password" required />
-            <input type="hidden" id="userid" name="userid" value="{{userid}}" required />
-            <script type="text/javascript">
-                        document.getElementById('password').value = <%- JSON.stringify(user.password) %>;
-            </script>
-            <button class"button" type="submit">Return to User Home Page</button>
         </form>
         <br>
         <br>
