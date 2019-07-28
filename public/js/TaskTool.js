@@ -15,6 +15,7 @@ const subtaskTemplate = document.querySelector('#subtask-template').innerHTML
 
 // Options
 const {username, userid, roomNumber, TaskToolName, TaskTool_ID, projectNameVP, projectidVP} = Qs.parse(location.search, { ignoreQueryPrefix: true })
+console.log("qs: ", {username, userid, roomNumber, TaskToolName, TaskTool_ID, projectNameVP, projectidVP})
 
 // Definition for header
 const headerhtml = Mustache.render(headerTemplate, {
