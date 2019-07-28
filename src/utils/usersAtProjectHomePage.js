@@ -27,7 +27,8 @@ const addUserToProjectHomePage = ({ id, usernameVP, useridVP, projectNameVP, pro
     }
 
     // Store user
-    const user = { id, usernameVP, useridVP, projectNameVP, projectidVP }
+    const roomNumber = 'PHP'+(projectidVP).toString() // CHATROOM NAMING CONVENTION - PHP+ID (e.g. PHP82 for MET-Agile)
+    const user = { id, usernameVP, useridVP, projectNameVP, projectidVP, roomNumber }
     projectHomePageUsers.push(user)
     return { user }
 }

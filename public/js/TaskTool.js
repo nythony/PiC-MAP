@@ -14,15 +14,19 @@ const subtaskCategoryTemplate = document.querySelector('#subtaskCategory-templat
 const subtaskTemplate = document.querySelector('#subtask-template').innerHTML
 
 // Options
-const {username, userid, roomNumber, TaskToolName, TaskTool_ID, projectNameVP} = Qs.parse(location.search, { ignoreQueryPrefix: true })
+const {username, userid, roomNumber, TaskToolName, TaskTool_ID, projectNameVP, projectidVP} = Qs.parse(location.search, { ignoreQueryPrefix: true })
+console.log("qs: ", {username, userid, roomNumber, TaskToolName, TaskTool_ID, projectNameVP, projectidVP})
 
 // Definition for header
 const headerhtml = Mustache.render(headerTemplate, {
     username: username,
+    userid: userid,
     TaskToolName: TaskToolName,
-    projectNameVP: projectNameVP
+    projectNameVP: projectNameVP,
+    projectidVP: projectidVP
 })
 document.querySelector('#header').innerHTML = headerhtml
+console.log("headerhtml: ", headerhtml)
 
 // Definition for subtaskCategory event
 socket.on('subtaskCategory', (subtaskCategory) => {

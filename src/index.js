@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
 
     // ChatApp
 
-    socket.on('joinChat', ({ username, userid, room, chatroomid, roomNumber }, callback) => {
+    socket.on('joinChat', ({ username, userid, room, chatroomid, roomNumber }, callback) => { 
         const { error, user} = addUserChat({ id: socket.id, username, userid, room, chatroomid, roomNumber })
         
 
@@ -128,21 +128,29 @@ io.on('connection', (socket) => {
         }
     })
 
-    // Project Home Page
+
+    ///////////////////////
+    //  ProjectHomePage  //
+    ///////////////////////
+
 
     // When a user enters a projecthomepage
     socket.on('enterProjectHomePage',  ({usernameVP, useridVP, projectNameVP, projectidVP}, callback) => {
         // Display only to connection
         client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectNameVP+'\';', (err, projectidresult) => { // get project ID of input project
-            projectidVP = projectidresult["rows"][0]["Project_ID"]
+            projectidVP = projectidresult["rows"][0]["Project_ID"] // get project ID (this might get deleted if VP button is added
             const { error, user} = addUserToProjectHomePage({ id: socket.id, usernameVP, useridVP, projectNameVP, projectidVP }) // register user on page
             if (error) {
                 return callback(error)
             }
-            socket.join((user.projectidVP).toString() + user.projectNameVP) // CHATROOM NAMING CONVENTION - ID + name (e.g. 8Twitter)
-            client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+            socket.join(user.roomNumber) // PHP + projectid
+            client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+                const tasktools = []
                 for (let foo of tasktoolresult.rows) {
-                    socket.emit('taskTool', generateTaskTool(foo["TaskToolName"])) // display all task tools to user who just joined
+                    const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
+                        TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
+                    tasktools.push(tasktool)
+                    io.to(user.roomNumber).emit('taskTool', (tasktools))
                 }
             })
         })
@@ -151,13 +159,77 @@ io.on('connection', (socket) => {
     })
 
     // When a new task tool is created with in ProjectHomePage
-    socket.on('newTaskTool', ({taskToolProjectID, taskToolProjectName, taskTool}, callback) => {
+    socket.on('createTaskTool', ({taskToolProjectID, taskTool}, callback) => {
+        const user = getUserInProjectHomePage(socket.id)
         const text = 'INSERT INTO "TaskTool"( "Project_ID", "TaskToolName" ) VALUES($1, $2) RETURNING *'
         const values = [taskToolProjectID, taskTool]
         client.query(text, values, (err, res) => { // add taskTool to database
-            io.in(taskToolProjectID.toString()+taskToolProjectName).emit('taskTool', generateTaskTool(taskTool)) // emit the new task tool to all user in room (room identifier is projectid+projectname)
-            callback()
+            client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+taskToolProjectID+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+                const tasktools = []
+                for (let foo of tasktoolresult.rows) {
+                    const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
+                        TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
+                    tasktools.push(tasktool)
+                    io.to(user.roomNumber).emit('taskTool', (tasktools))
+                }
+            })
         })
+        callback()
+    })
+
+
+    // When a task tool is edited within ProjectHomePage
+    socket.on('editTaskTool', ({taskTool, Project_ID, TaskTool_ID}, callback) => {
+        const user = getUserInProjectHomePage(socket.id)
+        const text = 'UPDATE "TaskTool" SET "TaskToolName"=$1 WHERE "TaskTool_ID"=$2 RETURNING *'
+        const values = [taskTool, TaskTool_ID]
+        client.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            }
+            else {
+                //console.log(res.rows[0])
+            }
+            console.log('----------------------------------record is updated--------------------------------')
+        })
+        // redisplay task tools
+        client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+Project_ID+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+            const tasktools = []
+            for (let foo of tasktoolresult.rows) {
+                const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
+                    TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
+                tasktools.push(tasktool)
+                io.to(user.roomNumber).emit('taskTool', (tasktools))
+            }
+        })
+        callback()
+    })
+
+    // When a task tool is deleted within ProjectHomePage
+    socket.on('deleteTaskTool', ({projectidVP, TaskTool_ID}, callback) => {
+        const user = getUserInProjectHomePage(socket.id)
+        const text = 'DELETE FROM "TaskTool" WHERE "TaskTool_ID"=$1 RETURNING *'
+        const values = [TaskTool_ID]
+        client.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            }
+            else {
+                //console.log(res.rows[0])
+            }
+            console.log('----------------------------------record is deleted--------------------------------')
+        })
+        // redisplay task tools
+        client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+            const tasktools = []
+            for (let foo of tasktoolresult.rows) {
+                const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
+                    TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
+                tasktools.push(tasktool)
+                io.to(user.roomNumber).emit('taskTool', (tasktools))
+            }
+        })
+        callback()
     })
 
     
@@ -589,8 +661,6 @@ app.get("/ProjectHomePage/", function (req, res) {
             const chatName = chatresult["rows"][0]["ChatName"]
             newCookie["chatroomid"] = chatID
             newCookie["chatname"] = chatName // update cookie, put new cookie in response, and finish
-            const roomNumber = "C" + chatID.toString()
-            newCookie["roomNumber"] = roomNumber
             res.cookie("userInfo", newCookie)
             req.query.projectidVP = projectid
             res.render(publicDirectoryPath + "views/ProjectHomePage.html", { user: req.cookies.userInfo })
@@ -632,6 +702,7 @@ app.get("/issueform", function (req, res) {
 
 // Current version of chatApp (Must be updated)
 app.get("/chatapp", function (req, res) {
+    console.log(req.query)
     res.sendFile(publicDirectoryPath + "views/chatApp.html")
 })
 
@@ -721,84 +792,6 @@ app.post("/UserHomePage/joinProject", function (req, res) {
 })
 
 
-/* I DON'T THINK THIS POST IS EVER CALLED !
-// TEMPORARY
-// When user clicks button to view a project
-app.post("/UserHomePage/ProjectHomePage", function (req, res) {
-    console.log("query: ", req.query)
-    var projectName = req.body.projectNameVP
-    client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
-        var newCookie = req.cookies.userInfo
-        const projectid = projectidresult["rows"][0]["Project_ID"]
-        newCookie["currProjectID"] = projectName
-        newCookie["currProjectID"] = projectid // update cookie for the input project
-        client.query('SELECT "User_ID" FROM "AttachUserP" WHERE "Project_ID" = '+projectid+';', (err1, teamIDresult) => {
-            var teamIDs = []
-            for (let teammate of teamIDresult["rows"]) {
-                teamIDs.push(teammate["User_ID"]) // get the IDs of the users associated with this project
-            }
-            var IDstring = '('
-            var i;
-            for (i = 0; i < teamIDs.length; i++) { // put in the form of (id1, id2, id3, ...), as this is needed for the IN query
-                IDstring += (teamIDs[i]).toString()
-                if (i != teamIDs.length-1) {
-                    IDstring += ','
-                }
-            }
-            IDstring += ')'
-            client.query('SELECT "UserName" FROM "User" WHERE "User_ID" IN '+IDstring+';', (err2, teamnameresult) => {
-                var teamNames = []
-                for (let teammate of teamnameresult["rows"]){ // get the names of all users whose IDs we have
-                    teamNames.push(teammate["UserName"])
-                }
-                newCookie["teamIDs"] = teamIDs
-                newCookie["teamNames"] = teamNames
-                client.query('SELECT "TaskToolName" FROM "TaskTool" WHERE "Project_ID" = '+projectid+';', (err3, tasktoolresult) => {
-                    var taskToolNames = []
-                    for (let tTool of tasktoolresult["rows"]) {
-                        taskToolNames.push(tTool["TaskToolName"])
-                    }
-                    newCookie["taskTools"] = taskToolNames
-                    res.cookie("userInfo", newCookie)
-                    res.redirect('/ProjectHomePage')
-                })
-            })
-        })
-    })
-})
-*/
-
-
-// When user attempts to sign in
-// // If successful, redirects to UserHomePage
-// // If unsuccessful, redirects to failedLoginPage
-// app.post("/loginPage", function (req, res) { //--EDIT DELETE
-//     var username = req.body.username
-//     var password = req.body.password
-    
-//     var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
-//     loginMatch.then(function(result) {
-//         loginMatch = result.rows[0]["user_pass_match"]
-//         if (loginMatch == 1) { // successful login
-//             client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
-//                 var thisUserID = useridresult["rows"][0]["User_ID"]
-//                 res.cookie("userInfo",{name:username, userid: thisUserID, chatname: "TestingChatroom", chatroomid: 1})
-//                 res.redirect("UserHomePage")
-//             })
-//         } else if (loginMatch == 2) { //username exists, bad password
-//             io.sockets.emit('failedLogin', 'Login unsuccessful: Wrong password')
-//         }
-//         else { // loginMatch == 3, username does not exist
-//             io.sockets.emit('failedLogin', 'Login unsuccessful: Username does not exist')
-//         } 
-//     })           
-// })
-
-
-
-
-
-//PUT VERIFY CREDENTIALS HERE AND ADD SOCKET FOR FAILED LOGIN.
 
 
 
