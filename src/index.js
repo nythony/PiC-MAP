@@ -147,7 +147,8 @@ io.on('connection', (socket) => {
             client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
                 const tasktools = []
                 for (let foo of tasktoolresult.rows) {
-                    const tasktool = {TaskToolName: foo["TaskToolName"], TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
+                    const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
+                        TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
                     tasktools.push(tasktool)
                     io.to(user.roomNumber).emit('taskTool', (tasktools))
                 }
@@ -166,7 +167,8 @@ io.on('connection', (socket) => {
             client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+taskToolProjectID+';', (err3, tasktoolresult) => { // get all task tools for that project ID
                 const tasktools = []
                 for (let foo of tasktoolresult.rows) {
-                    const tasktool = {TaskToolName: foo["TaskToolName"], TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
+                    const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
+                        TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
                     tasktools.push(tasktool)
                     io.to(user.roomNumber).emit('taskTool', (tasktools))
                 }
@@ -194,7 +196,8 @@ io.on('connection', (socket) => {
         client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+Project_ID+';', (err3, tasktoolresult) => { // get all task tools for that project ID
             const tasktools = []
             for (let foo of tasktoolresult.rows) {
-                const tasktool = {TaskToolName: foo["TaskToolName"], TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
+                const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
+                    TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
                 tasktools.push(tasktool)
                 io.to(user.roomNumber).emit('taskTool', (tasktools))
             }
@@ -220,7 +223,8 @@ io.on('connection', (socket) => {
         client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
             const tasktools = []
             for (let foo of tasktoolresult.rows) {
-                const tasktool = {TaskToolName: foo["TaskToolName"], TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
+                const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
+                    TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
                 tasktools.push(tasktool)
                 io.to(user.roomNumber).emit('taskTool', (tasktools))
             }
