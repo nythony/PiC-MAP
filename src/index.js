@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
 
     // ChatApp
 
-    socket.on('joinChat', ({ username, userid, room, chatroomid, roomNumber }, callback) => {
+    socket.on('joinChat', ({ username, userid, room, chatroomid, roomNumber }, callback) => { 
         const { error, user} = addUserChat({ id: socket.id, username, userid, room, chatroomid, roomNumber })
         
 
