@@ -154,8 +154,11 @@
         </form>
         <form action="/UserHomePage" id="backToUserHomePage" method="get" style="display: inline-block; float:right; padding: 4px;">
             <input type="hidden" id="username" name="username" value="{{username}}" required />
-            <input type="hidden" id="password" name="password" value="" required />
+            <input type="hidden" id="password" name="password" required />
             <input type="hidden" id="userid" name="userid" value="{{userid}}" required />
+            <script type="text/javascript">
+                        document.getElementById('password').value = <%- JSON.stringify(user.password) %>;
+            </script>
             <button class"button" type="submit">Return to User Home Page</button>
         </form>
         <br>

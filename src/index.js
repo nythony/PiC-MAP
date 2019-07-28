@@ -635,7 +635,7 @@ app.get("/UserHomePage/", function (req, res) {
         if (loginMatch == 1) { // successful login
             client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, useridresult) => {
                 var thisUserID = useridresult["rows"][0]["User_ID"]
-                res.cookie("userInfo",{name:username, userid: thisUserID, chatname: "TestingChatroom", chatroomid: 1})
+                res.cookie("userInfo",{name:username, userid: thisUserID, password: password, chatname: "TestingChatroom", chatroomid: 1})
                 res.render("UserHomePage", { user: req.cookies.userInfo })
                //Are we only using cookie to display username?
             })
