@@ -11,6 +11,7 @@ socket.emit('enterLogin', (error) => {
 	id = socket.id;
 
 	document.getElementById("socketid").value = id;
+	console.log("SOCKETID ", document.getElementById("socketid").value);
     
     if (error) {
         alert(error)

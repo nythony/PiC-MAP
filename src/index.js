@@ -241,9 +241,7 @@ io.on('connection', (socket) => {
     //Makes login page a room, and allows user to have a socket.id so that error message is user-centric
     socket.on('enterLogin', (callback)  => { 
 
-        var room = "Login"
-
-        socket.join(room) //General room
+        socket.join("Login") //General room
 
         callback();
 
@@ -762,6 +760,8 @@ app.get("/loginPage", function (req, res) { //Redirect to home page/login page, 
 app.get("/UserHomePage/", function (req, res) {
     var username = req.query.username
     var password = req.query.password
+
+    console.log("APP.GET ", username, password, req.query.socketid)
     
     var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
     loginMatch.then(function(result) {
@@ -774,11 +774,9 @@ app.get("/UserHomePage/", function (req, res) {
                //Are we only using cookie to display username?
             })
         } else if (loginMatch == 2) { //username exists, bad password
-            console.log("In app.get userhompage", socket)
             io.to(req.query.socketid).emit('failedLogin', 'Login unsuccessful: Wrong password'); //socket.emit('failedLogin', 'Login unsuccessful: Wrong password')
         }
         else { // loginMatch == 3, username does not exist
-            console.log("In app.get userhompage", socket)
             io.to(req.query.socketid).emit('failedLogin', 'Login unsuccessful: Username does not exist') //socket.emit('failedLogin', 'Login unsuccessful: Username does not exist')
         } 
     })    
