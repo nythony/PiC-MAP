@@ -24,8 +24,8 @@ const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjec
 
 //Connecting to cloud based database:
 const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+    //connectionString: process.env.DATABASE_URL,
+    connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 })
 client.connect()
@@ -238,11 +238,12 @@ io.on('connection', (socket) => {
 //  UserHomePage  //
 ////////////////////
 
-
     // When a user enters a userhomepage
     socket.on('enterUserHomePage',  (userProj, callback) => { 
         var username = userProj.username;
         var list = []
+
+        socket.join('UHP') //General room
 
         const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
 
