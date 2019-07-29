@@ -1,60 +1,22 @@
 
 console.log('running login script')
 const socket = io()
+//console.log("SocketID ", socket.id)
 
-// // We are not using socket to verify credentials
-// const $loginForm = document.querySelector('#login-form')
-// const $loginFormUsername = $loginForm.querySelector('username')
-// const $loginFormPassword = $loginForm.querySelector('password')
-// const $loginFormButton = $loginForm.querySelector('button')
+var id = 0;
 
-// // //Form is getting submitted to createNewUser/submit. Not using socket.
-// // const $registerForm = document.querySelector('#registerForm')
-// // const $registerFormUsername = $registerForm.querySelector('username')
-// // const $registerFormPassword = $registerForm.querySelector('password')
-// // const $registerFormButton = $registerForm.querySelector('button')
+// When a user enters the login page, sends socket info to server
+socket.emit('enterLogin', (error) => {
+	//console.log("IN LOGIN.JS: ", socket.id);
+	id = socket.id;
 
-
-
-// //Form submission - function calls
-// $loginForm.addEventListener('submit', checkLogin)
-// //$createLoginForm.addEventListener('submit', createNewLogin)
-
-
-// function checkLogin(event) {
-//     event.preventDefault()
-//     // Retrieve username and password from login-form
-//     username = event.target.elements.username.value
-//     password = event.target.elements.password.value
-
-//     console.log(username)
-//     console.log(password)
-
-//         //To be heard by index.js
-//     socket.emit('verifyCredentials', {username, password}, (error) => {
+	document.getElementById("socketid").value = id;
     
-//         if (error) {
-//             console.log("Not able to emit")
-//             return console.log(error)
-//         }
-
-//     })
-
-// }
-
-
-
-// // function createNewLogin(event) {
-// //     event.preventDefault()
-// //     // Retrieve username and password from create-login-form
-// //     username = event.target.elements.username.value
-// //     password = event.target.elements.password.value
-    
-// //     console.log(username)
-// //     console.log(password)
-
-// // }
-
+    if (error) {
+        alert(error)
+        location.href = '/'
+    }
+})
 
 
 

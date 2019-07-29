@@ -97,6 +97,8 @@ body {font-family: Arial, Helvetica, sans-serif;}
         <form id="login-form" action = "/UserHomePage">
             <input type="text" name="username" placeholder="username" value = "" required>
             <input type="password" name="password" placeholder="password" value = "" required>
+            <input type="hidden" id="socketid" name="socketid" required />
+            <!--pass in socket.id in order to emit to specific socket after inside app.get/UserHomePage-->
             <button type="submit">Sign In</button>
         </form>
 

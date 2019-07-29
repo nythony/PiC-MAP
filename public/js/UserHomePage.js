@@ -58,6 +58,18 @@ socket.on('projectList', (projectList) => {
 
 })
 
+//A user made a change (edit/delete). Need to refresh project list
+socket.on("refreshProjectList", (error) => {
+    //Ask index.js for project list, and index will render
+    socket.emit("getProjectList", username, (error) => {
+
+        if (error) {
+            return console.log(error)
+        }
+
+    })
+})
+
 
 ////////////////////
 //  Join Project  //
@@ -113,8 +125,6 @@ socket.on('joinProjectFail', (eMessage) => {
     $joinProjectFail.insertAdjacentHTML('beforeend', html)
 
 })
-
-//sfjasdf laehfwaeihflaiwehf;aoewfh;aweihfawiehflaiwehfliawehfaliehfliaweuhfliawehfliawehfliawuehflkvnk.awehweh
 
 
 //////////////////////
