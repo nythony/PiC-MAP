@@ -7,8 +7,9 @@ const socket = io()
 //////////////////////////
 
 //var rCookie = document.cookie; Returns encoded cookie
-const { username, password, userid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+const { username, password } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 var localProjects = [];
+
 
 //UserName Display
 const welcomeUserTemplate = document.querySelector('#welcomeUser-template').innerHTML
@@ -22,7 +23,7 @@ messageDisplay: username
 $welcomeUser.insertAdjacentHTML('beforeend', html)
 
 // When a user enters a projecthomepage, sends user info to server
-socket.emit('enterUserHomePage', { username, password }, (error) => {
+socket.emit('enterUserHomePage', { username, password}, (error) => {
     if (error) {
         alert(error)
         location.href = '/'
@@ -58,6 +59,64 @@ socket.on('projectList', (projectList) => {
 })
 
 
+////////////////////
+//  Join Project  //
+////////////////////
+
+
+const $joinProjectForm = document.querySelector('#join-project-form')
+
+// Listen for submission of join-project-form
+$joinProjectForm.addEventListener('submit', (e) => {
+    console.log("A user is joining a project")
+
+    e.preventDefault()
+
+    // Retrieve inputs
+    const name = e.target.elements.projectName.value
+    const pass = e.target.elements.projectPassword.value
+    const user = username
+
+    console.log("Name: ", name)
+    console.log("Pass: ", pass)
+    console.log("Username (hidden): ", user)
+
+
+    //To be heard by index.js
+    socket.emit('joinProject', {name, pass, user}, (error) => {
+
+        if (error) {
+            return console.log(error)
+        }
+
+        var form = document.getElementById("join-project-form")
+        document.getElementById("joinProjectForm").style.display = "none";
+        form.reset()
+    })
+})
+
+
+
+//Error message
+const joinProjectTemplate = document.querySelector('#joinProjectFail-template').innerHTML
+const $joinProjectFail = document.querySelector('#joinProjectFail')
+
+
+socket.on('joinProjectFail', (eMessage) => {
+
+    document.getElementById("joinProjectForm").style.display = "block";
+
+    const html = Mustache.render(joinProjectTemplate, {
+        messageDisplay: eMessage
+    })
+
+    $joinProjectFail.insertAdjacentHTML('beforeend', html)
+
+})
+
+//sfjasdf laehfwaeihflaiwehf;aoewfh;aweihfawiehflaiwehfliawehfaliehfliaweuhfliawehfliawehfliawuehflkvnk.awehweh
+
+
 //////////////////////
 //  Create Project  //
 //////////////////////
@@ -74,12 +133,14 @@ $createProjectForm.addEventListener('submit', (e) => {
     e.preventDefault()
 
     // Retrieve inputs
+    const pass = e.target.elements.projectPassword.value
     const name = e.target.elements.projectName.value
     const desc = e.target.elements.projectDescription.value
     const start = e.target.elements.startDate.value
     const due = e.target.elements.dueDate.value
     const user = username 
 
+    console.log("Pass: ", pass)
     console.log("Name: ", name)
     console.log("Desc: ", desc)
     console.log("Start: ", start)
@@ -89,7 +150,7 @@ $createProjectForm.addEventListener('submit', (e) => {
 
 
     //To be heard by index.js
-    socket.emit('createProject', {name, desc, start, due, user}, (error) => {
+    socket.emit('createProject', {pass, name, desc, start, due, user}, (error) => {
   
         if (error) {
             return console.log(error)
@@ -111,7 +172,7 @@ $createProjectForm.addEventListener('submit', (e) => {
 const $editProjectForm = document.querySelector('#edit-project-form')
 
 
-// Listen for submission of create-project-form
+// Listen for submission of edit-project-form
 $editProjectForm.addEventListener('submit', (e) => {
     console.log("A project is being edited")
 
@@ -155,36 +216,6 @@ $editProjectForm.addEventListener('submit', (e) => {
 })
 
 
-
-
-
-// var projectMemberList = [] //do not need to add creator, because create button should automatically create AttachUserP for creator --Might not need
-// // Elements
-// const $addMembers = document.querySelector('#add-project-members')
-// const $addMembersInput = $addMembersInput.querySelector('input')
-// const $addMembersButton = $addMembersInput.querySelector('button')
-
-// //When the add button is clicked to add a user (in edit project) --STILL NEED TO IMPLEMENT AND TEST IF WORKS
-// $addMembers.addEventListener('submit', (e) => {
-//     e.preventDefault()
-
-//     // Retrieve message value of message form
-//     const member = e.target.elements.project-member.value
-
-//     socket.emit('addProjectMember', member, (error) => {
-//         // Enable form
-
-//         if (error) {
-//             return console.log(error)
-//         }
-
-//         var form = document.getElementById("add-project-members")
-//         form.reset()
-//     })
-// })
-
-
-
 //////////////////////
 //  Delete Project  //
 //////////////////////
@@ -192,7 +223,7 @@ $editProjectForm.addEventListener('submit', (e) => {
 
 const $deleteProjectForm = document.querySelector('#delete-project-form')
 
-// Listen for submission of create-project-form
+// Listen for submission of delete-project-form
 $deleteProjectForm.addEventListener('submit', (e) => {
     console.log("A project is being deleted")
 
@@ -237,8 +268,6 @@ socket.on('deleteProjectFail', (eMessage) => {
     })
 
     $deleteProjectFail.insertAdjacentHTML('beforeend', html)
-
-
 
 })
 

@@ -24,8 +24,8 @@ const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjec
 
 //Connecting to cloud based database:
 const client = new Client({
-    //connectionString: process.env.DATABASE_URL,
-    connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+    connectionString: process.env.DATABASE_URL,
+    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 })
 client.connect()
@@ -242,16 +242,21 @@ io.on('connection', (socket) => {
     // When a user enters a userhomepage
     socket.on('enterUserHomePage',  (userProj, callback) => { 
         var username = userProj.username;
-        var list = []//[username]
+        var list = []
 
-        const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
+        const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
 
         client.query(text, (err, results) => { 
             for (let obj of results.rows){
-                var proj = {}
+                var proj = {
+                	username: username, 
+                }
+                proj['userid'] = obj["User_ID"]
                 proj['Project_ID'] = obj["Project_ID"]
                 proj['projectName'] = obj["ProjectName"]
                 proj['projectDesc'] = obj["ProjectDesc"]
+                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
+                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')
                 
                 list.push(proj);
             }
@@ -260,8 +265,117 @@ io.on('connection', (socket) => {
     })
 
 
+
+    // Joining an existing project
+    socket.on('joinProject', ({name, pass, user}, callback) => {
+
+        var obj = []
+
+        
+        //Verification of project name entry
+        var promise1 = new Promise(function(resolve, reject) {
+            
+            client.query('SELECT "ProjectPassword", "Project_ID" FROM "Project" WHERE "ProjectName" = \''+name+'\';', (err, res) => {
+                if (err) {
+                    console.log(err.stack)
+                } else {
+                	//Checking if project exists
+                    if (res.rows.length != 0){
+
+                    	//Project exists, checking if correct password
+                        if (res.rows[0].ProjectPassword == pass){ //ProjectPassword does not exist in res.rows if no match, so cannot combine with above statement
+                            //Correct password:
+
+                            //Storing projectID
+                            const projid = res.rows[0].Project_ID;
+                            obj.push(projid)
+
+                            //Getting userID
+				            client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \''+user+'\';', (err, res1) => {
+				                if (err) {
+				                    console.log(err.stack)
+				                } else {
+				                	const userid = res1.rows[0].User_ID;
+
+				                	//Checks if User_ID already exists
+				                	client.query('SELECT * FROM "AttachUserP" WHERE "User_ID" = \''+userid+'\'AND "Project_ID" = \''+projid+'\';', (err, res2) => {
+						                if (err) {
+						                    console.log(err.stack)
+						                } else {
+
+						                	//User is already attached to project
+						                	if (res2.rows.length != 0){
+
+						                		socket.emit("joinProjectFail", "You are already in that project");
+						                	}
+
+						                   	else{
+						                   		obj.push(userid)
+						                   		obj.push(user)
+						                   		resolve(obj)
+						                   	}
+						                }
+	                  				})
+				                }
+				            })
+
+                        } else {
+                            //Entered a project name, but with the wrong password
+                            socket.emit("joinProjectFail", "Invalid Project Password"); 
+                        }
+                    } else {
+                        //Project name does not exist
+                        socket.emit("joinProjectFail", "Invalid Project Name");
+                    }
+
+                }
+            })
+        });
+
+        //Creating new project
+        promise1.then(function(obj) {
+        	//obj = {projectID, userID, username} DIFFERENT FROM DELETE
+
+            const text = 'INSERT INTO "AttachUserP"("User_ID", "Project_ID") VALUES(\'' + obj[1] + '\', \'' + obj[0] + '\');'
+
+            client.query(text, (err, res) => {
+                if (err) {
+                    console.log(err.stack)
+                } else {
+                    console.log('----------------------------------user has joined a project--------------------------------');
+                    
+                    //Displaying project list again
+                    var list = []
+                    const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + obj[2] + '\' ORDER BY "StartDate"'
+                    client.query(text, (err, results) => { 
+                        for (let obj of results.rows){
+                            var proj = {
+			                	username: obj[2] 
+			                }
+			                proj['userid'] = obj["User_ID"]
+                            proj['Project_ID'] = obj["Project_ID"]
+                            proj['projectName'] = obj["ProjectName"]
+                            proj['projectDesc'] = obj["ProjectDesc"]
+			                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
+			                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                          
+                            
+                            list.push(proj);
+                        }
+                        socket.emit('projectList', list)
+                    })
+                }
+           })
+
+        })
+
+        callback()
+    })
+
+    //aklsdhflasdjhflaihf;aoewh;fihwefiuahwelfiahwelfihawe;fihawe;ifhalwiehfliaweuhfl
+
+
     // Creating a new project in the userHomePage
-    socket.on('createProject', ({name, desc, start, due, user}, callback) => {
+    socket.on('createProject', ({pass, name, desc, start, due, user}, callback) => {
 
         //Convert username to userID
         var promise1 = new Promise(function(resolve, reject) {
@@ -289,8 +403,8 @@ io.on('connection', (socket) => {
             }
 
             //Inserting into database
-            const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate") VALUES($1,$2,$3,$4,$5) RETURNING *';
-            const values = [name, desc, userCreate, start, due];
+            const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate", "ProjectPassword") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
+            const values = [name, desc, userCreate, start, due, pass];
 
             client.query(text, values, (err, res) => {
                 if (err) {
@@ -302,14 +416,19 @@ io.on('connection', (socket) => {
                     //updating list shown
                 var list = []//[username]
 
-                const text = 'SELECT "Project_ID", "ProjectName", "ProjectDesc" FROM "Project"  WHERE "UserCreate" = \'' + userCreate + '\' ORDER BY "StartDate"'
+                const text = 'SELECT "Project_ID", "ProjectName", "ProjectDesc", "StartDate", "DueDate" FROM "Project"  WHERE "UserCreate" = \'' + userCreate + '\' ORDER BY "StartDate"'
 
                 client.query(text, (err, results) => { 
                     for (let obj of results.rows){
-                        var proj = {}
+		                var proj = {
+		                	username: userCreate
+		                }
+		                proj['userid'] = userCreate
                         proj['Project_ID'] = obj["Project_ID"]
                         proj['projectName'] = obj["ProjectName"]
                         proj['projectDesc'] = obj["ProjectDesc"]
+		                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
+		                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                       
                         
                         list.push(proj);
                     }
@@ -331,57 +450,70 @@ io.on('connection', (socket) => {
     socket.on('editProject', (proj, callback) => {
         var start = proj.start;
         var due = proj.due;
+         
+         //Determining SQL query statement
+        var promise1 = new Promise(function(resolve, reject) {
+    
+	        //Can just require each field and use last const text query statement
 
-        //Can just require each field and use last const text query statement
+	        //Do not edit start and due date
+	        if ((start == "") && (due == "")){
+	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+	            resolve(text);
+	        //Do not edit start, edit due
+	        } else if ( start == ""){
+	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+	            resolve(text);
+	        //Edit start, do not edit due  
+	        } else if (due == ""){
+	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+	            resolve(text);
+	        //Edit both start and due
+	        } else { 
+	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+	        	resolve(text);
+	        }
+
+        })
+  		
+  		promise1.then(function(text) {
+	        client.query(text, (err, res) => {
+	            if (err) {
+	                console.log(err.stack)
+	            } else {
+	                console.log('----------------------------------project is modified--------------------------------');
 
 
-        //Do not edit start and due date
-        if ((start == "") && (due == "")){
-            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+	                //Displaying project list again
+	                var username = proj.user;
 
-        //Do not edit start, edit due
-        } else if ( start == ""){
-            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
-
-        //Edit start, do not edit due  
-        } else if (due == ""){
-            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
-
-        //Edit both start and due
-        } else { 
-            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
-        }
-        
-
-        client.query(text, (err, res) => {
-            if (err) {
-                console.log(err.stack)
-            } else {
-                console.log('----------------------------------project is modified--------------------------------');
-
-
-                var username = proj.user
                     var list = []
-                    const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
+                    const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
                     client.query(text, (err, results) => { 
                         for (let obj of results.rows){
-                            var proj = {}
+                          	var proj = {
+			                	username: username, 
+			                }
+			                proj['userid'] = obj["User_ID"]
                             proj['Project_ID'] = obj["Project_ID"]
-                            proj['ProjectName'] = obj["ProjectName"]
-                            proj['ProjectDesc'] = obj["ProjectDesc"]
+                            proj['projectName'] = obj["ProjectName"]
+                            proj['projectDesc'] = obj["ProjectDesc"]
+			                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
+			                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                            
                             
                             list.push(proj);
                         }
                         socket.emit('projectList', list)
+                        //This might need to be emitted to all users that are connected to that project
                     })
 
-            }
+	            }
             
-        })
+       		 })
+	    })
 
         callback()
     })
-
 
 
     // Deleting project from the userHomePage
@@ -419,7 +551,7 @@ io.on('connection', (socket) => {
 
         //Creating new project
         promise1.then(function(obj) {
-
+        	//obj = {userID, projectID} DIFFERENT FROM JOIN
 
             const text = 'DELETE FROM "Project" WHERE "Project_ID"= \'' + id + '\';'
             client.query(text, (err, res) => {
@@ -430,13 +562,18 @@ io.on('connection', (socket) => {
                     
                     //Displaying project list again
                     var list = []
-                    const text = 'SELECT Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + obj[0] + '\' ORDER BY "StartDate"'
+                    const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + obj[0] + '\' ORDER BY "StartDate"'
                     client.query(text, (err, results) => { 
                         for (let obj of results.rows){
-                            var proj = {}
+                            var proj = {
+			                	username: obj[0] 
+			                }
+			                proj['userid'] = obj["User_ID"]
                             proj['Project_ID'] = obj["Project_ID"]
                             proj['projectName'] = obj["ProjectName"]
                             proj['projectDesc'] = obj["ProjectDesc"]
+			                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
+			                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                          
                             
                             list.push(proj);
                         }
@@ -932,27 +1069,27 @@ app.post("/backToProjectHomePage", function (req, res) {
 })
 
 
-    // When user clicks button to join an existing project
-app.post("/UserHomePage/joinProject", function (req, res) {
-    var userid = JSON.stringify(req.cookies.userInfo.userid)
-    var projectName = req.body.projectName
-    client.query('SELECT "Project_ID", "ProjectDesc" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err1, projectresult) => { // get project ID of input project
-        if (err1) {console.log(err1.stack)}
-        const projectid = projectresult["rows"][0]["Project_ID"]
-        const projectDesc = projectresult["rows"][0]["ProjectDesc"]
-        const attachValues = [userid, projectid]
-        const attachText = 'INSERT INTO "AttachUserP"("User_ID", "Project_ID") VALUES($1,$2) RETURNING *'
-        client.query(attachText, attachValues, (err2, res2) => { // add new link to AttachUserP table
-            if (err2) {console.log(err2.stack)}     // THIS NEEDS TO BE PUT INTO A refreshCookie() function
-            var newCookie = req.cookies.userInfo
-            newCookie.projects.push(projectid) // update cookie from req -> res to add the new project that the user is assigned to
-            newCookie.projectNames.push(projectName)
-            newCookie.projectDescs.push(projectDesc)
-            res.cookie("userInfo", newCookie)
-            res.redirect('/UserHomePage/');
-        })
-    })
-})
+//     // When user clicks button to join an existing project
+// app.post("/UserHomePage/joinProject", function (req, res) {
+//     var userid = JSON.stringify(req.cookies.userInfo.userid)
+//     var projectName = req.body.projectName
+//     client.query('SELECT "Project_ID", "ProjectDesc" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err1, projectresult) => { // get project ID of input project
+//         if (err1) {console.log(err1.stack)}
+//         const projectid = projectresult["rows"][0]["Project_ID"]
+//         const projectDesc = projectresult["rows"][0]["ProjectDesc"]
+//         const attachValues = [userid, projectid]
+//         const attachText = 'INSERT INTO "AttachUserP"("User_ID", "Project_ID") VALUES($1,$2) RETURNING *'
+//         client.query(attachText, attachValues, (err2, res2) => { // add new link to AttachUserP table
+//             if (err2) {console.log(err2.stack)}     // THIS NEEDS TO BE PUT INTO A refreshCookie() function
+//             var newCookie = req.cookies.userInfo
+//             newCookie.projects.push(projectid) // update cookie from req -> res to add the new project that the user is assigned to
+//             newCookie.projectNames.push(projectName)
+//             newCookie.projectDescs.push(projectDesc)
+//             res.cookie("userInfo", newCookie)
+//             res.redirect('/UserHomePage/');
+//         })
+//     })
+// })
 
 
 
