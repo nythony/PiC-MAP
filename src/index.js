@@ -417,15 +417,21 @@ io.on('connection', (socket) => {
 
         //Convert username to userID
         var promise1 = new Promise(function(resolve, reject) {
+
+            if (name.indexOf('\'') >= 0) {
+               callback("Please do not enter an apostrophe");
+            }
             
-            client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \''+user+'\';', (err, res) => {
-                if (err) {
-                    console.log(err.stack)
-                } else {
-                    const userCreate = res.rows[0].User_ID;
-                    resolve(userCreate)
-                }
-            })
+            else{ 
+                client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \''+user+'\';', (err, res) => {
+                    if (err) {
+                        console.log(err.stack)
+                    } else {
+                        const userCreate = res.rows[0].User_ID;
+                        resolve(userCreate)
+                    }
+                })
+            }
         });
 
         //Creating new project
