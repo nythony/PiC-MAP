@@ -24,8 +24,8 @@ const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjec
 
 //Connecting to cloud based database:
 const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+    //connectionString: process.env.DATABASE_URL,
+    connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 })
 client.connect()
@@ -388,16 +388,16 @@ io.on('connection', (socket) => {
                     var list = []
                     const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + obj[2] + '\' ORDER BY "StartDate"'
                     client.query(text, (err, results) => { 
-                        for (let obj of results.rows){
+                        for (let line of results.rows){
                             var proj = {
 			                	username: obj[2] 
 			                }
-			                proj['userid'] = obj["User_ID"]
-                            proj['Project_ID'] = obj["Project_ID"]
-                            proj['projectName'] = obj["ProjectName"]
-                            proj['projectDesc'] = obj["ProjectDesc"]
-			                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
-			                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                          
+			                proj['userid'] = line["User_ID"]
+                            proj['Project_ID'] = line["Project_ID"]
+                            proj['projectName'] = line["ProjectName"]
+                            proj['projectDesc'] = line["ProjectDesc"]
+			                proj['StartDate'] = moment(line["StartDate"]).format('MM/DD/YY')
+			                proj['DueDate'] = moment(line["DueDate"]).format('MM/DD/YY')                          
                             
                             list.push(proj);
                         }
@@ -760,8 +760,6 @@ app.get("/loginPage", function (req, res) { //Redirect to home page/login page, 
 app.get("/UserHomePage/", function (req, res) {
     var username = req.query.username
     var password = req.query.password
-
-    console.log("APP.GET ", username, password, req.query.socketid)
     
     var loginMatch = client.query('SELECT user_pass_match(\''+username+'\',\''+password+'\');')
     loginMatch.then(function(result) {
