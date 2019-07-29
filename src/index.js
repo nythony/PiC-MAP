@@ -24,8 +24,8 @@ const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjec
 
 //Connecting to cloud based database:
 const client = new Client({
-    //connectionString: process.env.DATABASE_URL,
-    connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+    connectionString: process.env.DATABASE_URL,
+    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 })
 client.connect()
@@ -232,7 +232,24 @@ io.on('connection', (socket) => {
         callback()
     })
 
+
+
+//////////////////
+//  Login Page  //
+//////////////////
     
+    //Makes login page a room, and allows user to have a socket.id so that error message is user-centric
+    socket.on('enterLogin', (callback)  => { 
+
+        var room = "Login"
+
+        socket.join(room) //General room
+
+        callback();
+
+    })
+
+
 
 ////////////////////
 //  UserHomePage  //
@@ -263,6 +280,30 @@ io.on('connection', (socket) => {
             }
             socket.emit('projectList', list)
         })
+    })
+
+    socket.on('getProjectList', (username, callback) => {
+
+        var list = []
+        const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
+        client.query(text, (err, results) => { 
+            for (let obj of results.rows){
+                var proj = {
+                    username: username, 
+                }
+                proj['userid'] = obj["User_ID"]
+                proj['Project_ID'] = obj["Project_ID"]
+                proj['projectName'] = obj["ProjectName"]
+                proj['projectDesc'] = obj["ProjectDesc"]
+                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
+                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                            
+                
+                list.push(proj);
+            }
+            socket.emit('projectList', list)
+
+        })
+
     })
 
 
@@ -372,8 +413,6 @@ io.on('connection', (socket) => {
         callback()
     })
 
-    //aklsdhflasdjhflaihf;aoewh;fihwefiuahwelfiahwelfihawe;fihawe;ifhalwiehfliaweuhfl
-
 
     // Creating a new project in the userHomePage
     socket.on('createProject', ({pass, name, desc, start, due, user}, callback) => {
@@ -415,28 +454,25 @@ io.on('connection', (socket) => {
                     console.log('----------------------------------project is created--------------------------------');
                     
                     //updating list shown
-                var list = []//[username]
+                    var list = []
+                    const text = 'SELECT Up."UserName", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE Ap."User_ID" = \'' + userCreate + '\' ORDER BY "StartDate"'
+                    client.query(text, (err, results) => { 
+                        for (let obj of results.rows){
+                            var proj = {
+                                userid: userCreate, 
+                            }
+                            proj['username'] = obj["UserName"]
+                            proj['Project_ID'] = obj["Project_ID"]
+                            proj['projectName'] = obj["ProjectName"]
+                            proj['projectDesc'] = obj["ProjectDesc"]
+                            proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
+                            proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                            
+                            
+                            list.push(proj);
+                        }
+                        socket.emit('projectList', list)
 
-                const text = 'SELECT "Project_ID", "ProjectName", "ProjectDesc", "StartDate", "DueDate" FROM "Project"  WHERE "UserCreate" = \'' + userCreate + '\' ORDER BY "StartDate"'
-
-                client.query(text, (err, results) => { 
-                    for (let obj of results.rows){
-		                var proj = {
-		                	username: userCreate
-		                }
-		                proj['userid'] = userCreate
-                        proj['Project_ID'] = obj["Project_ID"]
-                        proj['projectName'] = obj["ProjectName"]
-                        proj['projectDesc'] = obj["ProjectDesc"]
-		                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
-		                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                       
-                        
-                        list.push(proj);
-                    }
-                    socket.emit('projectList', list)
-                })
-
-
+                    })
 
                 }
 
@@ -484,29 +520,7 @@ io.on('connection', (socket) => {
 	            } else {
 	                console.log('----------------------------------project is modified--------------------------------');
 
-
-	                //Displaying project list again
-	                var username = proj.user;
-
-                    var list = []
-                    const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
-                    client.query(text, (err, results) => { 
-                        for (let obj of results.rows){
-                          	var proj = {
-			                	username: username, 
-			                }
-			                proj['userid'] = obj["User_ID"]
-                            proj['Project_ID'] = obj["Project_ID"]
-                            proj['projectName'] = obj["ProjectName"]
-                            proj['projectDesc'] = obj["ProjectDesc"]
-			                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
-			                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                            
-                            
-                            list.push(proj);
-                        }
-                        socket.emit('projectList', list)
-                        //This might need to be emitted to all users that are connected to that project
-                    })
+                    io.to('UHP').emit('refreshProjectList')
 
 	            }
             
@@ -562,25 +576,7 @@ io.on('connection', (socket) => {
                     console.log('----------------------------------project has been deleted--------------------------------');
                     
                     //Displaying project list again
-                    var list = []
-                    const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + obj[0] + '\' ORDER BY "StartDate"'
-                    client.query(text, (err, results) => { 
-                        for (let obj of results.rows){
-                            var proj = {
-			                	username: obj[0] 
-			                }
-			                proj['userid'] = obj["User_ID"]
-                            proj['Project_ID'] = obj["Project_ID"]
-                            proj['projectName'] = obj["ProjectName"]
-                            proj['projectDesc'] = obj["ProjectDesc"]
-			                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
-			                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                          
-                            
-                            list.push(proj);
-                        }
-                        socket.emit('projectList', list)
-                        //All those subsequent users inside project need to be redirected
-                    })
+                    io.to('UHP').emit('refreshProjectList')
                 }
            })
 
@@ -778,10 +774,12 @@ app.get("/UserHomePage/", function (req, res) {
                //Are we only using cookie to display username?
             })
         } else if (loginMatch == 2) { //username exists, bad password
-            io.sockets.emit('failedLogin', 'Login unsuccessful: Wrong password')
+            console.log("In app.get userhompage", socket)
+            io.to(req.query.socketid).emit('failedLogin', 'Login unsuccessful: Wrong password'); //socket.emit('failedLogin', 'Login unsuccessful: Wrong password')
         }
         else { // loginMatch == 3, username does not exist
-            io.sockets.emit('failedLogin', 'Login unsuccessful: Username does not exist')
+            console.log("In app.get userhompage", socket)
+            io.to(req.query.socketid).emit('failedLogin', 'Login unsuccessful: Username does not exist') //socket.emit('failedLogin', 'Login unsuccessful: Username does not exist')
         } 
     })    
 })
