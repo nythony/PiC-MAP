@@ -117,20 +117,33 @@
         </form>
 
     </div>
-    <div id="joinExisting">
-        <form action="joinProject" method="post">
-            <input type="hidden" id="usernameJP" name="usernameJP" required />
-            <input type="hidden" id="useridJP" name="useridJP" required />
-            <input type="hidden" id="projectidJP" name="chatroomidJP" required />
-            <input type="text" id="projectNameJP" name="projectNameJP" placeholder="Project Name"><br>
-            <script type="text/javascript">
-                document.getElementById('usernameJP').value = <%- JSON.stringify(user.name) %>;
-                document.getElementById('useridJP').value = <%- JSON.stringify(user.userid) %>;
-                document.getElementById('projectidJP').value = <%- JSON.stringify(user.chatroomid) %>;
-            </script>
-            <button type="submit">Join Existing Project</button>
+
+    <button class="open-button" onclick=openJoinProjectForm()>Join an Existing Project</button>
+
+    <div class="form-popup" id="joinProjectForm">
+        <form class="form-container" id="join-project-form">
+            <h1>Join Project</h1>
+              <br>
+              <!--Error message template: DOESN'T GO AWAY AFTER IT APPEARS THOUGH-->
+               <div id="joinProjectFail"></div>
+                <script id="joinProjectFail-template" type="text/html">
+                    <div class="errorMessage">
+                      <h4 style="color:red"><center>{{messageDisplay}}</center></h4>
+                    </div>
+                </script>
+
+
+            <label><b>Project Name</b></label>
+            <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" autocomplete="off" required>
+
+            <label><b>Project Password</b></label>
+            <input type="password" id="projectPassword" name="projectPassword" placeholder="Enter the project password" autocomplete="off" required>
+
+            <button type="submit" class="btn">Join</button>
+            <button type="button" class="btn cancel" onclick="closeJoinProjectForm()">Close</button>
         </form>
-    </div>
+      </div>
+
 
 
 
@@ -175,7 +188,7 @@
 
                   <form class="form-container" id="edit-project-form">
                     <h1>Edit Your Project</h1>
-
+                    <br>
                     <label><b>Name</b></label>
                     <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" required>
 
@@ -208,7 +221,7 @@
 
                   <form class="form-container" id="delete-project-form">
                     <h1>Are you sure you want to delete this project?</h1>
-
+                      <br>
                       <!--Error message template: DOESN'T GO AWAY AFTER IT APPEARS THOUGH-->
                        <div id="deleteProjectFail"></div>
                         <script id="deleteProjectFail-template" type="text/html">
@@ -241,6 +254,10 @@
      <div class="form-popup" id="projectForm">
           <form class="form-container" id="create-project-form">
             <h1>Create A New Project</h1>
+            <br>
+
+            <label><b>Project Password</b> <i>(required for users to join your project)</i></label>
+            <input type="password" id="projectPassword" name="projectPassword" placeholder="Enter the project password" required>
 
             <label><b>Name</b></label>
             <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" required>
@@ -277,6 +294,16 @@
         function openDeleteProjectForm(Project_ID){
             document.getElementById("deleteProjectForm").style.display = "block";
             document.getElementById("deleteProject_ID").value = Project_ID;
+        }
+
+        function openJoinProjectForm(){
+            document.getElementById("joinProjectForm").style.display = "block";
+        }
+
+
+        function closeJoinProjectForm() {
+          document.getElementById("joinProjectForm").style.display = "none";
+          document.getElementById("join-project-form").reset();
         }
 
 
