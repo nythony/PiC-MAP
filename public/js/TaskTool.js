@@ -64,7 +64,7 @@ $createSubTaskForm.addEventListener('submit', (e) => {
 
         console.log('Subtask created!')
         var form = document.getElementById("createSubTaskForm")
-        document.getElementById("createSubTaskForm").style.display = "none";
+        document.getElementById("createSubTask").style.display = "none";
         form.reset()
     })
 })
@@ -88,7 +88,7 @@ $editSubTaskForm.addEventListener('submit', (e) => {
 
         console.log('Subtask edited!')
         var form = document.getElementById("editSubTaskForm")
-        document.getElementById("editSubTaskForm").style.display = "none";
+        document.getElementById("editSubTask").style.display = "none";
         form.reset()
     })
 })
@@ -109,7 +109,7 @@ $deleteSubTaskForm.addEventListener('submit', (e) => {
 
         console.log('Subtask deleted!')
         var form = document.getElementById("deleteSubTaskForm")
-        document.getElementById("deleteSubTaskForm").style.display = "none";
+        document.getElementById("deleteSubTask").style.display = "none";
         form.reset()
     })
 })
