@@ -495,24 +495,31 @@ io.on('connection', (socket) => {
          //Determining SQL query statement
         var promise1 = new Promise(function(resolve, reject) {
     
-	        //Can just require each field and use last const text query statement
+            if (proj.name.indexOf('\'') >= 0) {
+               callback("Please do not enter an apostrophe");
+            }
+            
+            //No Apostrphes
+            else{ 
 
-	        //Do not edit start and due date
-	        if ((start == "") && (due == "")){
-	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\' WHERE "Project_ID" = \'' + proj.id + '\';'
-	            resolve(text);
-	        //Do not edit start, edit due
-	        } else if ( start == ""){
-	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
-	            resolve(text);
-	        //Edit start, do not edit due  
-	        } else if (due == ""){
-	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
-	            resolve(text);
-	        //Edit both start and due
-	        } else { 
-	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
-	        	resolve(text);
+    	        //Do not edit start and due date
+    	        if ((start == "") && (due == "")){
+    	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+    	            resolve(text);
+    	        //Do not edit start, edit due
+    	        } else if ( start == ""){
+    	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+    	            resolve(text);
+    	        //Edit start, do not edit due  
+    	        } else if (due == ""){
+    	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+    	            resolve(text);
+    	        //Edit both start and due
+    	        } else { 
+    	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+    	        	resolve(text);
+                }
+
 	        }
 
         })
