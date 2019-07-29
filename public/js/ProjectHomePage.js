@@ -62,6 +62,7 @@ $createTaskToolForm.addEventListener('submit', (e) => {
         }
         // clear task tool form
         var form = document.getElementById("createTaskToolForm")
+        document.getElementById("createTaskTool").style.display = "none";
         form.reset()
     })
 })
@@ -86,6 +87,7 @@ $editTaskToolForm.addEventListener('submit', (e) => {
 
         console.log('Task tool edited!')
         var form = document.getElementById("editTaskToolForm")
+        document.getElementById("editTaskTool").style.display = "none";
         form.reset()
     })
 })
@@ -106,6 +108,7 @@ $deleteTaskToolForm.addEventListener('submit', (e) => {
 
         console.log('Task tool deleted!')
         var form = document.getElementById("deleteTaskToolForm")
+        document.getElementById("deleteTaskTool").style.display = "none";
         form.reset()
     })
 })
