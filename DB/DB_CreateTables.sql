@@ -242,3 +242,55 @@ ALTER TABLE "Issue" ADD COLUMN "RootCause" VARCHAR(255);
 ALTER TABLE "Issue" ADD COLUMN "Resolution" VARCHAR(255);
 ALTER TABLE "Issue"
 ALTER COLUMN "CreateDate" SET DEFAULT CURRENT_TIMESTAMP;
+
+/* Update JUL 19*/
+UPDATE "ChatMessage" SET "TimeStamp" = ("TimeStamp" AT TIME ZONE 'UTC') AT TIME ZONE 'EST';
+
+ALTER TABLE "ChatMessage" ALTER COLUMN "TimeStamp" TYPE TIMESTAMP WITH TIME ZONE USING "TimeStamp" AT TIME ZONE 'America/New_York';
+
+ALTER TABLE "AttachUserP" ADD CONSTRAINT "unique_attachP" UNIQUE ("User_ID", "Project_ID");
+
+alter table "AttachUserP" alter column "User_ID" set NOT NULL;
+alter table "AttachUserP" alter column "Project_ID" set NOT NULL;
+
+ALTER TABLE "ChatMessage" ALTER COLUMN "Message" TYPE text;
+
+CREATE TABLE "TaskCategory" (
+  "TaskCategory" SERIAL ,
+  "TaskTool_ID" INTEGER NOT NULL,
+  "CategoryName" VARCHAR(255) NOT NULL,
+CONSTRAINT "TaskCategory_PK" PRIMARY KEY ( "TaskCategory" ),
+CONSTRAINT "TaskTool_ID_FK" FOREIGN KEY ("TaskTool_ID")
+REFERENCES "TaskTool"( "TaskTool_ID" ) MATCH SIMPLE
+);
+
+ALTER TABLE "Task"
+RENAME COLUMN "TaskCategory" TO "Category_ID";
+ALTER TABLE "Task"
+ALTER COLUMN "Category_ID" SET DEFAULT '1';
+
+
+ALTER TABLE "TaskCategory"
+RENAME COLUMN "TaskCategory" TO "Category_ID";
+
+INSERT INTO "TaskCategory"("Category_ID", "CategoryName")
+	VALUES ('1', 'To Do');
+INSERT INTO "TaskCategory"("Category_ID", "CategoryName")
+	VALUES ('2', 'Doing');	
+INSERT INTO "TaskCategory"("Category_ID", "CategoryName")
+	VALUES ('3', 'To Do');
+	
+ALTER TABLE "Task"
+ADD CONSTRAINT "Category_FK" FOREIGN KEY ("Category_ID")
+REFERENCES "TaskCategory"( "Category_ID" ) MATCH SIMPLE;
+
+ALTER TABLE "Project"
+ALTER COLUMN "DueDate" SET DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE "Project"
+ALTER COLUMN "DueDate" DROP DEFAULT;
+
+ALTER TABLE "Project" ADD COLUMN "ProjectPassword" VARCHAR(255) DEFAULT '123';
+
+
+
