@@ -602,34 +602,34 @@ io.on('connection', (socket) => {
 
                 console.log("Attempting to redirect PHP for project id = ", id)
 
-                // const text = 'SELECT "TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = \'' + id + '\';'
-                // client.query(text, (err, res) => {
-                //     if (err) {
-                //         console.log(err.stack)
-                //     } else {
-                //         for (let ttid of results.rows) {
-                //             var roomTT = 'TT' + ttid["TaskTool_ID"];
-                //                 console.log("in delete at index, redirecting users in roomTT = ", roomTT)
-                //                 io.to(roomTT).emit('redirectToLogin');
-                //         }
-                //     }
-                // })
+                const text = 'SELECT "TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = \'' + id + '\';'
+                client.query(text, (err, res) => {
+                    if (err) {
+                        console.log(err.stack)
+                    } else {
+                        for (let ttid of res.rows) {
+                            var roomTT = 'TT' + ttid["TaskTool_ID"];
+                                console.log("in delete at index, redirecting users in roomTT = ", roomTT)
+                                io.to(roomTT).emit('redirectToLogin');
+                        }
+                    }
+                })
 
-                // //Redirect users in Chatroom of that project
-                // var roomC = 'C' + id;
-                //     io.to(roomC).emit('redirectToLogin');
+                //Redirect users in Chatroom of that project
+                var roomC = 'C' + id;
+                    io.to(roomC).emit('redirectToLogin');
 
                 //Redirect users in ProjectHomePage of that project
                 var roomP = 'PHP' + id;
                     io.to(roomP).emit('redirectToLogin');
 
-                // //Redirect users in RequirementTool of that project
-                // var roomR = 'R' + id;
-                //     io.to(roomR).emit('redirectToLogin');
+                //Redirect users in RequirementTool of that project
+                var roomR = 'R' + id;
+                    io.to(roomR).emit('redirectToLogin');
 
-                // //Redirect users in IssueTool of that project
-                // var roomI = 'I' + id
-                //     io.to(roomI).emit('redirectToLogin');
+                //Redirect users in IssueTool of that project
+                var roomI = 'I' + id
+                    io.to(roomI).emit('redirectToLogin');
 
                 resolve() 
             })

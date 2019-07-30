@@ -94,6 +94,19 @@ $messageForm.addEventListener('submit', (e) => {
     })
 })
 
+
+//A user is getting redirected to login because the project they are in has been deleted
+socket.on("redirectToLogin", (error) => {
+
+    if (error){
+        console.log(error)
+    }
+
+    alert("This project as been deleted. Please log in again.");
+    location.href = '/';
+
+})
+
 socket.emit('joinChat', { username, userid, room, chatroomid, roomNumber }, (error) => {
     if (error) {
         alert(error)

@@ -114,6 +114,19 @@ $deleteRequirementForm.addEventListener('submit', (e) => {
     })
 })
 
+//A user is getting redirected to login because the project they are in has been deleted
+socket.on("redirectToLogin", (error) => {
+
+    if (error){
+        console.log(error)
+    }
+
+    alert("This project as been deleted. Please log in again.");
+    location.href = '/';
+
+})
+
+
 socket.emit('joinRequirements', {username, userid, roomNumber, ProjectName, Project_ID}, (error) => {
     if (error) {
         alert(error)

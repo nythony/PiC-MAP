@@ -113,7 +113,7 @@ $deleteTaskToolForm.addEventListener('submit', (e) => {
     })
 })
 
-//A user is getting redirected to login
+//A user is getting redirected to login because the project they are in has been deleted
 socket.on("redirectToLogin", (error) => {
 
     if (error){

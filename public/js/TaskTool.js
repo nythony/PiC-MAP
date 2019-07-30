@@ -114,6 +114,19 @@ $deleteSubTaskForm.addEventListener('submit', (e) => {
     })
 })
 
+//A user is getting redirected to login because the project they are in has been deleted
+socket.on("redirectToLogin", (error) => {
+
+    if (error){
+        console.log(error)
+    }
+
+    alert("This project as been deleted. Please log in again.");
+    location.href = '/';
+
+})
+
+
 socket.emit('joinTaskTool', {username, userid, roomNumber, TaskToolName, TaskTool_ID}, (error) => {
     if (error) {
         alert(error)
