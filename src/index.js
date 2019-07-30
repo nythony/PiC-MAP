@@ -612,7 +612,7 @@ io.on('connection', (socket) => {
 
                 //Redirect users in ProjectHomePage of that project
                 var roomP = 'PHP' + id;
-                    io.to(roomP).emit('redirectToLogin', "This project as been deleted. Please log in again.");
+                    io.to(roomP).emit('redirectToLogin');
 
                 // //Redirect users in RequirementTool of that project
                 // var roomR = 'R' + id;
