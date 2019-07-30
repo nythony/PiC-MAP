@@ -218,7 +218,7 @@ $editProjectForm.addEventListener('submit', (e) => {
         console.log(user) //works
 
         if (error) {
-            return alert(error)
+            return console.log(error)
         }
 
         var form = document.getElementById("edit-project-form")
