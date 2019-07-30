@@ -16,6 +16,7 @@ const { addUserChat, removeUserChat, getUserChat, getUsersInRoomChat } = require
 const { addUserTaskTool, removeUserTaskTool, getUserTaskTool, getUsersInTaskTool } = require('./utils/usersAtTaskTool')
 const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjectHomePage, getAllUsersInProjectHomePage } = require('./utils/usersAtProjectHomePage')
 const { addUserRequirements, removeUserRequirements, getUserRequirements, getUsersInRequirements } = require('./utils/usersAtRequirements')
+const { addUserIssues, removeUserIssues, getUserIssues, getUsersInIssues } = require('./utils/usersAtIssues')
 
 
 //const project = require('./projectForm.js')
@@ -123,6 +124,7 @@ io.on('connection', (socket) => {
         const userTaskTool = removeUserTaskTool(socket.id)
         const userLeavingProjectHomePage = removeUserFromProjectHomePage(socket.id)
         const userLeaveRequirements = removeUserRequirements(socket.id)
+        const userLeaveIssues = removeUserIssues(socket.id)
         if (user) {
             // io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
             io.to(user.roomNumber).emit('roomData', {
@@ -155,7 +157,7 @@ io.on('connection', (socket) => {
                         TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
                     tasktools.push(tasktool)
                 }
-                io.to(user.roomNumber).emit('taskTool', (tasktools))
+                socket.emit('taskTool', (tasktools))
             })
         })
         //socket.emit('projectData', {projectname: user.projectNameVP, users: getAllUsersInProject(user.projectNameVP)})
@@ -226,12 +228,19 @@ io.on('connection', (socket) => {
         // redisplay task tools
         client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
             const tasktools = []
-            for (let foo of tasktoolresult.rows) {
-                const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
-                    TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
-                tasktools.push(tasktool)
+            if (tasktoolresult.rows.length < 1)
+            {
+                io.to(user.roomNumber).emit('taskTool', ([]))
             }
-            io.to(user.roomNumber).emit('taskTool', (tasktools))
+            else
+            {
+                for (let foo of tasktoolresult.rows) {
+                    const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
+                        TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
+                    tasktools.push(tasktool)
+                }
+                io.to(user.roomNumber).emit('taskTool', (tasktools))
+            }
         })
         callback()
     })
@@ -731,20 +740,27 @@ io.on('connection', (socket) => {
         client.query('SELECT * FROM "Task" AS t1 JOIN "TaskCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."TaskTool_ID" = \'' + user.TaskTool_ID + '\' ORDER BY "DueDate";', (error, results) => {
             const subtasks = []
             var subtaskusers = []
-            for (let foo of results.rows) {
-                client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserT" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Task_ID" = \'' + foo["Task_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
-                    for (let foo2 of results2.rows) {
-                        subtaskusers.push(foo2["UserName"])
-                    }
-                    if (results2.rows.length < 1)
-                    {
-                        subtaskusers.push("No users assigned")
-                    }
-                    const subtask = { TaskName: foo["TaskName"] , TaskDesc: foo["TaskDesc"], TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), TasksLabel: foo["TasksLabel"], TaskCategory: foo["CategoryName"], Task_ID: foo["Task_ID"], Task_ID2: foo["Task_ID"] }
-                    subtasks.push(subtask)
-                    subtaskusers.length = 0
-                    io.to(user.roomNumber).emit('subtask', (subtasks))
-                })
+            if (results.rows.length < 1)
+            {
+                io.to(user.roomNumber).emit('subtask', ([]))
+            }
+            else
+            {
+                for (let foo of results.rows) {
+                    client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserT" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Task_ID" = \'' + foo["Task_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
+                        for (let foo2 of results2.rows) {
+                            subtaskusers.push(foo2["UserName"])
+                        }
+                        if (results2.rows.length < 1)
+                        {
+                            subtaskusers.push("No users assigned")
+                        }
+                        const subtask = { TaskName: foo["TaskName"] , TaskDesc: foo["TaskDesc"], TaskUsers: subtaskusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), TasksLabel: foo["TasksLabel"], TaskCategory: foo["CategoryName"], Task_ID: foo["Task_ID"], Task_ID2: foo["Task_ID"] }
+                        subtasks.push(subtask)
+                        subtaskusers.length = 0
+                        io.to(user.roomNumber).emit('subtask', (subtasks))
+                    })
+                }
             }
         })
         callback()
@@ -819,7 +835,7 @@ io.on('connection', (socket) => {
                     const requirement = { RequirementName: foo["RequirementName"] , RequirementDesc: foo["RequirementDesc"], RequirementUsers: requirementusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), RequirementLabel: foo["RequirementLabel"], RequirementCategory: 1, Req_ID: foo["Req_ID"], Req_ID2: foo["Req_ID"] }
                     requirements.push(requirement)
                     requirementusers.length = 0
-                    socket.emit('requirement', (requirements))
+                    io.to(user.roomNumber).emit('requirement', (requirements))
                 })
             }
         })
@@ -857,7 +873,7 @@ io.on('connection', (socket) => {
                     const requirement = { RequirementName: foo["RequirementName"] , RequirementDesc: foo["RequirementDesc"], RequirementUsers: requirementusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), RequirementLabel: foo["RequirementLabel"], RequirementCategory: 1, Req_ID: foo["Req_ID"], Req_ID2: foo["Req_ID"] }
                     requirements.push(requirement)
                     requirementusers.length = 0
-                    socket.emit('requirement', (requirements))
+                    io.to(user.roomNumber).emit('requirement', (requirements))
                 })
             }
         })
@@ -882,21 +898,28 @@ io.on('connection', (socket) => {
         client.query('SELECT * FROM "Requirement" WHERE "Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
             const requirements = []
             var requirementusers = []
-            for (let foo of results.rows) {
-                client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserR" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Req_ID" = \'' + foo["Req_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
-                    for (let foo2 of results2.rows) {
-                        requirementusers.push(foo2["UserName"])
-                    }
-                    if (results2.rows.length < 1)
-                    {
-                        requirementusers.push("No users assigned")
-                    }
-                    //const requirement = { RequirementName: foo["RequirementName"] , RequirementDesc: foo["RequirementDesc"], RequirementUsers: requirementusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), RequirementLabel: foo["RequirementLabel"], RequirementCategory: foo["CategoryName"], Req_ID: foo["Req_ID"], Req_ID2: foo["Req_ID"] }
-                    const requirement = { RequirementName: foo["RequirementName"] , RequirementDesc: foo["RequirementDesc"], RequirementUsers: requirementusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), RequirementLabel: foo["RequirementLabel"], RequirementCategory: 1, Req_ID: foo["Req_ID"], Req_ID2: foo["Req_ID"] }
-                    requirements.push(requirement)
-                    requirementusers.length = 0
-                    socket.emit('requirement', (requirements))
-                })
+            if (results.rows.length < 1)
+            {
+                io.to(user.roomNumber).emit('requirement', ([]))
+            }
+            else
+            {
+                for (let foo of results.rows) {
+                    client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserR" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Req_ID" = \'' + foo["Req_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
+                        for (let foo2 of results2.rows) {
+                            requirementusers.push(foo2["UserName"])
+                        }
+                        if (results2.rows.length < 1)
+                        {
+                            requirementusers.push("No users assigned")
+                        }
+                        //const requirement = { RequirementName: foo["RequirementName"] , RequirementDesc: foo["RequirementDesc"], RequirementUsers: requirementusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), RequirementLabel: foo["RequirementLabel"], RequirementCategory: foo["CategoryName"], Req_ID: foo["Req_ID"], Req_ID2: foo["Req_ID"] }
+                        const requirement = { RequirementName: foo["RequirementName"] , RequirementDesc: foo["RequirementDesc"], RequirementUsers: requirementusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), RequirementLabel: foo["RequirementLabel"], RequirementCategory: 1, Req_ID: foo["Req_ID"], Req_ID2: foo["Req_ID"] }
+                        requirements.push(requirement)
+                        requirementusers.length = 0
+                        io.to(user.roomNumber).emit('requirement', (requirements))
+                    })
+                }
             }
         })
         callback()
@@ -909,6 +932,162 @@ io.on('connection', (socket) => {
     ////////////////////
     //     Issues     //
     ////////////////////
+
+
+    socket.on('joinIssues', ({ username, userid, roomNumber, ProjectName, Project_ID }, callback) => {
+        const {error, user} = addUserIssues({ id: socket.id, username, userid, roomNumber, ProjectName, Project_ID })
+
+        if (error) {
+            return callback(error)
+        }
+
+        socket.join(user.roomNumber)
+
+        // Display issues
+        //client.query('SELECT * FROM "Issue" AS t1 JOIN "IssueCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
+        client.query('SELECT * FROM "Issue" WHERE "Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
+            const issues = []
+            var issueusers = []
+            for (let foo of results.rows) {
+                client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserI" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Issue_ID" = \'' + foo["Issue_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
+                    for (let foo2 of results2.rows) {
+                        issueusers.push(foo2["UserName"])
+                    }
+                    if (results2.rows.length < 1)
+                    {
+                        issueusers.push("No users assigned")
+                    }
+                    //const issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: foo["CategoryName"], Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }
+                    const issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: 1, Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }
+                    issues.push(issue)
+                    issueusers.length = 0
+                    socket.emit('issue', (issues))
+                })
+            }
+        })
+        callback()
+    })
+
+    socket.on('createIssue', ({IssueName, IssueDesc, DueDate, Project_ID}, callback) => {
+        const user = getUserIssues(socket.id)
+        const text = 'INSERT INTO "Issue"( "IssueName", "IssueDesc", "DueDate", "Project_ID" ) VALUES($1, $2, $3, $4) RETURNING *'
+        const values = [IssueName, IssueDesc, DueDate, Project_ID]
+        client.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            }
+            else {
+                //console.log(res.rows[0])
+            }
+            console.log('----------------------------------record is created--------------------------------')
+        })
+        // Display issues
+        //client.query('SELECT * FROM "Issue" AS t1 JOIN "IssueCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
+        client.query('SELECT * FROM "Issue" WHERE "Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
+            const issues = []
+            var issueusers = []
+            for (let foo of results.rows) {
+                client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserI" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Issue_ID" = \'' + foo["Issue_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
+                    for (let foo2 of results2.rows) {
+                        issueusers.push(foo2["UserName"])
+                    }
+                    if (results2.rows.length < 1)
+                    {
+                        issueusers.push("No users assigned")
+                    }
+                    //const issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: foo["CategoryName"], Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }
+                    const issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: 1, Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }
+                    issues.push(issue)
+                    issueusers.length = 0
+                    io.to(user.roomNumber).emit('issue', (issues))
+                })
+            }
+        })
+        callback()
+    })
+
+    socket.on('editIssue', ({IssueName, IssueDesc, DueDate, Project_ID, Issue_ID}, callback) => {
+        const user = getUserIssues(socket.id)
+        const text = 'UPDATE "Issue" SET "IssueName"=$1, "IssueDesc"=$2, "DueDate"=$3 WHERE "Issue_ID" = \'' + Issue_ID + '\' RETURNING *'
+        const values = [IssueName, IssueDesc, DueDate]
+        client.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            }
+            else {
+                //console.log(res.rows[0])
+            }
+            console.log('----------------------------------record is updated--------------------------------')
+        })
+        // Display issues
+        //client.query('SELECT * FROM "Issue" AS t1 JOIN "IssueCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
+        client.query('SELECT * FROM "Issue" WHERE "Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
+            const issues = []
+            var issueusers = []
+            for (let foo of results.rows) {
+                client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserI" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Issue_ID" = \'' + foo["Issue_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
+                    for (let foo2 of results2.rows) {
+                        issueusers.push(foo2["UserName"])
+                    }
+                    if (results2.rows.length < 1)
+                    {
+                        issueusers.push("No users assigned")
+                    }
+                    //const issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: foo["CategoryName"], Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }
+                    const issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: 1, Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }
+                    issues.push(issue)
+                    issueusers.length = 0
+                    io.to(user.roomNumber).emit('issue', (issues))
+                })
+            }
+        })
+        callback()
+    })
+
+    socket.on('deleteIssue', ({Project_ID, Issue_ID}, callback) => {
+        const user = getUserIssues(socket.id)
+        const text = 'DELETE FROM "Issue" WHERE "Issue_ID"=$1 RETURNING *'
+        const values = [Issue_ID]
+        client.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            }
+            else {
+                //console.log(res.rows[0])
+            }
+            console.log('----------------------------------record is deleted--------------------------------')
+        })
+        // Display issues
+        //client.query('SELECT * FROM "Issue" AS t1 JOIN "IssueCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
+        client.query('SELECT * FROM "Issue" WHERE "Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
+            var issues = []
+            var issueusers = []
+            if (results.rows.length < 1)
+            {
+                io.to(user.roomNumber).emit('issue', ([]))
+            }
+            else
+            {
+                for (let foo of results.rows) {
+                    client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserI" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Issue_ID" = \'' + foo["Issue_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
+                        for (let foo2 of results2.rows) {
+                            issueusers.push(foo2["UserName"])
+                        }
+                        if (results2.rows.length < 1)
+                        {
+                            issueusers.push("No users assigned")
+                        }
+                        //const issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: foo["CategoryName"], Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }
+                        const issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: 1, Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }
+                        issues.push(issue)
+                        issueusers.length = 0
+                        io.to(user.roomNumber).emit('issue', (issues))
+                    })
+                }
+            }
+        })
+        callback()
+    })
 
 
 
@@ -1025,6 +1204,10 @@ app.get("/TaskTool", function (req, res) {
 
 app.get("/Requirements", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/Requirements.html")
+})
+
+app.get("/Issues", function (req, res) {
+    res.sendFile(publicDirectoryPath + "views/Issues.html")
 })
 
 

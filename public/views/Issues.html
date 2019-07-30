@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PiC-MAP Issues</title>
+        <link rel="icon" href="/img/favicon.png">
+        <link rel="stylesheet" href="/css/styles.css">
+    </head>
+    <style>
+        /* Button used to open the contact form - fixed at the bottom of the page */
+        .open-button {
+            background-color: #555;
+            color: white;
+            border: none;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        /* The popup form - hidden by default */
+        .form-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            margin-left: -150px;
+            margin-top: -150px;
+            border: 3px solid #f1f1f1;
+        }
+
+        /* Add styles to the form container */
+        .form-container {
+            max-width: 300px;
+            padding: 10px;
+            background-color: white;
+        }
+
+        /* Full-width input fields */
+        .form-container input[type=text], .form-container input[type=password] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        /* When the inputs get focus, do something */
+        .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+
+        /* Add some hover effects to buttons */
+        .form-container .btn:hover, .open-button:hover {
+            opacity: 1;
+        }
+    </style>
+    <body>
+        <div id="header" class="header"></div>
+        <div id="issueCategory" class="project__issueCategory"></div>
+        <div id="issue" class="project__issue"></div>
+        <button class="open-button" onclick="openCreateIssueForm()" style="position: absolute; left: 25%; display: inline-block;">Create a new Issue</button>
+        <div style="clear: both;"></div>
+        
+        <div class="form-popup" id="createIssue">
+            <form class="form-container" id="createIssueForm" name="createIssueForm">
+                <h1>Create a new Issue</h1>
+                <label><b>Name</b></label>
+                <input type="text" name="IssueName" placeholder="Issue Name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
+                <label><b>Description</b></label>
+                <input type="text" name="IssueDesc" placeholder="Issue Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
+                <label><b>Due date</b></label>
+                <input type="date" name="DueDate" id="createDueDate" required autocomplete="off"><br>
+                <input type="hidden" id="createProject_ID" name="Project_ID" autocomplete="off"/>
+                <button class="btn" type="submit">Create Issue</button>
+                <button class="btn cancel" onclick="closeCreateIssueForm()" type="reset">Cancel</button>
+            </form>
+        </div>
+
+        <div class="form-popup" id="editIssue">
+            <form class="form-container" id="editIssueForm" name="editIssueForm">
+                <h1>Edit a Issue</h1>
+                <label><b>Name</b></label>
+                <input type="text" name="IssueName" placeholder="Issue Name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
+                <label><b>Description</b></label>
+                <input type="text" name="IssueDesc" placeholder="Issue Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
+                <label><b>Due date</b></label>
+                <input type="date" name="DueDate" id="editDueDate" required autocomplete="off"><br>
+                <input type="hidden" id="editProject_ID" name="Project_ID" autocomplete="off"/>
+                <input type="hidden" id="editIssue_ID" name="Issue_ID" autocomplete="off"/>
+                <button class="btn" type="submit">Update Issue</button>
+                <button class="btn cancel" onclick="closeEditIssueForm()" type="reset">Cancel</button>
+            </form>
+        </div>
+
+        <div class="form-popup" id="deleteIssue">
+            <form class="form-container" id="deleteIssueForm" name="deleteIssueForm">
+                <h1>Delete a Issue</h1>
+                <p><b>Are you sure you wish to delete this issue?</b></p>
+                <p><b>This can not be undone once deleted.</b></p>
+                <input type="hidden" id="deleteProject_ID" name="Project_ID" autocomplete="off"/>
+                <input type="hidden" id="deleteIssue_ID" name="Issue_ID" autocomplete="off"/>
+                <button class="btn" type="submit">Delete</button>
+                <button class="btn cancel" onclick="closeDeleteIssueForm()" type="reset">Cancel</button>
+            </form>
+        </div>
+
+        <script>
+            function openCreateIssueForm() {
+                document.getElementById("createIssue").style.display = "block";
+                document.getElementById("createProject_ID").value = Project_ID;
+            }
+                
+            function closeCreateIssueForm() {
+                document.getElementById("createIssue").style.display = "none";
+                document.getElementById("createIssueForm").reset();
+            }
+
+            function openEditIssueForm(Issue_ID) {
+                document.getElementById("editIssue").style.display = "block";
+                document.getElementById("editProject_ID").value = Project_ID;
+                document.getElementById("editIssue_ID").value = Issue_ID;
+            }
+
+            function closeEditIssueForm() {
+                document.getElementById("editIssue").style.display = "none";
+                document.getElementById("editIssueForm").reset();
+            }
+
+            function openDeleteIssueForm(Issue_ID) {
+                document.getElementById("deleteIssue").style.display = "block";
+                document.getElementById("deleteProject_ID").value = Project_ID;
+                document.getElementById("deleteIssue_ID").value = Issue_ID;
+            }
+
+            function closeDeleteIssueForm() {
+                document.getElementById("deleteIssue").style.display = "none";
+                document.getElementById("deleteIssueForm").reset();
+            }
+        </script>
+
+        <script id="header-template" type="text/html">
+            <h1 style="text-align:center;">{{ProjectName}}</h1>
+            <h1 style="text-align:right;">{{username}}</h1>
+            <form action="/logout" method="post" style="display: inline-block; float:right; padding: 4px;">
+                <button class"button" type="submit">Log Out</button>
+            </form>
+            <form action="/ProjectHomePage" id="backToProjectHomePage" method="get" style="display: inline-block; float:right; padding: 4px;">
+                <input type="hidden" id="usernameVP" name="usernameVP" value="{{username}}" required />
+                <input type="hidden" id="useridVP" name="useridVP" value="{{userid}}" required />
+                <input type="hidden" id="projectidVP" name="projectidVP" value="{{projectidVP}}" required />
+                <input type="hidden" id="projectNameVP" name="projectNameVP" value="{{projectNameVP}}" required />
+                <button class"button" type="submit">Return to Project Home Page</button>
+            </form><br><br>
+            <div style="clear: both;"></div>
+        </script>
+
+        <script id="issueCategory-template" type="text/html">
+            {{#issueCategories}}
+                <div class="issueCategory"><p>
+                    {{IssueCategory}}<
+                </p></div>
+            {{/issueCategories}}
+        </script>
+
+        <script id="issue-template" type="text/html">
+            {{#issues}}
+                <div class="issue"><p>
+                    <button class="open-button" onclick=openEditIssueForm({{Issue_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
+                    <br><br>{{IssueName}}
+                    <br>{{IssueDesc}}
+                    <br>{{IssueUsers}}
+                    <br>{{DueDate}}
+                    <br>{{IssueCategory}}<br><br>
+                    <button class="open-button" onclick=openDeleteIssueForm({{Issue_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
+                </p></div>
+            {{/issues}}
+        </script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/js/Issues.js"></script>
+    </body>
+</html>
