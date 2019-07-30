@@ -150,8 +150,8 @@ io.on('connection', (socket) => {
                     const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
                         TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
                     tasktools.push(tasktool)
-                    io.to(user.roomNumber).emit('taskTool', (tasktools))
                 }
+                io.to(user.roomNumber).emit('taskTool', (tasktools))
             })
         })
         //socket.emit('projectData', {projectname: user.projectNameVP, users: getAllUsersInProject(user.projectNameVP)})
@@ -170,8 +170,8 @@ io.on('connection', (socket) => {
                     const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
                         TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
                     tasktools.push(tasktool)
-                    io.to(user.roomNumber).emit('taskTool', (tasktools))
                 }
+                io.to(user.roomNumber).emit('taskTool', (tasktools))
             })
         })
         callback()
@@ -199,8 +199,8 @@ io.on('connection', (socket) => {
                 const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
                     TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
                 tasktools.push(tasktool)
-                io.to(user.roomNumber).emit('taskTool', (tasktools))
             }
+            io.to(user.roomNumber).emit('taskTool', (tasktools))
         })
         callback()
     })
@@ -226,8 +226,8 @@ io.on('connection', (socket) => {
                 const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
                     TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
                 tasktools.push(tasktool)
-                io.to(user.roomNumber).emit('taskTool', (tasktools))
             }
+            io.to(user.roomNumber).emit('taskTool', (tasktools))
         })
         callback()
     })

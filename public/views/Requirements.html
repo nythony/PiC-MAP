@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PiC-MAP Requirements</title>
+        <link rel="icon" href="/img/favicon.png">
+        <link rel="stylesheet" href="/css/styles.css">
+    </head>
+    <style>
+        /* Button used to open the contact form - fixed at the bottom of the page */
+        .open-button {
+            background-color: #555;
+            color: white;
+            border: none;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        /* The popup form - hidden by default */
+        .form-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            margin-left: -150px;
+            margin-top: -150px;
+            border: 3px solid #f1f1f1;
+        }
+
+        /* Add styles to the form container */
+        .form-container {
+            max-width: 300px;
+            padding: 10px;
+            background-color: white;
+        }
+
+        /* Full-width input fields */
+        .form-container input[type=text], .form-container input[type=password] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        /* When the inputs get focus, do something */
+        .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+
+        /* Add some hover effects to buttons */
+        .form-container .btn:hover, .open-button:hover {
+            opacity: 1;
+        }
+    </style>
+    <body>
+        <div id="header" class="header"></div>
+        <div id="requirementCategory" class="project__requirementCategory"></div>
+        <div id="requirement" class="project__requirement"></div>
+        <button class="open-button" onclick="openCreateRequirementForm()" style="position: absolute; left: 25%; display: inline-block;">Create a new Requirement</button>
+        <div style="clear: both;"></div>
+        
+        <div class="form-popup" id="createRequirement">
+            <form class="form-container" id="createRequirementForm" name="createRequirementForm">
+                <h1>Create a new Requirement</h1>
+                <label><b>Name</b></label>
+                <input type="text" name="RequirementName" placeholder="Requirement Name" required autocomplete="off">
+                <label><b>Description</b></label>
+                <input type="text" name="RequirementDesc" placeholder="Requirement Description" required autocomplete="off">
+                <label><b>Due date</b></label>
+                <input type="date" name="DueDate" id="createDueDate" required autocomplete="off"><br>
+                <input type="hidden" id="createProject_ID" name="Project_ID" autocomplete="off"/>
+                <button class="btn" type="submit">Create Subtask</button>
+                <button class="btn cancel" onclick="closeCreateRequirementForm()" type="reset">Cancel</button>
+            </form>
+        </div>
+
+        <div class="form-popup" id="editRequirement">
+            <form class="form-container" id="editRequirementForm" name="editRequirementForm">
+                <h1>Edit a Requirement</h1>
+                <label><b>Name</b></label>
+                <input type="text" name="RequirementName" placeholder="Requirement Name" required autocomplete="off">
+                <label><b>Description</b></label>
+                <input type="text" name="RequirementDesc" placeholder="Requirement Description" required autocomplete="off">
+                <label><b>Due date</b></label>
+                <input type="date" name="DueDate" id="editDueDate" required autocomplete="off"><br>
+                <input type="hidden" id="editProject_ID" name="Project_ID" autocomplete="off"/>
+                <input type="hidden" id="editReq_ID" name="Req_ID" autocomplete="off"/>
+                <button class="btn" type="submit">Update Requirement</button>
+                <button class="btn cancel" onclick="closeEditRequirementForm()" type="reset">Cancel</button>
+            </form>
+        </div>
+
+        <div class="form-popup" id="deleteRequirement">
+            <form class="form-container" id="deleteSubTaskForm" name="deleteSubTaskForm">
+                <h1>Delete a Subtask</h1>
+                <p><b>Are you sure you wish to delete this subtask?</b></p>
+                <p><b>This can not be undone once deleted.</b></p>
+                <input type="hidden" id="deleteTaskTool_ID" name="TaskTool_ID" autocomplete="off"/>
+                <input type="hidden" id="deleteTask_ID" name="Task_ID" autocomplete="off"/>
+                <button class="btn" type="submit">Delete</button>
+                <button class="btn cancel" onclick="closeDeleteSubTaskForm()" type="reset">Cancel</button>
+            </form>
+        </div>
+
+        <script>
+            function openCreateSubTaskForm() {
+                document.getElementById("createSubTask").style.display = "block";
+                document.getElementById("createTaskTool_ID").value = TaskTool_ID;
+            }
+                
+            function closeCreateSubTaskForm() {
+                document.getElementById("createSubTask").style.display = "none";
+                document.getElementById("createSubTaskForm").reset();
+            }
+
+            function openEditSubTaskForm(Task_ID) {
+                document.getElementById("editSubTask").style.display = "block";
+                document.getElementById("editTaskTool_ID").value = TaskTool_ID;
+                document.getElementById("editTask_ID").value = Task_ID;
+            }
+
+            function closeEditSubTaskForm() {
+                document.getElementById("editSubTask").style.display = "none";
+                document.getElementById("editSubTaskForm").reset();
+            }
+
+            function openDeleteSubTaskForm(Task_ID) {
+                document.getElementById("deleteSubTask").style.display = "block";
+                document.getElementById("deleteTaskTool_ID").value = TaskTool_ID;
+                document.getElementById("deleteTask_ID").value = Task_ID;
+            }
+
+            function closeDeleteSubTaskForm() {
+                document.getElementById("deleteSubTask").style.display = "none";
+                document.getElementById("deleteSubTaskForm").reset();
+            }
+        </script>
+
+        <script id="header-template" type="text/html">
+            <h1 style="text-align:center;">{{TaskToolName}}</h1>
+            <h1 style="text-align:right;">{{username}}</h1>
+            <form action="/logout" method="post" style="display: inline-block; float:right; padding: 4px;">
+                <button class"button" type="submit">Log Out</button>
+            </form>
+            <form action="/ProjectHomePage" id="backToProjectHomePage" method="get" style="display: inline-block; float:right; padding: 4px;">
+                <input type="hidden" id="usernameVP" name="usernameVP" value="{{username}}" required />
+                <input type="hidden" id="useridVP" name="useridVP" value="{{userid}}" required />
+                <input type="hidden" id="projectidVP" name="projectidVP" value="{{projectidVP}}" required />
+                <input type="hidden" id="projectNameVP" name="projectNameVP" value="{{projectNameVP}}" required />
+                <button class"button" type="submit">Return to Project Home Page</button>
+            </form><br><br>
+            <div style="clear: both;"></div>
+        </script>
+
+        <script id="subtaskCategory-template" type="text/html">
+            {{#subtaskCategories}}
+                <div class="subtaskCategory"><p>
+                    {{TaskCategory}}<
+                </p></div>
+            {{/subtaskCategories}}
+        </script>
+
+        <script id="subtask-template" type="text/html">
+            {{#subtasks}}
+                <div class="subtask"><p>
+                    <button class="open-button" onclick=openEditSubTaskForm({{Task_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
+                    <br><br>{{TaskName}}
+                    <br>{{TaskDesc}}
+                    <br>{{TaskUsers}}
+                    <br>{{DueDate}}
+                    <br>{{TaskCategory}}<br><br>
+                    <button class="open-button" onclick=openDeleteSubTaskForm({{Task_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
+                </p></div>
+            {{/subtasks}}
+        </script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/js/TaskTool.js"></script>
+    </body>
+</html>
