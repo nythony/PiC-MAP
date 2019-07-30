@@ -423,7 +423,7 @@ io.on('connection', (socket) => {
             //    callback("Please do not enter an apostrophe");
             // }
             
-            else{ 
+            //else{ 
                 client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \''+user+'\';', (err, res) => {
                     if (err) {
                         console.log(err.stack)
@@ -432,7 +432,7 @@ io.on('connection', (socket) => {
                         resolve(userCreate)
                     }
                 })
-            }
+            //}
         });
 
         //Creating new project
@@ -502,7 +502,7 @@ io.on('connection', (socket) => {
             // }
             
             //No Apostrphes
-            else{ 
+            //else{ 
 
     	        //Do not edit start and due date
     	        if ((start == "") && (due == "")){
@@ -522,7 +522,7 @@ io.on('connection', (socket) => {
     	        	resolve(text);
                 }
 
-	        }
+	        //}
 
         })
   		
