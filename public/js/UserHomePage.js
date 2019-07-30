@@ -110,19 +110,21 @@ $joinProjectForm.addEventListener('submit', (e) => {
 
 
 //Error message
-const joinProjectTemplate = document.querySelector('#joinProjectFail-template').innerHTML
-const $joinProjectFail = document.querySelector('#joinProjectFail')
+// const joinProjectTemplate = document.querySelector('#joinProjectFail-template').innerHTML
+// const $joinProjectFail = document.querySelector('#joinProjectFail')
 
 
 socket.on('joinProjectFail', (eMessage) => {
 
-    document.getElementById("joinProjectForm").style.display = "block";
+    alert(eMessage)
 
-    const html = Mustache.render(joinProjectTemplate, {
-        messageDisplay: eMessage
-    })
+    // document.getElementById("joinProjectForm").style.display = "block";
 
-    $joinProjectFail.insertAdjacentHTML('beforeend', html)
+    // const html = Mustache.render(joinProjectTemplate, {
+    //     messageDisplay: eMessage
+    // })
+
+    // $joinProjectFail.insertAdjacentHTML('beforeend', html)
 
 })
 
@@ -163,7 +165,7 @@ $createProjectForm.addEventListener('submit', (e) => {
     socket.emit('createProject', {pass, name, desc, start, due, user}, (error) => {
   
         if (error) {
-            return console.log(error)
+            return alert(error)
         }
 
         var form = document.getElementById("create-project-form")
@@ -216,7 +218,7 @@ $editProjectForm.addEventListener('submit', (e) => {
         console.log(user) //works
 
         if (error) {
-            return console.log(error)
+            return alert(error)
         }
 
         var form = document.getElementById("edit-project-form")
@@ -265,19 +267,21 @@ $deleteProjectForm.addEventListener('submit', (e) => {
 
 
 //Error message
-const deleteProjectTemplate = document.querySelector('#deleteProjectFail-template').innerHTML
-const $deleteProjectFail = document.querySelector('#deleteProjectFail')
+// const deleteProjectTemplate = document.querySelector('#deleteProjectFail-template').innerHTML
+// const $deleteProjectFail = document.querySelector('#deleteProjectFail')
 
 
 socket.on('deleteProjectFail', (eMessage) => {
 
-    document.getElementById("deleteProjectForm").style.display = "block";
+    alert(eMessage);
 
-    const html = Mustache.render(deleteProjectTemplate, {
-        messageDisplay: eMessage
-    })
+    // document.getElementById("deleteProjectForm").style.display = "block";
 
-    $deleteProjectFail.insertAdjacentHTML('beforeend', html)
+    // const html = Mustache.render(deleteProjectTemplate, {
+    //     messageDisplay: eMessage
+    // })
+
+    // $deleteProjectFail.insertAdjacentHTML('beforeend', html)
 
 })
 

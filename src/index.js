@@ -24,8 +24,8 @@ const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjec
 
 //Connecting to cloud based database:
 const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+    //connectionString: process.env.DATABASE_URL,
+    connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 })
 client.connect()
@@ -417,15 +417,21 @@ io.on('connection', (socket) => {
 
         //Convert username to userID
         var promise1 = new Promise(function(resolve, reject) {
+
+            if (name.indexOf('\'') >= 0) {
+               callback("Please do not enter an apostrophe");
+            }
             
-            client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \''+user+'\';', (err, res) => {
-                if (err) {
-                    console.log(err.stack)
-                } else {
-                    const userCreate = res.rows[0].User_ID;
-                    resolve(userCreate)
-                }
-            })
+            else{ 
+                client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \''+user+'\';', (err, res) => {
+                    if (err) {
+                        console.log(err.stack)
+                    } else {
+                        const userCreate = res.rows[0].User_ID;
+                        resolve(userCreate)
+                    }
+                })
+            }
         });
 
         //Creating new project
@@ -489,24 +495,31 @@ io.on('connection', (socket) => {
          //Determining SQL query statement
         var promise1 = new Promise(function(resolve, reject) {
     
-	        //Can just require each field and use last const text query statement
+            if (proj.name.indexOf('\'') >= 0) {
+               callback("Please do not enter an apostrophe");
+            }
+            
+            //No Apostrphes
+            else{ 
 
-	        //Do not edit start and due date
-	        if ((start == "") && (due == "")){
-	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\' WHERE "Project_ID" = \'' + proj.id + '\';'
-	            resolve(text);
-	        //Do not edit start, edit due
-	        } else if ( start == ""){
-	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
-	            resolve(text);
-	        //Edit start, do not edit due  
-	        } else if (due == ""){
-	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
-	            resolve(text);
-	        //Edit both start and due
-	        } else { 
-	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
-	        	resolve(text);
+    	        //Do not edit start and due date
+    	        if ((start == "") && (due == "")){
+    	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+    	            resolve(text);
+    	        //Do not edit start, edit due
+    	        } else if ( start == ""){
+    	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+    	            resolve(text);
+    	        //Edit start, do not edit due  
+    	        } else if (due == ""){
+    	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+    	            resolve(text);
+    	        //Edit both start and due
+    	        } else { 
+    	            const text = 'UPDATE "Project" SET "ProjectName" = \'' + proj.name + '\', "ProjectDesc" = \''+ proj.desc+ '\', "StartDate" = \'' + start + '\', "DueDate" = \'' + due + '\' WHERE "Project_ID" = \'' + proj.id + '\';'
+    	        	resolve(text);
+                }
+
 	        }
 
         })
