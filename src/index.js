@@ -422,11 +422,12 @@ io.on('connection', (socket) => {
         //Convert username to userID
         var promise1 = new Promise(function(resolve, reject) {
 
-            if (name.indexOf('\'') >= 0) {
-               callback("Please do not enter an apostrophe");
-            }
+            //FIXED VIA HTML RESTRICTION
+            // if (name.indexOf('\'') >= 0) {
+            //    callback("Please do not enter an apostrophe");
+            // }
             
-            else{ 
+            //else{ 
                 client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \''+user+'\';', (err, res) => {
                     if (err) {
                         console.log(err.stack)
@@ -435,7 +436,7 @@ io.on('connection', (socket) => {
                         resolve(userCreate)
                     }
                 })
-            }
+            //}
         });
 
         //Creating new project
@@ -498,13 +499,14 @@ io.on('connection', (socket) => {
          
          //Determining SQL query statement
         var promise1 = new Promise(function(resolve, reject) {
-    
-            if (proj.name.indexOf('\'') >= 0) {
-               callback("Please do not enter an apostrophe");
-            }
+            
+            //FIXED VIA HTML RESTRICTION
+            // if (proj.name.indexOf('\'') >= 0) {
+            //    callback("Please do not enter an apostrophe");
+            // }
             
             //No Apostrphes
-            else{ 
+            //else{ 
 
     	        //Do not edit start and due date
     	        if ((start == "") && (due == "")){
@@ -524,7 +526,7 @@ io.on('connection', (socket) => {
     	        	resolve(text);
                 }
 
-	        }
+	        //}
 
         })
   		
@@ -582,6 +584,10 @@ io.on('connection', (socket) => {
         //Creating new project
         promise1.then(function(obj) {
         	//obj = {userID, projectID} DIFFERENT FROM JOIN
+               
+               //Redirecting sub users
+            //io.to('UHP').emit('refreshProjectList')
+
 
             const text = 'DELETE FROM "Project" WHERE "Project_ID"= \'' + id + '\';'
             client.query(text, (err, res) => {

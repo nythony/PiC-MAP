@@ -95,8 +95,8 @@ body {font-family: Arial, Helvetica, sans-serif;}
         <h2>Please enter your username and password to sign in.</h2>
 
         <form id="login-form" action = "/UserHomePage">
-            <input type="text" name="username" placeholder="username" value = "" required>
-            <input type="password" name="password" placeholder="password" value = "" required>
+            <input type="text" name="username" placeholder="username" value = "" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required>
+            <input type="password" name="password" placeholder="password" value = "" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required>
             <input type="hidden" id="socketid" name="socketid" required />
             <!--pass in socket.id in order to emit to specific socket after inside app.get/UserHomePage-->
             <button type="submit">Sign In</button>
@@ -110,11 +110,11 @@ body {font-family: Arial, Helvetica, sans-serif;}
           <form action="/createNewUser/submit" class="form-container" method = "post" id="create-new-user-form">
             <h1>Register</h1>
 
-            <label><b>Username</b></label>
-            <input type="text" name="username" placeholder="username" required>
+            <label><b>Username</b> </label>
+            <input type="text" name="username" placeholder="username" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required>
 
-            <label><b>Password</b></label>
-            <input type="password" name="password" placeholder="password" required>
+            <label><b>Password</b>/label>
+            <input type="password" name="password" placeholder="password" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes"required>
 
             <button type="submit" class="btn">Register</button>
             <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
