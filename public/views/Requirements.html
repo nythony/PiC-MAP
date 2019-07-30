@@ -66,13 +66,13 @@
             <form class="form-container" id="createRequirementForm" name="createRequirementForm">
                 <h1>Create a new Requirement</h1>
                 <label><b>Name</b></label>
-                <input type="text" name="RequirementName" placeholder="Requirement Name" required autocomplete="off">
+                <input type="text" name="RequirementName" placeholder="Requirement Name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
                 <label><b>Description</b></label>
-                <input type="text" name="RequirementDesc" placeholder="Requirement Description" required autocomplete="off">
+                <input type="text" name="RequirementDesc" placeholder="Requirement Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
                 <label><b>Due date</b></label>
                 <input type="date" name="DueDate" id="createDueDate" required autocomplete="off"><br>
                 <input type="hidden" id="createProject_ID" name="Project_ID" autocomplete="off"/>
-                <button class="btn" type="submit">Create Subtask</button>
+                <button class="btn" type="submit">Create Requirement</button>
                 <button class="btn cancel" onclick="closeCreateRequirementForm()" type="reset">Cancel</button>
             </form>
         </div>
@@ -81,9 +81,9 @@
             <form class="form-container" id="editRequirementForm" name="editRequirementForm">
                 <h1>Edit a Requirement</h1>
                 <label><b>Name</b></label>
-                <input type="text" name="RequirementName" placeholder="Requirement Name" required autocomplete="off">
+                <input type="text" name="RequirementName" placeholder="Requirement Name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
                 <label><b>Description</b></label>
-                <input type="text" name="RequirementDesc" placeholder="Requirement Description" required autocomplete="off">
+                <input type="text" name="RequirementDesc" placeholder="Requirement Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
                 <label><b>Due date</b></label>
                 <input type="date" name="DueDate" id="editDueDate" required autocomplete="off"><br>
                 <input type="hidden" id="editProject_ID" name="Project_ID" autocomplete="off"/>
@@ -94,53 +94,53 @@
         </div>
 
         <div class="form-popup" id="deleteRequirement">
-            <form class="form-container" id="deleteSubTaskForm" name="deleteSubTaskForm">
-                <h1>Delete a Subtask</h1>
-                <p><b>Are you sure you wish to delete this subtask?</b></p>
+            <form class="form-container" id="deleteRequirementForm" name="deleteRequirementForm">
+                <h1>Delete a Requirement</h1>
+                <p><b>Are you sure you wish to delete this requirement?</b></p>
                 <p><b>This can not be undone once deleted.</b></p>
-                <input type="hidden" id="deleteTaskTool_ID" name="TaskTool_ID" autocomplete="off"/>
-                <input type="hidden" id="deleteTask_ID" name="Task_ID" autocomplete="off"/>
+                <input type="hidden" id="deleteProject_ID" name="Project_ID" autocomplete="off"/>
+                <input type="hidden" id="deleteReq_ID" name="Req_ID" autocomplete="off"/>
                 <button class="btn" type="submit">Delete</button>
-                <button class="btn cancel" onclick="closeDeleteSubTaskForm()" type="reset">Cancel</button>
+                <button class="btn cancel" onclick="closeDeleteRequirementForm()" type="reset">Cancel</button>
             </form>
         </div>
 
         <script>
-            function openCreateSubTaskForm() {
-                document.getElementById("createSubTask").style.display = "block";
-                document.getElementById("createTaskTool_ID").value = TaskTool_ID;
+            function openCreateRequirementForm() {
+                document.getElementById("createRequirement").style.display = "block";
+                document.getElementById("createProject_ID").value = Project_ID;
             }
                 
-            function closeCreateSubTaskForm() {
-                document.getElementById("createSubTask").style.display = "none";
-                document.getElementById("createSubTaskForm").reset();
+            function closeCreateRequirementForm() {
+                document.getElementById("createRequirement").style.display = "none";
+                document.getElementById("createRequirementForm").reset();
             }
 
-            function openEditSubTaskForm(Task_ID) {
-                document.getElementById("editSubTask").style.display = "block";
-                document.getElementById("editTaskTool_ID").value = TaskTool_ID;
-                document.getElementById("editTask_ID").value = Task_ID;
+            function openEditRequirementForm(Req_ID) {
+                document.getElementById("editRequirement").style.display = "block";
+                document.getElementById("editProject_ID").value = Project_ID;
+                document.getElementById("editReq_ID").value = Req_ID;
             }
 
-            function closeEditSubTaskForm() {
-                document.getElementById("editSubTask").style.display = "none";
-                document.getElementById("editSubTaskForm").reset();
+            function closeEditRequirementForm() {
+                document.getElementById("editRequirement").style.display = "none";
+                document.getElementById("editRequirementForm").reset();
             }
 
-            function openDeleteSubTaskForm(Task_ID) {
-                document.getElementById("deleteSubTask").style.display = "block";
-                document.getElementById("deleteTaskTool_ID").value = TaskTool_ID;
-                document.getElementById("deleteTask_ID").value = Task_ID;
+            function openDeleteRequirementForm(Req_ID) {
+                document.getElementById("deleteRequirement").style.display = "block";
+                document.getElementById("deleteProject_ID").value = Project_ID;
+                document.getElementById("deleteReq_ID").value = Req_ID;
             }
 
-            function closeDeleteSubTaskForm() {
-                document.getElementById("deleteSubTask").style.display = "none";
-                document.getElementById("deleteSubTaskForm").reset();
+            function closeDeleteRequirementForm() {
+                document.getElementById("deleteRequirement").style.display = "none";
+                document.getElementById("deleteRequirementForm").reset();
             }
         </script>
 
         <script id="header-template" type="text/html">
-            <h1 style="text-align:center;">{{TaskToolName}}</h1>
+            <h1 style="text-align:center;">{{ProjectName}}</h1>
             <h1 style="text-align:right;">{{username}}</h1>
             <form action="/logout" method="post" style="display: inline-block; float:right; padding: 4px;">
                 <button class"button" type="submit">Log Out</button>
@@ -155,32 +155,32 @@
             <div style="clear: both;"></div>
         </script>
 
-        <script id="subtaskCategory-template" type="text/html">
-            {{#subtaskCategories}}
-                <div class="subtaskCategory"><p>
-                    {{TaskCategory}}<
+        <script id="requirementCategory-template" type="text/html">
+            {{#requirementCategories}}
+                <div class="requirementCategory"><p>
+                    {{RequirementCategory}}<
                 </p></div>
-            {{/subtaskCategories}}
+            {{/requirementCategories}}
         </script>
 
-        <script id="subtask-template" type="text/html">
-            {{#subtasks}}
-                <div class="subtask"><p>
-                    <button class="open-button" onclick=openEditSubTaskForm({{Task_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
-                    <br><br>{{TaskName}}
-                    <br>{{TaskDesc}}
-                    <br>{{TaskUsers}}
+        <script id="requirement-template" type="text/html">
+            {{#requirements}}
+                <div class="requirement"><p>
+                    <button class="open-button" onclick=openEditRequirementForm({{Req_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
+                    <br><br>{{RequirementName}}
+                    <br>{{RequirementDesc}}
+                    <br>{{RequirementUsers}}
                     <br>{{DueDate}}
-                    <br>{{TaskCategory}}<br><br>
-                    <button class="open-button" onclick=openDeleteSubTaskForm({{Task_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
+                    <br>{{RequirementCategory}}<br><br>
+                    <button class="open-button" onclick=openDeleteRequirementForm({{Req_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
                 </p></div>
-            {{/subtasks}}
+            {{/requirements}}
         </script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
-        <script src="/js/TaskTool.js"></script>
+        <script src="/js/Requirements.js"></script>
     </body>
 </html>
