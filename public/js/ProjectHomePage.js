@@ -113,6 +113,15 @@ $deleteTaskToolForm.addEventListener('submit', (e) => {
     })
 })
 
+//A user is getting redirected to login
+socket.on("redirectToLogin", (eMessage) => {
+
+    
+    alert(eMessage);
+    location.href = '/';
+
+})
+
 
 // When a user enters a projecthomepage, sends user info to server
 socket.emit('enterProjectHomePage', { usernameVP, useridVP, projectNameVP, projectidVP }, (error) => {
