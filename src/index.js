@@ -15,6 +15,9 @@ const { generateMessage, generateMessageHistory, generateTaskTool, generateSubta
 const { addUserChat, removeUserChat, getUserChat, getUsersInRoomChat } = require('./utils/usersAtChat')
 const { addUserTaskTool, removeUserTaskTool, getUserTaskTool, getUsersInTaskTool } = require('./utils/usersAtTaskTool')
 const { addUserToProjectHomePage, removeUserFromProjectHomePage, getUserInProjectHomePage, getAllUsersInProjectHomePage } = require('./utils/usersAtProjectHomePage')
+const { addUserRequirements, removeUserRequirements, getUserRequirements, getUsersInRequirements } = require('./utils/usersAtRequirements')
+
+
 //const project = require('./projectForm.js')
 // const requirement = require('./requirementForm.js')
 // const task = require('./taskForm.js')
@@ -119,6 +122,7 @@ io.on('connection', (socket) => {
         const user = removeUserChat(socket.id)
         const userTaskTool = removeUserTaskTool(socket.id)
         const userLeavingProjectHomePage = removeUserFromProjectHomePage(socket.id)
+        const userLeaveRequirements = removeUserRequirements(socket.id)
         if (user) {
             // io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
             io.to(user.roomNumber).emit('roomData', {
@@ -777,7 +781,6 @@ io.on('connection', (socket) => {
                     const requirement = { RequirementName: foo["RequirementName"] , RequirementDesc: foo["RequirementDesc"], RequirementUsers: requirementusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), RequirementLabel: foo["RequirementLabel"], RequirementCategory: 1, Req_ID: foo["Req_ID"], Req_ID2: foo["Req_ID"] }
                     requirements.push(requirement)
                     requirementusers.length = 0
-                    console.log(requirements)
                     socket.emit('requirement', (requirements))
                 })
             }
@@ -786,7 +789,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('createRequirement', ({RequirementName, RequirementDesc, DueDate, Project_ID}, callback) => {
-        const user = getUserRequirement(socket.id)
+        const user = getUserRequirements(socket.id)
         const text = 'INSERT INTO "Requirement"( "RequirementName", "RequirementDesc", "DueDate", "Project_ID" ) VALUES($1, $2, $3, $4) RETURNING *'
         const values = [RequirementName, RequirementDesc, DueDate, Project_ID]
         client.query(text, values, (err, res) => {
@@ -816,7 +819,6 @@ io.on('connection', (socket) => {
                     const requirement = { RequirementName: foo["RequirementName"] , RequirementDesc: foo["RequirementDesc"], RequirementUsers: requirementusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), RequirementLabel: foo["RequirementLabel"], RequirementCategory: 1, Req_ID: foo["Req_ID"], Req_ID2: foo["Req_ID"] }
                     requirements.push(requirement)
                     requirementusers.length = 0
-                    console.log(requirements)
                     socket.emit('requirement', (requirements))
                 })
             }
@@ -825,7 +827,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('editRequirement', ({RequirementName, RequirementDesc, DueDate, Project_ID, Req_ID}, callback) => {
-        const user = getUserRequirement(socket.id)
+        const user = getUserRequirements(socket.id)
         const text = 'UPDATE "Requirement" SET "RequirementName"=$1, "RequirementDesc"=$2, "DueDate"=$3 WHERE "Req_ID" = \'' + Req_ID + '\' RETURNING *'
         const values = [RequirementName, RequirementDesc, DueDate]
         client.query(text, values, (err, res) => {
@@ -855,7 +857,6 @@ io.on('connection', (socket) => {
                     const requirement = { RequirementName: foo["RequirementName"] , RequirementDesc: foo["RequirementDesc"], RequirementUsers: requirementusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), RequirementLabel: foo["RequirementLabel"], RequirementCategory: 1, Req_ID: foo["Req_ID"], Req_ID2: foo["Req_ID"] }
                     requirements.push(requirement)
                     requirementusers.length = 0
-                    console.log(requirements)
                     socket.emit('requirement', (requirements))
                 })
             }
@@ -864,7 +865,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('deleteRequirement', ({Project_ID, Req_ID}, callback) => {
-        const user = getUserRequirement(socket.id)
+        const user = getUserRequirements(socket.id)
         const text = 'DELETE FROM "Requirement" WHERE "Req_ID"=$1 RETURNING *'
         const values = [Req_ID]
         client.query(text, values, (err, res) => {
@@ -894,7 +895,6 @@ io.on('connection', (socket) => {
                     const requirement = { RequirementName: foo["RequirementName"] , RequirementDesc: foo["RequirementDesc"], RequirementUsers: requirementusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), RequirementLabel: foo["RequirementLabel"], RequirementCategory: 1, Req_ID: foo["Req_ID"], Req_ID2: foo["Req_ID"] }
                     requirements.push(requirement)
                     requirementusers.length = 0
-                    console.log(requirements)
                     socket.emit('requirement', (requirements))
                 })
             }
@@ -1014,7 +1014,6 @@ app.get("/issueform", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/issueForm.html");
 });
 
-// Current version of chatApp (Must be updated)
 app.get("/chatapp", function (req, res) {
     console.log(req.query)
     res.sendFile(publicDirectoryPath + "views/chatApp.html")
@@ -1022,6 +1021,10 @@ app.get("/chatapp", function (req, res) {
 
 app.get("/TaskTool", function (req, res) {
     res.sendFile(publicDirectoryPath + "views/TaskTool.html")
+})
+
+app.get("/Requirements", function (req, res) {
+    res.sendFile(publicDirectoryPath + "views/Requirements.html")
 })
 
 
