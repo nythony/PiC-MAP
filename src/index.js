@@ -216,32 +216,49 @@ io.on('connection', (socket) => {
         const user = getUserInProjectHomePage(socket.id)
         const text = 'DELETE FROM "TaskTool" WHERE "TaskTool_ID"=$1 RETURNING *'
         const values = [TaskTool_ID]
-        client.query(text, values, (err, res) => {
-            if (err) {
-                console.log(err.stack)
-            }
-            else {
-                //console.log(res.rows[0])
-            }
-            console.log('----------------------------------record is deleted--------------------------------')
-        })
-        // redisplay task tools
-        client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
-            const tasktools = []
-            if (tasktoolresult.rows.length < 1)
-            {
-                io.to(user.roomNumber).emit('taskTool', ([]))
-            }
-            else
-            {
-                for (let foo of tasktoolresult.rows) {
-                    const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
-                        TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
-                    tasktools.push(tasktool)
-                }
-                io.to(user.roomNumber).emit('taskTool', (tasktools))
-            }
-        })
+
+        var promise2 = new Promise(function(resolve, reject){
+
+                console.log("Attempting to redirect TT for TTID = ", TaskTool_ID)
+
+                var roomTT = 'TT' + TaskTool_ID;
+                    console.log("in delete TaskTool at index, redirecting users in roomTT = ", roomTT)
+                    io.to(roomTT).emit('redirectToLogin');
+
+                resolve() 
+            })
+
+            promise2.then(function() {
+
+            	client.query(text, values, (err, res) => {
+		            if (err) {
+		                console.log(err.stack)
+		            }
+		            else {
+		                //console.log(res.rows[0])
+		            }
+		            console.log('----------------------------------record is deleted--------------------------------')
+		        })
+		        // redisplay task tools
+		        client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+		            const tasktools = []
+		            if (tasktoolresult.rows.length < 1)
+		            {
+		                io.to(user.roomNumber).emit('taskTool', ([]))
+		            }
+		            else
+		            {
+		                for (let foo of tasktoolresult.rows) {
+		                    const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
+		                        TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
+		                    tasktools.push(tasktool)
+		                }
+		                io.to(user.roomNumber).emit('taskTool', (tasktools))
+		            }
+		        })
+
+            })
+
         callback()
     })
 
@@ -505,6 +522,10 @@ io.on('connection', (socket) => {
     socket.on('editProject', (proj, callback) => {
         var start = proj.start;
         var due = proj.due;
+
+        //For mass update
+        var name = proj.name;
+        var id = proj.id;
          
          //Determining SQL query statement
         var promise1 = new Promise(function(resolve, reject) {
@@ -540,21 +561,67 @@ io.on('connection', (socket) => {
         })
   		
   		promise1.then(function(text) {
-	        client.query(text, (err, res) => {
-	            if (err) {
-	                console.log(err.stack)
-	            } else {
-	                console.log('----------------------------------project is modified--------------------------------');
 
-                    io.to('UHP').emit('refreshProjectList')
 
-	            }
-            
-       		 })
-	    })
+
+            console.log("in edit project, project name, id = ", name, id)
+
+            var promise2 = new Promise(function(resolve, reject){
+
+                console.log("Attempting to update for project name, id = ", name, id)
+
+                // const text = 'SELECT "TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = \'' + id + '\';'
+                // client.query(text, (err, res) => {
+                //     if (err) {
+                //         console.log(err.stack)
+                //     } else {
+                //         for (let ttid of res.rows) {
+                //             var roomTT = 'TT' + ttid["TaskTool_ID"];
+                //                 console.log("in edit proj at index, updagin projName users in roomTT = ", roomTT)
+                //                 io.to(roomTT).emit('updateProjectName', name);
+                //         }
+                //     }
+                // })
+
+                // //Updating project name in Chatroom of that project
+                // var roomC = 'C' + id;
+                //     io.to(roomC).emit('updateProjectName', name);
+
+                //Updating project name in ProjectHomePage of that project
+                var roomP = 'PHP' + id;
+                    io.to(roomP).emit('updateProjectName', name);
+
+                // //Updating project name in RequirementTool of that project
+                // var roomR = 'R' + id;
+                //     io.to(roomR).emit('updateProjectName', name);
+
+                // //Updating project name in IssueTool of that project
+                // var roomI = 'I' + id
+                //     io.to(roomI).emit('updateProjectName', name);
+
+                resolve() 
+            })
+
+            promise2.then(function() {
+
+            	//Edit the project
+		        client.query(text, (err, res) => {
+		            if (err) {
+		                console.log(err.stack)
+		            } else {
+		                console.log('----------------------------------project is modified--------------------------------');
+
+	                    io.to('UHP').emit('refreshProjectList')
+
+		            }
+	            
+	       		 })
+	   		 })
 
         callback()
-    })
+        
+    	})
+  	})
 
 
     // Deleting project from the userHomePage

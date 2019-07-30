@@ -125,6 +125,17 @@ socket.on("redirectToLogin", (error) => {
 
 })
 
+//Updating projectName -> NEED TO RERENDER ANYTHING THAT USES PROJECT NAME
+socket.on("updateProjectName", (name) => {
+
+    if (error){
+        console.log(error)
+    }
+
+    projectNameVP = name;
+
+})
+
 
 // When a user enters a projecthomepage, sends user info to server
 socket.emit('enterProjectHomePage', { usernameVP, useridVP, projectNameVP, projectidVP }, (error) => {
