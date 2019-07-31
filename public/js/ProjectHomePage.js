@@ -138,7 +138,13 @@ socket.on("redirectToLogin", (error) => {
 
 // })
 
+socket.on("setPassword", (pass) =>{
 
+    console.log("Setting password = ", pass)
+    document.getElementById("password").value = pass;
+})
+
+var i = 0;
 // When a user enters a projecthomepage, sends user info to server
 socket.emit('enterProjectHomePage', { usernameVP, useridVP, projectNameVP, projectidVP }, (error) => {
     console.log("entering: ", { usernameVP, useridVP, projectNameVP, projectidVP })
@@ -146,4 +152,11 @@ socket.emit('enterProjectHomePage', { usernameVP, useridVP, projectNameVP, proje
         alert(error)
         location.href = '/'
     }
+
+    id = socket.id;
+
+    console.log("Socket id = ", id, "Username = ", username)
+    document.getElementById("socketid").value = id;
+    document.getElementById("username").value = usernameVP;
+    
 })

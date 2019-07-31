@@ -28,8 +28,8 @@ const { addUserIssues, removeUserIssues, getUserIssues, getUsersInIssues } = req
 
 //Connecting to cloud based database:
 const client = new Client({
-    //connectionString: process.env.DATABASE_URL,
-    connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
+    connectionString: process.env.DATABASE_URL,
+    //connectionString: "postgres://yyuppeulmuhcob:205438d2d30f5107605d7fa1c5d8cf4d667eaf0cb2b1608bf01cd4bb77f7bca5@ec2-54-221-212-126.compute-1.amazonaws.com:5432/deku7qrk30lh0",
     ssl: true,
 })
 client.connect()
@@ -160,6 +160,12 @@ io.on('connection', (socket) => {
     // When a user enters a projecthomepage
     socket.on('enterProjectHomePage',  ({usernameVP, useridVP, projectNameVP, projectidVP}, callback) => {
         // Display only to connection
+
+     	client.query('SELECT "Password" FROM "User" WHERE "UserName" = \''+usernameVP+'\';', (err, pass) => {
+     		socket.emit("setPassword", pass.rows[0].Password);
+     	})
+
+
         client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectNameVP+'\';', (err, projectidresult) => { // get project ID of input project
             projectidVP = projectidresult["rows"][0]["Project_ID"] // get project ID (this might get deleted if VP button is added
             const { error, user} = addUserToProjectHomePage({ id: socket.id, usernameVP, useridVP, projectNameVP, projectidVP }) // register user on page
