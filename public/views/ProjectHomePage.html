@@ -207,13 +207,9 @@
         <form action="/chatapp" style="display: inline-block; float:right; padding: 4px">
             <input type="hidden" id="username" name="username" value="{{username}}" required />
             <input type="hidden" id="userid" name="userid" value="{{userid}}" required />
-            <input type="hidden" id="room" name="room" required />
-            <input type="hidden" id="chatroomid" name="chatroomid" required />
+            <input type="hidden" id="room" name="room" value="{{room}}" required />
+            <input type="hidden" id="chatroomid" name="chatroomid" value="{{chatroomid}}" required />
             <input type="hidden" id="roomNumber" name="roomNumber" value="C{{Project_ID}}" required />
-            <script type="text/javascript">
-                document.getElementById('room') = <%- JSON.stringify(user.chatname) %>;
-                document.getElementById('chatroomid') = <%- JSON.stringify(user.chatroomid) %>;
-            </script>
             <button>ChatApp</button>
         </form>
     </script>
