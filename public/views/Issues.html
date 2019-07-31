@@ -69,6 +69,8 @@
                 <input type="text" name="IssueName" placeholder="Issue Name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
                 <label><b>Description</b></label>
                 <input type="text" name="IssueDesc" placeholder="Issue Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
+                <label><b>Assign issue to user</b></label>
+                <br></b><p id="usersCreateIssue"></p><br>
                 <label><b>Due date</b></label>
                 <input type="date" name="DueDate" id="createDueDate" required autocomplete="off"><br>
                 <input type="hidden" id="createProject_ID" name="Project_ID" autocomplete="off"/>
@@ -84,6 +86,8 @@
                 <input type="text" name="IssueName" placeholder="Issue Name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
                 <label><b>Description</b></label>
                 <input type="text" name="IssueDesc" placeholder="Issue Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
+                <label><b>Assign issue to user</b></label>
+                <br></b><p id="usersEditIssue"></p><br>
                 <label><b>Due date</b></label>
                 <input type="date" name="DueDate" id="editDueDate" required autocomplete="off"><br>
                 <input type="hidden" id="editProject_ID" name="Project_ID" autocomplete="off"/>
@@ -175,6 +179,18 @@
                     <button class="open-button" onclick=openDeleteIssueForm({{Issue_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
                 </p></div>
             {{/issues}}
+        </script>
+
+        <script id="userscreateissue-template" type="text/html">
+            {{#userNamesIds}}
+                <input type="checkbox" value={{ID}}>{{Name}}</option><br>
+            {{/userNamesIds}}
+        </script>
+
+        <script id="userseditissue-template" type="text/html">
+            {{#userNamesIds}}
+                <input type="checkbox" value={{ID}}>{{Name}}</option><br>
+            {{/userNamesIds}}
         </script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
