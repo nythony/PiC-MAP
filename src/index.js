@@ -324,7 +324,7 @@ io.on('connection', (socket) => {
                 proj['Project_ID'] = obj["Project_ID"]
                 proj['projectName'] = obj["ProjectName"]
                 proj['projectDesc'] = obj["ProjectDesc"]
-                proj['chatName'] = obj["ChatRoom_ID"]
+                proj['chatName'] = obj["ChatName"]
                 proj['Chat_ID'] = obj["ChatRoom_ID"]
                 proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
                 proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')
@@ -338,7 +338,7 @@ io.on('connection', (socket) => {
     socket.on('getProjectList', (username, callback) => {
 
         var list = []
-        const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
+        const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate", Ch."ChatRoom_ID", Ch."ChatName" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" JOIN "ChatRoom" Ch ON Ch."Project_ID" = Pa."Project_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
         client.query(text, (err, results) => { 
             for (let obj of results.rows){
                 var proj = {
@@ -348,8 +348,10 @@ io.on('connection', (socket) => {
                 proj['Project_ID'] = obj["Project_ID"]
                 proj['projectName'] = obj["ProjectName"]
                 proj['projectDesc'] = obj["ProjectDesc"]
+                proj['chatName'] = obj["ChatName"]
+                proj['Chat_ID'] = obj["ChatRoom_ID"]
                 proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
-                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                            
+                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                           
                 
                 list.push(proj);
             }
@@ -454,18 +456,20 @@ io.on('connection', (socket) => {
                     
                     //Displaying project list again
                     var list = []
-                    const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE "UserName" = \'' + obj[2] + '\' ORDER BY "StartDate"'
+                    const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate", Ch."ChatRoom_ID", Ch."ChatName" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" JOIN "ChatRoom" Ch ON Ch."Project_ID" = Pa."Project_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
                     client.query(text, (err, results) => { 
                         for (let line of results.rows){
                             var proj = {
 			                	username: obj[2] 
 			                }
-			                proj['userid'] = line["User_ID"]
-                            proj['Project_ID'] = line["Project_ID"]
-                            proj['projectName'] = line["ProjectName"]
-                            proj['projectDesc'] = line["ProjectDesc"]
-			                proj['StartDate'] = moment(line["StartDate"]).format('MM/DD/YY')
-			                proj['DueDate'] = moment(line["DueDate"]).format('MM/DD/YY')                          
+			                proj['userid'] = obj["User_ID"]
+			                proj['Project_ID'] = obj["Project_ID"]
+			                proj['projectName'] = obj["ProjectName"]
+			                proj['projectDesc'] = obj["ProjectDesc"]
+			                proj['chatName'] = obj["ChatName"]
+			                proj['Chat_ID'] = obj["ChatRoom_ID"]
+			                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
+			                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                         
                             
                             list.push(proj);
                         }
@@ -529,18 +533,20 @@ io.on('connection', (socket) => {
                     
                     //updating list shown
                     var list = []
-                    const text = 'SELECT Up."UserName", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" WHERE Ap."User_ID" = \'' + userCreate + '\' ORDER BY "StartDate"'
+                    const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate", Ch."ChatRoom_ID", Ch."ChatName" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" JOIN "ChatRoom" Ch ON Ch."Project_ID" = Pa."Project_ID" WHERE "UserName" = \'' + username + '\' ORDER BY "StartDate"'
                     client.query(text, (err, results) => { 
                         for (let obj of results.rows){
                             var proj = {
                                 userid: userCreate, 
                             }
-                            proj['username'] = obj["UserName"]
-                            proj['Project_ID'] = obj["Project_ID"]
-                            proj['projectName'] = obj["ProjectName"]
-                            proj['projectDesc'] = obj["ProjectDesc"]
-                            proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
-                            proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                            
+                            proj['userid'] = obj["User_ID"]
+			                proj['Project_ID'] = obj["Project_ID"]
+			                proj['projectName'] = obj["ProjectName"]
+			                proj['projectDesc'] = obj["ProjectDesc"]
+			                proj['chatName'] = obj["ChatName"]
+			                proj['Chat_ID'] = obj["ChatRoom_ID"]
+			                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
+			                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                            
                             
                             list.push(proj);
                         }
