@@ -69,6 +69,8 @@
                 <input type="text" name="RequirementName" placeholder="Requirement Name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
                 <label><b>Description</b></label>
                 <input type="text" name="RequirementDesc" placeholder="Requirement Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
+                <label><b>Assign requirement to user</b></label>
+                <br></b><p id="usersCreateRequirement"></p><br>
                 <label><b>Due date</b></label>
                 <input type="date" name="DueDate" id="createDueDate" required autocomplete="off"><br>
                 <input type="hidden" id="createProject_ID" name="Project_ID" autocomplete="off"/>
@@ -84,6 +86,8 @@
                 <input type="text" name="RequirementName" placeholder="Requirement Name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
                 <label><b>Description</b></label>
                 <input type="text" name="RequirementDesc" placeholder="Requirement Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
+                <label><b>Assign requirement to user</b></label>
+                <br></b><p id="usersEditRequirement"></p><br>
                 <label><b>Due date</b></label>
                 <input type="date" name="DueDate" id="editDueDate" required autocomplete="off"><br>
                 <input type="hidden" id="editProject_ID" name="Project_ID" autocomplete="off"/>
@@ -175,6 +179,18 @@
                     <button class="open-button" onclick=openDeleteRequirementForm({{Req_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
                 </p></div>
             {{/requirements}}
+        </script>
+
+        <script id="userscreaterequirement-template" type="text/html">
+            {{#userNamesIds}}
+                <input type="checkbox" value={{ID}}>{{Name}}</option><br>
+            {{/userNamesIds}}
+        </script>
+
+        <script id="userseditrequirement-template" type="text/html">
+            {{#userNamesIds}}
+                <input type="checkbox" value={{ID}}>{{Name}}</option><br>
+            {{/userNamesIds}}
         </script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>

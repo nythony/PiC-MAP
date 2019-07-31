@@ -2,6 +2,8 @@ const socket = io()
 
 // Elements
 const $header = document.querySelector('#header')
+const $usersCreateRequirement = document.querySelector('#usersCreateRequirement')
+const $usersEditRequirement = document.querySelector('#usersEditRequirement')
 const $requirementCategory = document.querySelector('#requirementCategory')
 const $requirement = document.querySelector('#requirement')
 const $createRequirementForm = document.querySelector('#createRequirementForm')
@@ -12,10 +14,12 @@ const $deleteRequirementForm = document.querySelector('#deleteRequirementForm')
 const headerTemplate = document.querySelector('#header-template').innerHTML
 const requirementCategoryTemplate = document.querySelector('#requirementCategory-template').innerHTML
 const requirementTemplate = document.querySelector('#requirement-template').innerHTML
+const usersCreateRequirementTemplate = document.querySelector('#userscreaterequirement-template').innerHTML
+const usersEditRequirementTemplate = document.querySelector('#userseditrequirement-template').innerHTML
 
 // Options
 const {username, userid, roomNumber, ProjectName, Project_ID, projectNameVP, projectidVP} = Qs.parse(location.search, { ignoreQueryPrefix: true })
-console.log("qs: ", {username, userid, roomNumber, ProjectName, Project_ID, projectNameVP, projectidVP})
+//console.log("qs: ", {username, userid, roomNumber, ProjectName, Project_ID, projectNameVP, projectidVP})
 
 // Definition for header
 const headerhtml = Mustache.render(headerTemplate, {
@@ -26,7 +30,7 @@ const headerhtml = Mustache.render(headerTemplate, {
     projectidVP: projectidVP
 })
 document.querySelector('#header').innerHTML = headerhtml
-console.log("headerhtml: ", headerhtml)
+//console.log("headerhtml: ", headerhtml)
 
 // Definition for requirementCategory event
 socket.on('requirementCategory', (requirementCategory) => {
@@ -54,8 +58,10 @@ $createRequirementForm.addEventListener('submit', (e) => {
     const RequirementDesc = e.target.elements.RequirementDesc.value
     const DueDate = e.target.elements.DueDate.value
     const Project_ID = e.target.elements.Project_ID.value
+    const Users = Array.from(document.querySelectorAll('input[type=checkbox]:checked'))
+        .map(item => item.value)
 
-    socket.emit('createRequirement', {RequirementName, RequirementDesc, DueDate, Project_ID} , (error) => {
+    socket.emit('createRequirement', {RequirementName, RequirementDesc, DueDate, Project_ID, Users} , (error) => {
         // Enable form
 
         if (error) {
@@ -78,8 +84,10 @@ $editRequirementForm.addEventListener('submit', (e) => {
     const RequirementDesc = e.target.elements.RequirementDesc.value
     const DueDate = e.target.elements.DueDate.value
     const Req_ID = e.target.elements.Req_ID.value
+    const Users = Array.from(document.querySelectorAll('input[type=checkbox]:checked'))
+        .map(item => item.value)
 
-    socket.emit('editRequirement', {RequirementName, RequirementDesc, DueDate, Project_ID, Req_ID} , (error) => {
+    socket.emit('editRequirement', {RequirementName, RequirementDesc, DueDate, Project_ID, Req_ID, Users} , (error) => {
         // Enable form
 
         if (error) {
@@ -132,4 +140,16 @@ socket.emit('joinRequirements', {username, userid, roomNumber, ProjectName, Proj
         alert(error)
         location.href = '/'
     }
+})
+
+// Loading list of users in project
+socket.emit('getUsersInProject', {projectidVP}, (userNamesIds) => {
+    const UsersInProjectCreateRequirement = Mustache.render(usersCreateRequirementTemplate, {
+        userNamesIds
+    })
+    document.querySelector('#usersCreateRequirement').innerHTML = UsersInProjectCreateRequirement;
+    const UsersInProjectEditRequirement = Mustache.render(usersEditRequirementTemplate, {
+        userNamesIds
+    })
+    document.querySelector('#usersEditRequirement').innerHTML = UsersInProjectEditRequirement;
 })
