@@ -74,7 +74,9 @@ console.log("loading button: ", cButton)
 // Definition for task tool event
 socket.on('taskTool', (tasktools) => {
     const html = Mustache.render(taskToolTemplate, {
-        tasktools
+        tasktools,
+        chatname: chatname,
+        chatid: chatid
     })
     document.querySelector('#taskTool').innerHTML = html
 })
