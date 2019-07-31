@@ -640,14 +640,24 @@ io.on('connection', (socket) => {
                 } else {
 
                     if (res.rows.length != 0){
-                        if (res.rows[0].Project_ID == id){ //Project_ID does not exist in res.rows if no match, so cannot combine with above statement
-                            obj.push(id)
-                            resolve(obj)
-                        } else {
-                            //Entered a project name, but with the wrong button
-                            socket.emit("deleteProjectFail", "Invalid Project Name"); 
-                            //Message should be kept the same because we query by projectID, which could be another user's project if mistyped
+
+                        //Multiple project names
+                        var i;
+                        for (let line of res.rows){
+                            if (line['Project_ID'] == id){ //Project_ID does not exist in res.rows if no match, so cannot combine with above statement
+                                obj.push(id)
+                                resolve(obj)
+                                i++;
+
+                            //Ensures loop finished first then emits error message if none of them match
+                            } else if (i == res.rows.length){
+                                //Entered a project name, but with the wrong button
+                                socket.emit("deleteProjectFail", "Invalid Project Name"); 
+                                //Message should be kept the same because we query by projectID, which could be another user's project if mistyped                                
+                            }
+
                         }
+
                     } else {
                         //Project name does not exist
                         socket.emit("deleteProjectFail", "Invalid Project Name");
