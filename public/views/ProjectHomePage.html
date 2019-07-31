@@ -60,15 +60,16 @@
     <div id="header" class="header"></div>
     <div id="taskTool" class="tasktool__subtask"></div>
     <button class="open-button" onclick="openCreateTaskToolForm()" style="position: absolute; left: 25%; display: inline-block;">Create a new Task Tool</button>
-    <form action="/Requirements" style="display: inline-block; float:right; padding:4px">
-        <input type="hidden" id="username" name="username" required />
-        <input type="hidden" id="userid" name="userid" required />
-        <input type="hidden" id="roomNumber" name="roomNumber" required />
-        <input type="hidden" id="ProjectName" name="ProjectName" required />
-        <input type="hidden" id="Project_ID" name="Project_ID" required />
-        <input type="hidden" id="projectNameVP" name="projectNameVP" required />
-        <input type="hidden" id="projectidVP" name="projectidVP" required />
-        <script type="text/javascript">
+    <div id="requirementsDiv">
+        <form action="/Requirements" style="display: inline-block; float:right; padding:4px">
+            <input type="hidden" id="username" name="username" required />
+            <input type="hidden" id="userid" name="userid" required />
+            <input type="hidden" id="roomNumber" name="roomNumber" required />
+            <input type="hidden" id="ProjectName" name="ProjectName" required />
+            <input type="hidden" id="Project_ID" name="Project_ID" required />
+            <input type="hidden" id="projectNameVP" name="projectNameVP" required />
+            <input type="hidden" id="projectidVP" name="projectidVP" required />
+            <script type="text/javascript">
             document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
             document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
             document.getElementById('roomNumber').value = 'R'+<%- JSON.stringify(user.currProjectID) %>;
@@ -76,43 +77,48 @@
             document.getElementById('Project_ID').value = <%- JSON.stringify(user.currProjectID) %>;
             document.getElementById('projectNameVP').value = <%- JSON.stringify(user.currProjectName) %>;
             document.getElementById('projectidVP').value = <%- JSON.stringify(user.currProjectID) %>;
-        </script>
-        <button>Project Requirements</button>
-    </form>
-    <form action="/Issues" style="display: inline-block; float:right; padding:4px">
-        <input type="hidden" id="username" name="username" required />
-        <input type="hidden" id="userid" name="userid" required />
-        <input type="hidden" id="roomNumber" name="roomNumber" required />
-        <input type="hidden" id="ProjectName" name="ProjectName" required />
-        <input type="hidden" id="Project_ID" name="Project_ID" required />
-        <input type="hidden" id="projectNameVP" name="projectNameVP" required />
-        <input type="hidden" id="projectidVP" name="projectidVP" required />
-        <script type="text/javascript">
-            document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
-            document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
-            document.getElementById('roomNumber').value = 'I'+<%- JSON.stringify(user.currProjectID) %>;
-            document.getElementById('ProjectName').value = <%- JSON.stringify(user.currProjectName) %>;
-            document.getElementById('Project_ID').value = <%- JSON.stringify(user.currProjectID) %>;
-            document.getElementById('projectNameVP').value = <%- JSON.stringify(user.currProjectName) %>;
-            document.getElementById('projectidVP').value = <%- JSON.stringify(user.currProjectID) %>;
-        </script>
-        <button>Project Issues</button>
-    </form>
-    <form action="/chatapp" style="display: inline-block; float:right; padding: 4px">
-        <input type="hidden" id="username" name="username" required />
-        <input type="hidden" id="userid" name="userid" required />
-        <input type="hidden" id="room" name="room" required />
-        <input type="hidden" id="chatroomid" name="chatroomid" required />
-        <input type="hidden" id="roomNumber" name="roomNumber" required />
-        <script type="text/javascript">
+            </script>
+            <button>Project Requirements</button>
+        </form>
+    </div>
+    <div id="issuesDiv">
+        <form action="/Issues" style="display: inline-block; float:right; padding:4px">
+            <input type="hidden" id="username" name="username" required />
+            <input type="hidden" id="userid" name="userid" required />
+            <input type="hidden" id="roomNumber" name="roomNumber" required />
+            <input type="hidden" id="ProjectName" name="ProjectName" required />
+            <input type="hidden" id="Project_ID" name="Project_ID" required />
+            <input type="hidden" id="projectNameVP" name="projectNameVP" required />
+            <input type="hidden" id="projectidVP" name="projectidVP" required />
+            <script type="text/javascript">
+                document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
+                document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
+                document.getElementById('roomNumber').value = 'I'+<%- JSON.stringify(user.currProjectID) %>;
+                document.getElementById('ProjectName').value = <%- JSON.stringify(user.currProjectName) %>;
+                document.getElementById('Project_ID').value = <%- JSON.stringify(user.currProjectID) %>;
+                document.getElementById('projectNameVP').value = <%- JSON.stringify(user.currProjectName) %>;
+                document.getElementById('projectidVP').value = <%- JSON.stringify(user.currProjectID) %>;
+            </script>
+            <button>Project Issues</button>
+        </form>
+    </div>
+    <div id="chatappDiv">
+        <form action="/chatapp" style="display: inline-block; float:right; padding: 4px">
+            <input type="hidden" id="username" name="username" required />
+            <input type="hidden" id="userid" name="userid" required />
+            <input type="hidden" id="room" name="room" required />
+            <input type="hidden" id="chatroomid" name="chatroomid" required />
+            <input type="hidden" id="roomNumber" name="roomNumber" required />
+            <script type="text/javascript">
             document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
             document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
             document.getElementById('room').value = <%- JSON.stringify(user.chatname) %>;
             document.getElementById('chatroomid').value = <%- JSON.stringify(user.chatroomid) %>;
             document.getElementById('roomNumber').value = 'C'+<%- JSON.stringify(user.currProjectID) %>;
-        </script>
-        <button>ChatApp</button>
-    </form>
+            </script>
+            <button>ChatApp</button>
+        </form>
+    </div>
     <!--
     <form action="/UserHomePage" id="backToUserHomePage" method="get" style="display: inline-block; float:right; padding: 4px;">
         <input type="hidden" id="username" name="username" value="{{username}}" required />
