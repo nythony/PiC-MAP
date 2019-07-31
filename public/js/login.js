@@ -11,11 +11,21 @@ socket.emit('enterLogin', (error) => {
 	id = socket.id;
 
 	document.getElementById("socketid").value = id;
+    document.getElementById("socketid2").value = id;
     
     if (error) {
         alert(error)
         location.href = '/'
     }
+})
+
+//Error message
+socket.on('failedRegistration', (eMessage) => {
+    console.log("We are getting here at login.js failed Registraton")
+
+    alert('Username already taken.');
+    location.href = '/';
+
 })
 
 

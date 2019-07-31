@@ -657,14 +657,24 @@ io.on('connection', (socket) => {
                 } else {
 
                     if (res.rows.length != 0){
-                        if (res.rows[0].Project_ID == id){ //Project_ID does not exist in res.rows if no match, so cannot combine with above statement
-                            obj.push(id)
-                            resolve(obj)
-                        } else {
-                            //Entered a project name, but with the wrong button
-                            socket.emit("deleteProjectFail", "Invalid Project Name"); 
-                            //Message should be kept the same because we query by projectID, which could be another user's project if mistyped
+
+                        //Multiple project names
+                        var i;
+                        for (let line of res.rows){
+                            if (line['Project_ID'] == id){ //Project_ID does not exist in res.rows if no match, so cannot combine with above statement
+                                obj.push(id)
+                                resolve(obj)
+                                i++;
+
+                            //Ensures loop finished first then emits error message if none of them match
+                            } else if (i == res.rows.length){
+                                //Entered a project name, but with the wrong button
+                                socket.emit("deleteProjectFail", "Invalid Project Name"); 
+                                //Message should be kept the same because we query by projectID, which could be another user's project if mistyped                                
+                            }
+
                         }
+
                     } else {
                         //Project name does not exist
                         socket.emit("deleteProjectFail", "Invalid Project Name");
@@ -1503,13 +1513,34 @@ app.post("/backToProjectHomePage", function (req, res) {
 //     res.redirect('/failedLoginPage')
 // });
 
-app.post("/createNewUser/submit", function (req, res) { //--EDIT DELETE
-    var username = req.body.username
-    var password = req.body.password
-    client.query('INSERT INTO "User"("UserName", "Password") VALUES(\'' + username + '\', \'' + password + '\');', (error, results) => {
-        if (error) throw error
+app.get("/createNewUser/submit", function (req, res) { 
+    var username = req.query.username
+    var password = req.query.password
+    var socketid = req.query.socketid2
+
+    console.log("Create user gets username, pass, socket ", username, password, socketid);
+
+    client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results1) => {
+        if (error1){
+            throw error1
+
+        //User already exists
+        } else if (results1.rows.length != 0){
+            console.log("Emitting from createNewUser/submit app.post, socket id, username, results = ", socketid, username, results1.rows);
+
+            io.to(socketid).emit('failedRegistration', 'Username already taken.');
+
+        //Create an account by adding inforamtion to DB
+        } else {
+
+            client.query('INSERT INTO "User"("UserName", "Password") VALUES(\'' + username + '\', \'' + password + '\');', (error, results) => {
+                if (error) throw error
+            })
+
+            res.redirect('/loginPage')
+
+        }
     })
-    res.redirect('/loginPage')
 });
 
 app.post("/contact-submitted", function (req, res) {
