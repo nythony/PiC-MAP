@@ -60,7 +60,7 @@ const cButton = Mustache.render(chatappButtonTemplate, {
     ProjectName: projectNameVP,
     Project_ID: projectidVP,
     room: chatname,
-    chatroomid: chatID
+    chatroomid: chatid
 })
 $chatappButton.innerHTML = cButton
 console.log("loading button: ", cButton)
