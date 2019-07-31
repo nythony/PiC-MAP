@@ -1421,13 +1421,34 @@ app.post("/backToProjectHomePage", function (req, res) {
 //     res.redirect('/failedLoginPage')
 // });
 
-app.post("/createNewUser/submit", function (req, res) { //--EDIT DELETE
-    var username = req.body.username
-    var password = req.body.password
-    client.query('INSERT INTO "User"("UserName", "Password") VALUES(\'' + username + '\', \'' + password + '\');', (error, results) => {
-        if (error) throw error
+app.get("/createNewUser/submit", function (req, res) { 
+    var username = req.query.username
+    var password = req.query.password
+    var socketid = req.query.socketid2
+
+    console.log("Create user gets username, pass, socket ", username, password, socketid);
+
+    client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results1) => {
+        if (error1){
+            throw error1
+
+        //User already exists
+        } else if (results1.rows.length != 0){
+            console.log("Emitting from createNewUser/submit app.post, socket id, username, results = ", socketid, username, results1.rows);
+
+            io.to(socketid).emit('failedRegistration', 'Username already taken.');
+
+        //Create an account by adding inforamtion to DB
+        } else {
+
+            client.query('INSERT INTO "User"("UserName", "Password") VALUES(\'' + username + '\', \'' + password + '\');', (error, results) => {
+                if (error) throw error
+            })
+
+            res.redirect('/loginPage')
+
+        }
     })
-    res.redirect('/loginPage')
 });
 
 app.post("/contact-submitted", function (req, res) {
