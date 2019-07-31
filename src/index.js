@@ -1374,8 +1374,8 @@ app.get("/ProjectHomePage/", function (req, res) {
             newCookie["chatname"] = chatName // update cookie, put new cookie in response, and finish
             res.cookie("userInfo", newCookie)
             req.query.projectidVP = projectid
-            res.query.chatroomid = chatID
-            res.query.chatname = chatName
+            req.query.chatroomid = chatID
+            req.query.chatname = chatName
             res.render(publicDirectoryPath + "views/ProjectHomePage.html", { user: req.cookies.userInfo })
         })
         
