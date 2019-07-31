@@ -2,6 +2,8 @@ const socket = io()
 
 // Elements
 const $header = document.querySelector('#header')
+const $usersCreateIssue = document.querySelector('#usersCreateIssue')
+const $usersEditIssue = document.querySelector('#usersEditIssue')
 const $issueCategory = document.querySelector('#issueCategory')
 const $issue = document.querySelector('#issue')
 const $createIssueForm = document.querySelector('#createIssueForm')
@@ -12,10 +14,12 @@ const $deleteIssueForm = document.querySelector('#deleteIssueForm')
 const headerTemplate = document.querySelector('#header-template').innerHTML
 const issueCategoryTemplate = document.querySelector('#issueCategory-template').innerHTML
 const issueTemplate = document.querySelector('#issue-template').innerHTML
+const usersCreateIssueTemplate = document.querySelector('#userscreateissue-template').innerHTML
+const usersEditIssueTemplate = document.querySelector('#userseditissue-template').innerHTML
 
 // Options
 const {username, userid, roomNumber, ProjectName, Project_ID, projectNameVP, projectidVP} = Qs.parse(location.search, { ignoreQueryPrefix: true })
-console.log("qs: ", {username, userid, roomNumber, ProjectName, Project_ID, projectNameVP, projectidVP})
+//console.log("qs: ", {username, userid, roomNumber, ProjectName, Project_ID, projectNameVP, projectidVP})
 
 // Definition for header
 const headerhtml = Mustache.render(headerTemplate, {
@@ -26,7 +30,7 @@ const headerhtml = Mustache.render(headerTemplate, {
     projectidVP: projectidVP
 })
 document.querySelector('#header').innerHTML = headerhtml
-console.log("headerhtml: ", headerhtml)
+//console.log("headerhtml: ", headerhtml)
 
 // Definition for issueCategory event
 socket.on('issueCategory', (issueCategory) => {
@@ -54,8 +58,10 @@ $createIssueForm.addEventListener('submit', (e) => {
     const IssueDesc = e.target.elements.IssueDesc.value
     const DueDate = e.target.elements.DueDate.value
     const Project_ID = e.target.elements.Project_ID.value
+    const Users = Array.from(document.querySelectorAll('input[type=checkbox]:checked'))
+        .map(item => item.value)
 
-    socket.emit('createIssue', {IssueName, IssueDesc, DueDate, Project_ID} , (error) => {
+    socket.emit('createIssue', {IssueName, IssueDesc, DueDate, Project_ID, Users} , (error) => {
         // Enable form
 
         if (error) {
@@ -78,8 +84,10 @@ $editIssueForm.addEventListener('submit', (e) => {
     const IssueDesc = e.target.elements.IssueDesc.value
     const DueDate = e.target.elements.DueDate.value
     const Issue_ID = e.target.elements.Issue_ID.value
+    const Users = Array.from(document.querySelectorAll('input[type=checkbox]:checked'))
+        .map(item => item.value)
 
-    socket.emit('editIssue', {IssueName, IssueDesc, DueDate, Project_ID, Issue_ID} , (error) => {
+    socket.emit('editIssue', {IssueName, IssueDesc, DueDate, Project_ID, Issue_ID, Users} , (error) => {
         // Enable form
 
         if (error) {
@@ -132,4 +140,16 @@ socket.emit('joinIssues', {username, userid, roomNumber, ProjectName, Project_ID
         alert(error)
         location.href = '/'
     }
+})
+
+// Loading list of users in project
+socket.emit('getUsersInProject', {projectidVP}, (userNamesIds) => {
+    const UsersInProjectCreateIssue = Mustache.render(usersCreateIssueTemplate, {
+        userNamesIds
+    })
+    document.querySelector('#usersCreateIssue').innerHTML = UsersInProjectCreateIssue;
+    const UsersInProjectEditIssue = Mustache.render(usersEditIssueTemplate, {
+        userNamesIds
+    })
+    document.querySelector('#usersEditIssue').innerHTML = UsersInProjectEditIssue;
 })
