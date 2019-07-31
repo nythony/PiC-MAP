@@ -124,20 +124,15 @@
         <form class="form-container" id="join-project-form">
             <h1>Join Project</h1>
               <br>
-              <!--Error message template: DOESN'T GO AWAY AFTER IT APPEARS THOUGH: Converted to alert-->
-               <!--div id="joinProjectFail"></div>
-                <script id="joinProjectFail-template" type="text/html">
-                    <div class="errorMessage">
-                      <h4 style="color:red"><center>{{messageDisplay}}</center></h4>
-                    </div>
-                </script-->
-
 
             <label><b>Project Name</b></label>
             <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" pattern="[^'\x22]+" autocomplete="off" title = "Please do not enter any single or double quotes" required>
 
             <label><b>Project Password</b> </label>
             <input type="password" id="projectPassword" name="projectPassword" placeholder="Enter the project password" pattern="[^'\x22]+" autocomplete="off" title = "Please do not enter any single or double quotes" required>
+
+            <label><b>Project ID</b> </label>
+            <input type="text" id="joinid" name="joinid" placeholder="Enter the project ID" pattern="[0-9]+" autocomplete="off" title = "Please only enter numbers" required>
 
             <button type="submit" class="btn">Join</button>
             <button type="button" class="btn cancel" onclick="closeJoinProjectForm()">Close</button>
@@ -158,7 +153,7 @@
                         <p>{{projectDesc}}</p>
                         <p>Start: {{StartDate}}</p>
                         <p>Due: {{DueDate}}</p>
-                        <p>Project ID  <i>(temporary)</i>: {{Project_ID}}</p>
+                        <p><i>Project ID: {{Project_ID}}</i></p>
                     
                     <button class="open-button" onclick=openEditProjectForm({{Project_ID}})>Edit</button>
                     <button class="open-button" onclick=openDeleteProjectForm({{Project_ID}})>Delete</button>

@@ -337,7 +337,7 @@ io.on('connection', (socket) => {
 
 
     // Joining an existing project
-    socket.on('joinProject', ({name, pass, user}, callback) => {
+    socket.on('joinProject', ({name, pass, user, joinid}, callback) => {
 
         var obj = []
 
@@ -353,46 +353,59 @@ io.on('connection', (socket) => {
                     if (res.rows.length != 0){
 
                     	//Project exists, checking if correct password
-                        if (res.rows[0].ProjectPassword == pass){ //ProjectPassword does not exist in res.rows if no match, so cannot combine with above statement
-                            //Correct password:
+                        var i = 0;
 
-                            //Storing projectID
-                            const projid = res.rows[0].Project_ID;
-                            obj.push(projid)
+                        for (let line of res.rows){
 
-                            //Getting userID
-				            client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \''+user+'\';', (err, res1) => {
-				                if (err) {
-				                    console.log(err.stack)
-				                } else {
-				                	const userid = res1.rows[0].User_ID;
 
-				                	//Checks if User_ID already exists
-				                	client.query('SELECT * FROM "AttachUserP" WHERE "User_ID" = \''+userid+'\'AND "Project_ID" = \''+projid+'\';', (err, res2) => {
-						                if (err) {
-						                    console.log(err.stack)
-						                } else {
+                            if ((line['ProjectPassword'] == pass) && (line['Project_ID'] == joinid)){ //ProjectPassword does not exist in res.rows if no match, so cannot combine with above statement
+                                //Correct password:
 
-						                	//User is already attached to project
-						                	if (res2.rows.length != 0){
+                                //Storing projectID
+                                const projid = joinid
+                                obj.push(projid)
 
-						                		socket.emit("joinProjectFail", "You are already in that project");
-						                	}
+                                //Getting userID
+                                client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \''+user+'\';', (err, res1) => {
+                                    if (err) {
+                                        console.log(err.stack)
+                                    } else {
+                                        //This should be okay because only one username exists
+                                        const userid = res1.rows[0].User_ID;
 
-						                   	else{
-						                   		obj.push(userid)
-						                   		obj.push(user)
-						                   		resolve(obj)
-						                   	}
-						                }
-	                  				})
-				                }
-				            })
+                                        //Checks if User_ID already exists
+                                        client.query('SELECT * FROM "AttachUserP" WHERE "User_ID" = \''+userid+'\'AND "Project_ID" = \''+projid+'\';', (err, res2) => {
+                                            if (err) {
+                                                console.log(err.stack)
+                                            } else {
 
-                        } else {
-                            //Entered a project name, but with the wrong password
-                            socket.emit("joinProjectFail", "Invalid Project Password"); 
+                                                //User is already attached to project
+                                                if (res2.rows.length != 0){
+
+                                                    socket.emit("joinProjectFail", "You are already in that project");
+                                                }
+
+                                                else{
+                                                    obj.push(userid)
+                                                    obj.push(user)
+                                                    resolve(obj)
+                                                }
+                                            }
+                                        })
+                                    }
+                                })
+
+                            console.log ("project length, i = ", res.rows.length, i)
+                            //This particular line in the results is not correct. If this is the last item in the results, print error.
+                            } else if (i == res.rows.length){
+                                //Entered a project name, but with the wrong password
+                                socket.emit("joinProjectFail", "Invalid Project Password"); 
+                            }
+
+                            i++;
+
                         }
+
                     } else {
                         //Project name does not exist
                         socket.emit("joinProjectFail", "Invalid Project Name");

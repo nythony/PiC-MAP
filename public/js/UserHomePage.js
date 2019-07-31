@@ -87,15 +87,12 @@ $joinProjectForm.addEventListener('submit', (e) => {
     // Retrieve inputs
     const name = e.target.elements.projectName.value
     const pass = e.target.elements.projectPassword.value
+    const joinid = e.target.elements.joinid.value
     const user = username
-
-    console.log("Name: ", name)
-    console.log("Pass: ", pass)
-    console.log("Username (hidden): ", user)
 
 
     //To be heard by index.js
-    socket.emit('joinProject', {name, pass, user}, (error) => {
+    socket.emit('joinProject', {name, pass, user, joinid}, (error) => {
 
         if (error) {
             return console.log(error)
@@ -109,22 +106,9 @@ $joinProjectForm.addEventListener('submit', (e) => {
 
 
 
-//Error message
-// const joinProjectTemplate = document.querySelector('#joinProjectFail-template').innerHTML
-// const $joinProjectFail = document.querySelector('#joinProjectFail')
-
-
 socket.on('joinProjectFail', (eMessage) => {
 
     alert(eMessage)
-
-    // document.getElementById("joinProjectForm").style.display = "block";
-
-    // const html = Mustache.render(joinProjectTemplate, {
-    //     messageDisplay: eMessage
-    // })
-
-    // $joinProjectFail.insertAdjacentHTML('beforeend', html)
 
 })
 
@@ -134,9 +118,6 @@ socket.on('joinProjectFail', (eMessage) => {
 //////////////////////
 
 const $createProjectForm = document.querySelector('#create-project-form')
-// const $createProjectFormInput = $createProjectForm.querySelector('input')
-// const $createProjectFormButton = $createProjectForm.querySelector('button')
-
 
 // Listen for submission of create-project-form
 $createProjectForm.addEventListener('submit', (e) => {
@@ -151,14 +132,6 @@ $createProjectForm.addEventListener('submit', (e) => {
     const start = e.target.elements.startDate.value
     const due = e.target.elements.dueDate.value
     const user = username 
-
-    console.log("Pass: ", pass)
-    console.log("Name: ", name)
-    console.log("Desc: ", desc)
-    console.log("Start: ", start)
-    console.log("Due: ", due)
-    console.log("Username: ", user)
-
 
 
     //To be heard by index.js
@@ -198,19 +171,6 @@ $editProjectForm.addEventListener('submit', (e) => {
     const id = e.target.elements.editProject_ID.value
     const user = username
 
-    console.log("Name: ", name)
-    console.log("Desc: ", desc)
-    console.log("Start: ", start)
-    console.log("Due: ", due)
-    console.log("Username (hidden): ", user)
-    console.log("ProjectID (hidden): ", id)
-
-
-
-    //
-    //WORKING ON GETTING EDIT FORM TO WORK. Get Query on editing
-    //
-
 
     //To be heard by index.js
     socket.emit('editProject', {name, desc, start, due, user, id}, (error) => {
@@ -246,10 +206,6 @@ $deleteProjectForm.addEventListener('submit', (e) => {
     const id = e.target.elements.deleteProject_ID.value
     const user = username
 
-    console.log("Name: ", name)
-    console.log("ProjectID (hidden): ", id)
-    console.log("Username (hidden): ", user)
-
 
     //To be heard by index.js
     socket.emit('deleteProject', {name, id, user}, (error) => {
@@ -266,22 +222,10 @@ $deleteProjectForm.addEventListener('submit', (e) => {
 
 
 
-//Error message
-// const deleteProjectTemplate = document.querySelector('#deleteProjectFail-template').innerHTML
-// const $deleteProjectFail = document.querySelector('#deleteProjectFail')
-
-
 socket.on('deleteProjectFail', (eMessage) => {
 
     alert(eMessage);
 
-    // document.getElementById("deleteProjectForm").style.display = "block";
-
-    // const html = Mustache.render(deleteProjectTemplate, {
-    //     messageDisplay: eMessage
-    // })
-
-    // $deleteProjectFail.insertAdjacentHTML('beforeend', html)
 
 })
 
