@@ -40,7 +40,9 @@ const rButton = Mustache.render(requirementsButtonTemplate, {
     username: usernameVP,
     userid: useridVP,
     ProjectName: projectNameVP,
-    Project_ID: projectidVP
+    Project_ID: projectidVP,
+    chatname: chatname,
+    chatid: chatid
 })
 $reqButton.innerHTML = rButton
 
@@ -49,7 +51,9 @@ const iButton = Mustache.render(issuesButtonTemplate, {
     username: usernameVP,
     userid: useridVP,
     ProjectName: projectNameVP,
-    Project_ID: projectidVP
+    Project_ID: projectidVP,
+    chatname: chatname,
+    chatid: chatid
 })
 $issuesButton.innerHTML = iButton
 

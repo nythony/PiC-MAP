@@ -18,7 +18,7 @@ const usersCreateIssueTemplate = document.querySelector('#userscreateissue-templ
 const usersEditIssueTemplate = document.querySelector('#userseditissue-template').innerHTML
 
 // Options
-const {username, userid, roomNumber, ProjectName, Project_ID, projectNameVP, projectidVP} = Qs.parse(location.search, { ignoreQueryPrefix: true })
+const {username, userid, roomNumber, ProjectName, Project_ID, projectNameVP, projectidVP, room, chatid} = Qs.parse(location.search, { ignoreQueryPrefix: true })
 //console.log("qs: ", {username, userid, roomNumber, ProjectName, Project_ID, projectNameVP, projectidVP})
 
 // Definition for header
@@ -27,7 +27,9 @@ const headerhtml = Mustache.render(headerTemplate, {
     userid: userid,
     ProjectName: ProjectName,
     projectNameVP: projectNameVP,
-    projectidVP: projectidVP
+    projectidVP: projectidVP,
+    room: room,
+    chatid: chatid
 })
 document.querySelector('#header').innerHTML = headerhtml
 //console.log("headerhtml: ", headerhtml)
