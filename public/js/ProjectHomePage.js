@@ -24,7 +24,7 @@ const chatappButtonTemplate = document.querySelector('#chatappButton-template').
 
 // Get user data
 // some of these aren't used as this passes through the query, not cookie
-const { usernameVP, useridVP, projectidVP, projectNameVP, chatID, chatname } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+const { usernameVP, useridVP, projectidVP, projectNameVP, chatname, chatid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
 
 // Definition for header
