@@ -471,6 +471,7 @@ io.on('connection', (socket) => {
                     if (err) {
                         console.log(err.stack)
                     } else {
+                        //This should be okay to assume rows[0] because no duplicate username
                         const userCreate = res.rows[0].User_ID;
                         resolve(userCreate)
                     }
@@ -498,7 +499,7 @@ io.on('connection', (socket) => {
                 if (err) {
                     console.log(err.stack)
                 } else {
-                    console.log(res.rows[0])
+
                     console.log('----------------------------------project is created--------------------------------');
                     
                     //updating list shown
