@@ -125,16 +125,18 @@ socket.on("redirectToLogin", (error) => {
 
 })
 
-//Updating projectName -> NEED TO RERENDER ANYTHING THAT USES PROJECT NAME
-socket.on("updateProjectName", (name) => {
+// //Updating projectName -> NEED TO RERENDER ANYTHING THAT USES PROJECT NAME. 
+//Does this somehow define project ID as well? When I deleted a project with the same name, it changed project ID to one that exists. 
 
-    if (error){
-        console.log(error)
-    }
+// socket.on("updateProjectName", (name) => {
 
-    projectNameVP = name;
+//     if (error){
+//         console.log(error)
+//     }
 
-})
+//     projectNameVP = name;
+
+// })
 
 
 // When a user enters a projecthomepage, sends user info to server

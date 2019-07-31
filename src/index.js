@@ -618,9 +618,9 @@ io.on('connection', (socket) => {
                 // var roomC = 'C' + id;
                 //     io.to(roomC).emit('updateProjectName', name);
 
-                //Updating project name in ProjectHomePage of that project
-                var roomP = 'PHP' + id;
-                    io.to(roomP).emit('updateProjectName', name);
+        // //Updating project name in ProjectHomePage of that project
+        // var roomP = 'PHP' + id;
+        //     io.to(roomP).emit('updateProjectName', name);
 
                 // //Updating project name in RequirementTool of that project
                 // var roomR = 'R' + id;
