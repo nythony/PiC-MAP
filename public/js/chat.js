@@ -15,7 +15,7 @@ const messageTemplate = document.querySelector('#message-template').innerHTML
 const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 
 // Options
-const { username, userid, room, chatroomid, roomNumber } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+const { username, userid, room, chatroomid, roomNumber, projectNameVP, projectidVP } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
 const autoscroll = () => {
     // New message element
@@ -66,7 +66,13 @@ socket.on('message', (message) => {
 socket.on('roomData', ({ room, users }) => {
     const html = Mustache.render(sidebarTemplate, {
         room,
-        users
+        users,
+        username: username,
+        userid: userid,
+        Project_ID: projectidVP,
+        projectName: projectNameVP,
+        chatname: room,
+        chatid: chatroomid
     })
     document.querySelector('#sidebar').innerHTML = html
 })
