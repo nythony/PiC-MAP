@@ -93,8 +93,6 @@ $messageForm.addEventListener('submit', (e) => {
         if (error) {
             return console.log(error)
         }
-
-        console.log('Message delivered!')
         var form = document.getElementById("message-form")
         form.reset()
     })
