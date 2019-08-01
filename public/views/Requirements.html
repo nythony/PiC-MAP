@@ -7,8 +7,6 @@
         <meta name="viewport" charset="utf-8" content="width=device-width, initial-scale=1">
     </head>
     <style>
-        h2 {color: #f1f1f1;}
-        p {color: #f1f1f1;}
         span.col{color: #39cccc;}
         /* Button used to open the contact form - fixed at the bottom of the page */
 /*        .open-button {
@@ -172,7 +170,7 @@
             <form action="/logout" method="post" style="display: inline-block; float:right; padding: 4px;">
                 <button class"button" type="submit">Log Out</button>
             </form>
-            <form action="/ProjectHomePage" id="backToProjectHomePage" method="get">
+            <form action="/ProjectHomePage" id="backToProjectHomePage" method="get" style="display: inline-block; float:right; padding: 4px;">
                 <input type="hidden" id="usernameVP" name="usernameVP" value="{{username}}" required />
                 <input type="hidden" id="useridVP" name="useridVP" value="{{userid}}" required />
                 <input type="hidden" id="projectidVP" name="projectidVP" value="{{projectidVP}}" required />
