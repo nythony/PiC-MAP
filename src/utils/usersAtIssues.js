@@ -1,11 +1,6 @@
 const usersIssues = []
 
 const addUserIssues = ({ id, username, userid, roomNumber, ProjectName, Project_ID }) => {
-    // Clean the data
-    // username = username.trim().toLowerCase()
-    // room = room.trim().toLowerCase()
-    // userid = userid.trim().toLowerCase()
-    // chatroomid = chatroomid.trim().toLowerCase()
 
     // Validate the data
     if (!username || !roomNumber) {

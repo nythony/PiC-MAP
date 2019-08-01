@@ -47,21 +47,11 @@ socket.on('message', (message) => {
         message: message.text,
         createdAt: moment(message.createdAt).format('dddd MM/DD/YY HH:mm')
     })
-    // New Messages show up at top inside messages div
-    // $messagese.insertAdjacentHTML('afterbegin')
-    // New Messages show up after element closes
-    // $messagese.insertAdjacentHTML('afterend')
-    // New Messages show up before messages div
-    // $messagese.insertAdjacentHTML('beforebegin')
-    // New Messages show up at bottom inside messages div
+
     $messages.insertAdjacentHTML('beforeend', html)
     autoscroll()
 })
 
-// We can use this for redirecting!
-// socket.on('redirect', function(destination) {
-//     window.location.href = destination;
-// });
 
 socket.on('roomData', ({ room, users }) => {
     const html = Mustache.render(sidebarTemplate, {
@@ -80,9 +70,6 @@ socket.on('roomData', ({ room, users }) => {
 // Listen for message form
 $messageForm.addEventListener('submit', (e) => {
     e.preventDefault()
-
-    // Disable form
-    //$messageFormButton.setAttribute('disabled', 'disabled')
 
     // Retrieve message value of message form
     const message = e.target.elements.message.value

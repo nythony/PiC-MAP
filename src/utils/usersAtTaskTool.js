@@ -1,11 +1,6 @@
 const usersTaskTool = []
 
 const addUserTaskTool = ({ id, username, userid, roomNumber, TaskToolName, TaskTool_ID }) => {
-    // Clean the data
-    // username = username.trim().toLowerCase()
-    // room = room.trim().toLowerCase()
-    // userid = userid.trim().toLowerCase()
-    // chatroomid = chatroomid.trim().toLowerCase()
 
     // Validate the data
     if (!username || !roomNumber) {
@@ -45,7 +40,7 @@ const getUserTaskTool = (id) => {
 }
 
 const getUsersInRoomTaskTool = (roomNumber) => {
-    // room = room.trim().toLowerCase()
+
     return usersTaskTool.filter((user) => user.roomNumber === roomNumber)
 }
 

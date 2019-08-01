@@ -11,15 +11,6 @@
     p {color: #f1f1f1;}
     * {box-sizing: border-box;}
 
-    /* Button used to open the contact form */
-/*    .open-button {
-      background-color: #555; Changes background color of button before hover 
-      color: white;
-      border: none;
-      cursor: pointer;
-      opacity: 0.8;
-    }*/
-
     /* The popup form - hidden by default */
     .form-popup {
       display: none;
@@ -100,9 +91,6 @@
     <!--GOES ABOVE PROJECT BLOCKS-->
 
 
-    <!--Background for project blocks>
-    <div id="header" class="header"></div>
-    <div id="taskTool" class="tasktool__subtask"></div-->
     <div id="projectElement" class="UHP__project"></div>
     
     <button onclick="openJoinProjectForm()" style="display: inline-block; float:right; padding:4px">Join an Existing Project</button>
@@ -126,13 +114,6 @@
         </form>
       </div>
 
-
-    <!--Change #projects to change layout of project list-->
-
-
-    <!--div id="projects"-->
-
-            <!--div id = "projectElement"></div-->
             <script id="projectList-template" type="text/html">
                 {{#projectList}}
                 <div class="project">
@@ -202,14 +183,6 @@
                     <h1>Are you sure you want to delete this project?</h1>
                       <br>
                       
-                      <!--Error message template: DOESN'T GO AWAY AFTER IT APPEARS THOUGH: Made into alert instead-->
-                       <!--div id="deleteProjectFail"></div>
-                        <script id="deleteProjectFail-template" type="text/html">
-                            <div class="errorMessage">
-                              <h4 style="color:red"><center>{{messageDisplay}}</center></h4>
-                            </div>
-                        </script-->
-
                     <!--Display project name for associated project-->
                     <label><b>Enter project name to confirm</b> </label>
                     <input type="text" id="projectName" name="projectName" pattern="[^'\x22]+" placeholder="Enter the project name" autocomplete="off" title = "Please do not enter any single or double quotes" required>
@@ -221,15 +194,11 @@
                   </form>
             </div>
 
-    <!--/div-->
-
-
 
 
     <!--POP UP FOR CREATING A PROJECT-->
     <button onclick="openCreateProjectForm()" style="position: absolute; left: 25%; display: inline-block;">Create Project</button>
 
-    <!--div id="newItems"-->
 
      <div class="form-popup" id="projectForm">
           <form class="form-container" id="create-project-form">
@@ -322,8 +291,6 @@
         }
 
         </script>
-
-    <!--/div-->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>

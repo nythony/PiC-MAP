@@ -2,11 +2,7 @@ const projectHomePageUsers = []
 
 
 const addUserToProjectHomePage = ({ id, usernameVP, useridVP, projectNameVP, projectidVP }) => {
-    // Clean the data
-    // username = username.trim().toLowerCase()
-    // room = room.trim().toLowerCase()
-    // userid = userid.trim().toLowerCase()
-    // chatroomid = chatroomid.trim().toLowerCase()
+
     // Validate the data
     if (!usernameVP || !projectNameVP) {
         return {
