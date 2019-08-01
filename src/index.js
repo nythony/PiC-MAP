@@ -504,15 +504,15 @@ io.on('connection', (socket) => {
             var values = []
             //Do not include start and due date
             if ((start == "") && (due == "")){
-                text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "ProjectPassword") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
+                text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "ProjectPassword") VALUES($1,$2,$3,$4) RETURNING *';
                 values = [name, desc, userCreate, pass];
             //Do not include start, include due
             } else if ( start == ""){
-                text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "DueDate", "ProjectPassword") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
+                text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "DueDate", "ProjectPassword") VALUES($1,$2,$3,$4,$5) RETURNING *';
                 values = [name, desc, userCreate, due, pass];
             //Include start, do not include due
             } else if (due == ""){
-                text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "ProjectPassword") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
+                text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "ProjectPassword") VALUES($1,$2,$3,$4,$5) RETURNING *';
                 values = [name, desc, userCreate, start, pass];
             //Include both start and due
             } else {
