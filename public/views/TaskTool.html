@@ -4,56 +4,65 @@
         <title>PiC-MAP Task Tool</title>
         <link rel="icon" href="/img/favicon.png">
         <link rel="stylesheet" href="/css/styles.css">
+        <meta name="viewport" charset="utf-8" content="width=device-width, initial-scale=1">
     </head>
     <style>
+        h2 {color: #f1f1f1;}
+        p {color: #f1f1f1;}
+        span.col{color: #39cccc;}
         /* Button used to open the contact form - fixed at the bottom of the page */
-        .open-button {
+/*        .open-button {
             background-color: #555;
             color: white;
             border: none;
             cursor: pointer;
             opacity: 0.8;
         }
-
+*/
         /* The popup form - hidden by default */
-        .form-popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 300px;
-            height: 300px;
-            margin-left: -150px;
-            margin-top: -150px;
-            border: 3px solid #f1f1f1;
-        }
+    .form-popup {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      right: 15px;
+      border: 3px solid #f1f1f1;
+      z-index: 9;
+    }
 
-        /* Add styles to the form container */
-        .form-container {
-            max-width: 300px;
-            padding: 10px;
-            background-color: white;
-        }
+    /* Add styles to the form container */
+    .form-container {
+      max-width: 300px;
+      padding: 10px;
+      background-color: white;
+    }
 
-        /* Full-width input fields */
-        .form-container input[type=text], .form-container input[type=password] {
-            width: 100%;
-            padding: 15px;
-            margin: 5px 0 22px 0;
-            border: none;
-            background: #f1f1f1;
-        }
+    /* Full-width input fields */
+    .form-container input[type=text], .form-container input[type=password] {
+      width: 100%;
+      padding: 15px;
+      margin: 5px 0 22px 0;
+      border: none;
+      background: #f1f1f1;
+    }
 
-        /* When the inputs get focus, do something */
-        .form-container input[type=text]:focus, .form-container input[type=password]:focus {
-            background-color: #ddd;
-            outline: none;
-        }
+    .form-container input[type=date], .form-container input[type=password] {
+      width: 100%;
+      padding: 15px;
+      margin: 5px 0 22px 0;
+      border: none;
+      background: #f1f1f1;
+    }
 
-        /* Add some hover effects to buttons */
-        .form-container .btn:hover, .open-button:hover {
-            opacity: 1;
-        }
+    /* When the inputs get focus, do something */
+    .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+      background-color: #ddd;
+      outline: none;
+    }
+
+    /* Add some hover effects to buttons */
+    .form-container .btn:hover, .open-button:hover {
+      opacity: 1;
+    }
     </style>
     <body>
         <div id="header" class="header"></div>
@@ -113,8 +122,8 @@
         <div class="form-popup" id="deleteSubTask">
             <form class="form-container" id="deleteSubTaskForm" name="deleteSubTaskForm">
                 <h1>Delete a Subtask</h1>
-                <p><b>Are you sure you wish to delete this subtask?</b></p>
-                <p><b>This can not be undone once deleted.</b></p>
+                <label><b>Are you sure you wish to delete this subtask?</b></label>
+                <label><b>This can not be undone once deleted.</b></label>
                 <input type="hidden" id="deleteTaskTool_ID" name="TaskTool_ID" autocomplete="off"/>
                 <input type="hidden" id="deleteTask_ID" name="Task_ID" autocomplete="off"/>
                 <button class="btn" type="submit">Delete</button>
@@ -162,13 +171,13 @@
             <form action="/logout" method="post" style="display: inline-block; float:right; padding: 4px;">
                 <button class"button" type="submit">Log Out</button>
             </form>
-            <form action="/ProjectHomePage" id="backToProjectHomePage" method="get" style="display: inline-block; float:right; padding: 4px;">
+            <form action="/ProjectHomePage" id="backToProjectHomePage" method="get">
                 <input type="hidden" id="usernameVP" name="usernameVP" value="{{username}}" required />
                 <input type="hidden" id="useridVP" name="useridVP" value="{{userid}}" required />
                 <input type="hidden" id="projectidVP" name="projectidVP" value="{{projectidVP}}" required />
                 <input type="hidden" id="projectNameVP" name="projectNameVP" value="{{projectNameVP}}" required />
-                <input type="hidden" id="chatname" name="chatname" value="{{chatname}}" required><br>
-                <input type="hidden" id="chatid" name="chatid" value="{{chatid}}" required><br>
+                <input type="hidden" id="chatname" name="chatname" value="{{chatname}}" required>
+                <input type="hidden" id="chatid" name="chatid" value="{{chatid}}" required>
                 <button class"button" type="submit">Return to Project Home Page</button>
             </form><br><br>
             <div style="clear: both;"></div>
@@ -221,13 +230,13 @@
 
         <script id="userscreatetask-template" type="text/html">
             {{#userNamesIds}}
-                <input type="checkbox" value={{ID}}>{{Name}}</option><br>
+                <input type="checkbox" value={{ID}}><span class = "col">{{Name}}</span></option><br>
             {{/userNamesIds}}
         </script>
 
         <script id="usersedittask-template" type="text/html">
             {{#userNamesIds}}
-                <input type="checkbox" value={{ID}}>{{Name}}</option><br>
+                <input type="checkbox" value={{ID}}><span class = "col">{{Name}}</span></option><br>
             {{/userNamesIds}}
         </script>
 

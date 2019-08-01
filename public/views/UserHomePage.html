@@ -12,13 +12,13 @@
     * {box-sizing: border-box;}
 
     /* Button used to open the contact form */
-    .open-button {
-      /*background-color: #555; Changes background color of button before hover 
+/*    .open-button {
+      background-color: #555; Changes background color of button before hover 
       color: white;
       border: none;
       cursor: pointer;
-      opacity: 0.8;*/
-    }
+      opacity: 0.8;
+    }*/
 
     /* The popup form - hidden by default */
     .form-popup {
@@ -73,34 +73,7 @@
         font-family: arial;
     }
 
-/*    #projects {
-        text-align: center;
-        margin-top: 50px;
-        font-size: 120%;
-        font-family: arial;
-    }*/
 
-/*    #newItems {
-        text-align: left;
-        margin-top: 50px;
-        margin-left: 50px;
-        font-size: 100%;
-        font-family: arial;
-    }
-    #joinExisting {
-        text-align: right;
-        margin-top: 50px;
-        margin-right: 50px;
-        font-size: 100%;
-        font-family: arial;
-    }
-    #chatApp {
-        text-align: left;
-        margin-top: 50px;
-        margin-left: 50px;
-        font-size: 100%;
-        font-family: arial;
-    }*/
 </style>
 </head>
 
@@ -131,12 +104,8 @@
     <div id="header" class="header"></div>
     <div id="taskTool" class="tasktool__subtask"></div-->
     <div id="projectElement" class="UHP__project"></div>
-
-
-
-
-
-    <button class="open-button" onclick=openJoinProjectForm()>Join an Existing Project</button>
+    
+    <button onclick="openJoinProjectForm()" style="display: inline-block; float:right; padding:4px">Join an Existing Project</button>
 
     <div class="form-popup" id="joinProjectForm">
         <form class="form-container" id="join-project-form">
@@ -174,11 +143,10 @@
 
                       <br><br><br><br>
 
-                      <h2><b> {{projectName}} </b></h2>
-                      <p>{{projectDesc}}</p>
+                      <h2><b> {{projectName}} </b></h2> <br>
+                      <p>{{projectDesc}}</p><br>
                       <p>Start: {{StartDate}}</p>
                       <p>Due: {{DueDate}}</p>
-                      <p><i>Project ID: {{Project_ID}}</i></p>
                   
                   <form action="/ProjectHomePage" >
                       <input type="hidden" id="usernameVP" name="usernameVP" value= "{{username}}" required />
@@ -191,6 +159,8 @@
                   </form>
 
                     <br>
+
+                <p align = left><i>Project ID: {{Project_ID}}</i></p>
                   </p>
                 </div>
                 
@@ -239,7 +209,7 @@
                     <label><b>Name</b> </label>
                     <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required>
 
-                    <label><b>Description</b> <i><(optional)</i></label>
+                    <label><b>Description</b> <i>(optional)</i></label>
                     <input type="text" id="projectDescription" name="projectDescription" placeholder="Enter the project description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" value = "">
 
                     <label><b>Start Date</b> <i>(optional)</i></label>
@@ -288,7 +258,7 @@
 
 
     <!--POP UP FOR CREATING A PROJECT-->
-    <button class="open-button" onclick="openCreateProjectForm()">Create Project</button>
+    <button onclick="openCreateProjectForm()" style="position: absolute; left: 25%; display: inline-block;">Create Project</button>
 
     <!--div id="newItems"-->
 

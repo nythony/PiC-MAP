@@ -213,26 +213,38 @@ io.on('connection', (socket) => {
         const user = getUserInProjectHomePage(socket.id)
         const text = 'UPDATE "TaskTool" SET "TaskToolName"=$1 WHERE "TaskTool_ID"=$2 RETURNING *'
         const values = [taskTool, TaskTool_ID]
-        client.query(text, values, (err, res) => {
-            if (err) {
-                console.log(err.stack)
-            }
-            else {
-                //console.log(res.rows[0])
-            }
-            console.log('----------------------------------record is updated--------------------------------')
+
+        var promise2 = new Promise(function(resolve, reject){
+
+            var roomTT = 'TT' + TaskTool_ID;
+                io.to(roomTT).emit('redirectToLogin', "This task tool has been edited. Please log in again.");
+
+            resolve() 
         })
-        // redisplay task tools
-        client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+Project_ID+';', (err3, tasktoolresult) => { // get all task tools for that project ID
-            const tasktools = []
-            for (let foo of tasktoolresult.rows) {
-                const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
-                    TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
-                tasktools.push(tasktool)
-            }
-            io.to(user.roomNumber).emit('taskTool', (tasktools))
+
+        promise2.then(function() {
+
+            client.query(text, values, (err, res) => {
+                if (err) {
+                    console.log(err.stack)
+                }
+                else {
+                    //console.log(res.rows[0])
+                }
+                console.log('----------------------------------record is updated--------------------------------')
+            })
+            // redisplay task tools
+            client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+Project_ID+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+                const tasktools = []
+                for (let foo of tasktoolresult.rows) {
+                    const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
+                        TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
+                    tasktools.push(tasktool)
+                }
+                io.to(user.roomNumber).emit('taskTool', (tasktools))
+            })
+            callback()
         })
-        callback()
     })
 
     // When a task tool is deleted within ProjectHomePage
@@ -243,11 +255,8 @@ io.on('connection', (socket) => {
 
         var promise2 = new Promise(function(resolve, reject){
 
-                console.log("Attempting to redirect TT for TTID = ", TaskTool_ID)
-
                 var roomTT = 'TT' + TaskTool_ID;
-                    console.log("in delete TaskTool at index, redirecting users in roomTT = ", roomTT)
-                    io.to(roomTT).emit('redirectToLogin');
+                    io.to(roomTT).emit('redirectToLogin', "This task tool has been deleted. Please log in again.");
 
                 resolve() 
             })
