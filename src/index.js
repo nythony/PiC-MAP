@@ -617,34 +617,34 @@ io.on('connection', (socket) => {
 
                 console.log("Attempting to update for project name, id = ", name, id)
 
-                // const text = 'SELECT "TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = \'' + id + '\';'
-                // client.query(text, (err, res) => {
-                //     if (err) {
-                //         console.log(err.stack)
-                //     } else {
-                //         for (let ttid of res.rows) {
-                //             var roomTT = 'TT' + ttid["TaskTool_ID"];
-                //                 console.log("in edit proj at index, updagin projName users in roomTT = ", roomTT)
-                //                 io.to(roomTT).emit('updateProjectName', name);
-                //         }
-                //     }
-                // })
+                const text = 'SELECT "TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = \'' + id + '\';'
+                client.query(text, (err, res) => {
+                    if (err) {
+                        console.log(err.stack)
+                    } else {
+                        for (let ttid of res.rows) {
+                            var roomTT = 'TT' + ttid["TaskTool_ID"];
+                                console.log("in edit proj at index, updagin projName users in roomTT = ", roomTT)
+                                io.to(roomTT).emit('updateProjectName', "This project as been modified. Please log in again.");
+                        }
+                    }
+                })
 
-                // //Updating project name in Chatroom of that project
-                // var roomC = 'C' + id;
-                //     io.to(roomC).emit('updateProjectName', name);
+                //Redirect users in Chatroom of that project
+                var roomC = 'C' + id;
+                    io.to(roomC).emit('redirectToLogin', "This project as been modified. Please log in again.");
 
-        // //Updating project name in ProjectHomePage of that project
-        // var roomP = 'PHP' + id;
-        //     io.to(roomP).emit('updateProjectName', name);
+                //Redirect users in ProjectHomePage of that project
+                var roomP = 'PHP' + id;
+                    io.to(roomP).emit('redirectToLogin', "This project as been modified. Please log in again.");
 
-                // //Updating project name in RequirementTool of that project
-                // var roomR = 'R' + id;
-                //     io.to(roomR).emit('updateProjectName', name);
+                //Redirect users in RequirementTool of that project
+                var roomR = 'R' + id;
+                    io.to(roomR).emit('redirectToLogin', "This project as been modified. Please log in again.");
 
-                // //Updating project name in IssueTool of that project
-                // var roomI = 'I' + id
-                //     io.to(roomI).emit('updateProjectName', name);
+                //Redirect users in IssueTool of that project
+                var roomI = 'I' + id
+                    io.to(roomI).emit('redirectToLogin', "This project as been modified. Please log in again.");
 
                 resolve() 
             })
@@ -734,26 +734,26 @@ io.on('connection', (socket) => {
                         for (let ttid of res.rows) {
                             var roomTT = 'TT' + ttid["TaskTool_ID"];
                                 console.log("in delete at index, redirecting users in roomTT = ", roomTT)
-                                io.to(roomTT).emit('redirectToLogin');
+                                io.to(roomTT).emit('redirectToLogin', "This project as been deleted. Please log in again.");
                         }
                     }
                 })
 
                 //Redirect users in Chatroom of that project
                 var roomC = 'C' + id;
-                    io.to(roomC).emit('redirectToLogin');
+                    io.to(roomC).emit('redirectToLogin', "This project as been deleted. Please log in again.");
 
                 //Redirect users in ProjectHomePage of that project
                 var roomP = 'PHP' + id;
-                    io.to(roomP).emit('redirectToLogin');
+                    io.to(roomP).emit('redirectToLogin', "This project as been deleted. Please log in again.");
 
                 //Redirect users in RequirementTool of that project
                 var roomR = 'R' + id;
-                    io.to(roomR).emit('redirectToLogin');
+                    io.to(roomR).emit('redirectToLogin', "This project as been deleted. Please log in again.");
 
                 //Redirect users in IssueTool of that project
                 var roomI = 'I' + id
-                    io.to(roomI).emit('redirectToLogin');
+                    io.to(roomI).emit('redirectToLogin', "This project as been deleted. Please log in again.");
 
                 resolve() 
             })

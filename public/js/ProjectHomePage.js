@@ -5,10 +5,6 @@ const socket = io()
 // Elements
 const $header = document.querySelector('#header')
 const $taskTool = document.querySelector('#taskTool')
-const $reqButton = document.querySelector('#reqButton')
-const $issuesButton = document.querySelector('#issuesButton')
-const $chatappButton = document.querySelector('#chatappButton')
-
 const $createTaskToolForm = document.querySelector('#createTaskToolForm')
 const $editTaskToolForm = document.querySelector('#editTaskToolForm')
 const $deleteTaskToolForm = document.querySelector('#deleteTaskToolForm')
@@ -16,15 +12,12 @@ const $deleteTaskToolForm = document.querySelector('#deleteTaskToolForm')
 // Templates
 const headerTemplate = document.querySelector('#header-template').innerHTML
 const taskToolTemplate = document.querySelector('#tasktool-template').innerHTML
-const requirementsButtonTemplate = document.querySelector('#requirementsButton-template').innerHTML
-const issuesButtonTemplate = document.querySelector('#issuesButton-template').innerHTML
-const chatappButtonTemplate = document.querySelector('#chatappButton-template').innerHTML
 
 
 
 // Get user data
 // some of these aren't used as this passes through the query, not cookie
-const { usernameVP, useridVP, projectidVP, projectNameVP, chatname, chatid } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+const { usernameVP, useridVP, projectidVP, projectNameVP } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
 
 // Definition for header
@@ -35,48 +28,11 @@ const headerhtml = Mustache.render(headerTemplate, {
 document.querySelector('#header').innerHTML = headerhtml
 
 
-// Fill requirements button with necessary navigation info
-const rButton = Mustache.render(requirementsButtonTemplate, {
-    username: usernameVP,
-    userid: useridVP,
-    ProjectName: projectNameVP,
-    Project_ID: projectidVP,
-    chatname: chatname,
-    chatid: chatid
-})
-$reqButton.innerHTML = rButton
-
-// Fill issues button with necessary navigation info
-const iButton = Mustache.render(issuesButtonTemplate, {
-    username: usernameVP,
-    userid: useridVP,
-    ProjectName: projectNameVP,
-    Project_ID: projectidVP,
-    chatname: chatname,
-    chatid: chatid
-})
-$issuesButton.innerHTML = iButton
-
-// Fill chatapp button with necessary navigation info
-const cButton = Mustache.render(chatappButtonTemplate, {
-    username: usernameVP,
-    userid: useridVP,
-    ProjectName: projectNameVP,
-    Project_ID: projectidVP,
-    room: chatname,
-    chatroomid: chatid
-})
-$chatappButton.innerHTML = cButton
-console.log("loading button: ", cButton)
-
-
 
 // Definition for task tool event
 socket.on('taskTool', (tasktools) => {
     const html = Mustache.render(taskToolTemplate, {
-        tasktools,
-        chatname: chatname,
-        chatid: chatid
+        tasktools
     })
     document.querySelector('#taskTool').innerHTML = html
 })
@@ -157,30 +113,14 @@ $deleteTaskToolForm.addEventListener('submit', (e) => {
     })
 })
 
-//A user is getting redirected to login because the project they are in has been deleted
-socket.on("redirectToLogin", (error) => {
+//A user is getting redirected to login
+socket.on("redirectToLogin", (eMessage) => {
 
-    if (error){
-        console.log(error)
-    }
-
-    alert("This project as been deleted. Please log in again.");
+    alert(eMessage);
     location.href = '/';
 
 })
 
-// //Updating projectName -> NEED TO RERENDER ANYTHING THAT USES PROJECT NAME. 
-//Does this somehow define project ID as well? When I deleted a project with the same name, it changed project ID to one that exists. 
-
-// socket.on("updateProjectName", (name) => {
-
-//     if (error){
-//         console.log(error)
-//     }
-
-//     projectNameVP = name;
-
-// })
 
 socket.on("setPassword", (pass) =>{
 
