@@ -505,20 +505,20 @@ io.on('connection', (socket) => {
             if ((start == "") && (due == "")){
                 const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "ProjectPassword") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
                 const values = [name, desc, userCreate, pass];
-                //Do not include start, include due
+            //Do not include start, include due
             } else if ( start == ""){
                 const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "DueDate", "ProjectPassword") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
                 const values = [name, desc, userCreate, due, pass];
-                //Include start, do not include due
+            //Include start, do not include due
             } else if (due == ""){
                 const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "ProjectPassword") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
                 const values = [name, desc, userCreate, start, pass];
-                //Include both start and due
+            //Include both start and due
             } else {
                 const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate", "ProjectPassword") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
                 const values = [name, desc, userCreate, start, due, pass];
             }
-
+            console.log(text)
             client.query(text, values, (err, res) => {
                 if (err) {
                     console.log(err.stack)
