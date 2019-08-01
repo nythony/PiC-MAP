@@ -513,7 +513,7 @@ io.on('connection', (socket) => {
                     client.query(text, (err, results) => { 
                         for (let obj of results.rows){
                             var proj = {
-                                userid: userCreate, 
+                                username: user, 
                             }
                             proj['userid'] = obj["User_ID"]
 			                proj['Project_ID'] = obj["Project_ID"]
