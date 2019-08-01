@@ -58,7 +58,6 @@ app.use(cookieParser());
 // When a user connects
 // Connection event is built in
 io.on('connection', (socket) => {
-    console.log('New WebSocket connection')
 
     // ChatApp
 
