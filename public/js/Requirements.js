@@ -21,7 +21,6 @@ const usersEditRequirementTemplate = document.querySelector('#userseditrequireme
 
 // Options
 const {username, userid, roomNumber, ProjectName, Project_ID, projectNameVP, projectidVP, chatname, chatid} = Qs.parse(location.search, { ignoreQueryPrefix: true })
-//console.log("qs: ", {username, userid, roomNumber, ProjectName, Project_ID, projectNameVP, projectidVP})
 
 // Definition for header
 const headerhtml = Mustache.render(headerTemplate, {
@@ -34,7 +33,6 @@ const headerhtml = Mustache.render(headerTemplate, {
     chatid: chatid
 })
 document.querySelector('#header').innerHTML = headerhtml
-//console.log("headerhtml: ", headerhtml)
 
 // Definitions for requirement event
 socket.on('requirement1', (requirements1) => {

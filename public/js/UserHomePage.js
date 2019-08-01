@@ -1,5 +1,4 @@
 
-console.log("running UserHomePage.js")
 const socket = io()
 
 //////////////////////////
@@ -45,9 +44,6 @@ const $projectElement = document.querySelector('#projectElement')
 socket.on('projectList', (projectList) => {
 
     localProjects = projectList;
-    console.log("in socket for projectList at userHomePage.js: ", projectList)
-
-
 
         const html = Mustache.render(projectListTemplate, {
            
@@ -80,8 +76,6 @@ const $joinProjectForm = document.querySelector('#join-project-form')
 
 // Listen for submission of join-project-form
 $joinProjectForm.addEventListener('submit', (e) => {
-    console.log("A user is joining a project")
-
     e.preventDefault()
 
     // Retrieve inputs
@@ -121,8 +115,6 @@ const $createProjectForm = document.querySelector('#create-project-form')
 
 // Listen for submission of create-project-form
 $createProjectForm.addEventListener('submit', (e) => {
-    console.log("A project is being created")
-
     e.preventDefault()
 
     // Retrieve inputs
@@ -132,7 +124,6 @@ $createProjectForm.addEventListener('submit', (e) => {
     const start = e.target.elements.startDate.value
     const due = e.target.elements.dueDate.value
     const user = username 
-
 
     //To be heard by index.js
     socket.emit('createProject', {pass, name, desc, start, due, user}, (error) => {
@@ -159,8 +150,6 @@ const $editProjectForm = document.querySelector('#edit-project-form')
 
 // Listen for submission of edit-project-form
 $editProjectForm.addEventListener('submit', (e) => {
-    console.log("A project is being edited")
-
     e.preventDefault()
 
     // Retrieve inputs
@@ -197,8 +186,6 @@ const $deleteProjectForm = document.querySelector('#delete-project-form')
 
 // Listen for submission of delete-project-form
 $deleteProjectForm.addEventListener('submit', (e) => {
-    console.log("A project is being deleted")
-
     e.preventDefault()
 
     // Retrieve inputs

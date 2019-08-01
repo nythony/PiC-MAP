@@ -71,14 +71,9 @@ io.on('connection', (socket) => {
         }
 
         socket.join(user.roomNumber)
-        //console.log(user)
-
         // Display only to connection
         client.query('SELECT t1."Message", t2."UserName", t1."TimeStamp" FROM "ChatMessage" AS t1 JOIN "User" AS t2 ON t1."User_ID" = t2."User_ID" JOIN "ChatRoom" AS t3 ON t1."ChatRoom_ID" = t3."ChatRoom_ID" WHERE t3."ChatRoom_ID" = \'' + user.chatroomid + '\' ORDER BY "ChatMessage_ID";', (error, results) => {
             for (let foo of results.rows) {
-                //console.log(foo["Message"])
-                //console.log("we're here")
-                //console.log(foo)
                 socket.emit('message', generateMessageHistory(foo["UserName"], foo["Message"], foo["TimeStamp"]))
             }
         })
@@ -104,11 +99,8 @@ io.on('connection', (socket) => {
                 console.log(err.stack)
             } else {
                 //console.log(res.rows[0])
-
             }
-            console.log('----------------------------------record is created--------------------------------')
         })
-        console.log(user.roomNumber)
         io.to(user.roomNumber).emit('message', generateMessage(user.username, message))
         // We can use this below for redirecting!
         // var destination = ('/loginPage')
@@ -164,27 +156,20 @@ io.on('connection', (socket) => {
      	client.query('SELECT "Password" FROM "User" WHERE "UserName" = \''+usernameVP+'\';', (err, pass) => {
      		socket.emit("setPassword", pass.rows[0].Password);
      	})
-
-
-        //client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectNameVP+'\';', (err, projectidresult) => { // get project ID of input project
-        //    projectidVP = projectidresult["rows"][0]["Project_ID"] // get project ID (this might get deleted if VP button is added
-            
-            const { error, user} = addUserToProjectHomePage({ id: socket.id, usernameVP, useridVP, projectNameVP, projectidVP }) // register user on page
-            if (error) {
-                return callback(error)
+        const { error, user} = addUserToProjectHomePage({ id: socket.id, usernameVP, useridVP, projectNameVP, projectidVP }) // register user on page
+        if (error) {
+            return callback(error)
+        }
+        socket.join(user.roomNumber) // PHP + projectid
+        client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
+            const tasktools = []
+            for (let foo of tasktoolresult.rows) {
+                const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
+                    TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
+                tasktools.push(tasktool)
             }
-            socket.join(user.roomNumber) // PHP + projectid
-            client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
-                const tasktools = []
-                for (let foo of tasktoolresult.rows) {
-                    const tasktool = {TaskToolName: foo["TaskToolName"], username: user.usernameVP, userid: user.useridVP, ProjectName: user.projectNameVP, Project_ID: user.projectidVP,
-                        TaskTool_ID: foo["TaskTool_ID"], TaskTool_ID2: foo["TaskTool_ID"]}
-                    tasktools.push(tasktool)
-                }
-                socket.emit('taskTool', (tasktools))
-            })
-        //})
-        //socket.emit('projectData', {projectname: user.projectNameVP, users: getAllUsersInProject(user.projectNameVP)})
+            socket.emit('taskTool', (tasktools))
+        })
         callback()
     })
 
@@ -231,7 +216,6 @@ io.on('connection', (socket) => {
                 else {
                     //console.log(res.rows[0])
                 }
-                console.log('----------------------------------record is updated--------------------------------')
             })
             // redisplay task tools
             client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+Project_ID+';', (err3, tasktoolresult) => { // get all task tools for that project ID
@@ -270,7 +254,6 @@ io.on('connection', (socket) => {
 		            else {
 		                //console.log(res.rows[0])
 		            }
-		            console.log('----------------------------------record is deleted--------------------------------')
 		        })
 		        // redisplay task tools
 		        client.query('SELECT "TaskToolName","TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = '+projectidVP+';', (err3, tasktoolresult) => { // get all task tools for that project ID
@@ -431,8 +414,6 @@ io.on('connection', (socket) => {
                                         })
                                     }
                                 })
-
-                            console.log ("project length, i = ", res.rows.length, i)
                             //This particular line in the results is not correct. If this is the last item in the results, print error.
                             } else if (i == res.rows.length){
                                 //Entered a project name, but with the wrong password
@@ -462,7 +443,6 @@ io.on('connection', (socket) => {
                 if (err) {
                     console.log(err.stack)
                 } else {
-                    console.log('----------------------------------user has joined a project--------------------------------');
                     
                     //Displaying project list again
                     var list = []
@@ -483,7 +463,6 @@ io.on('connection', (socket) => {
                             
                             list.push(proj);
                         }
-                        console.log("WE ARE GETTING TO JOINED PROJECT INDEX.JS: ", list);
                         socket.emit('projectList', list)
                     })
                 }
@@ -522,26 +501,28 @@ io.on('connection', (socket) => {
         //Creating new project
         promise1.then(function(userCreate) {
 
-            //Converting empty date to null values to enter into date type values in DB
-            if (start == ""){
-                start = null //Inserting allows for null entry. DB trigger to automatically set start date as current date. Due date is null
+            //Do not include start and due date
+            if ((start == "") && (due == "")){
+                const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "ProjectPassword") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
+                const values = [name, desc, userCreate, pass];
+                //Do not include start, include due
+            } else if ( start == ""){
+                const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "DueDate", "ProjectPassword") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
+                const values = [name, desc, userCreate, due, pass];
+                //Include start, do not include due
+            } else if (due == ""){
+                const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "ProjectPassword") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
+                const values = [name, desc, userCreate, start, pass];
+                //Include both start and due
+            } else {
+                const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate", "ProjectPassword") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
+                const values = [name, desc, userCreate, start, due, pass];
             }
-
-            if (due == ""){
-                due = null
-            }
-
-            //Inserting into database
-            const text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate", "ProjectPassword") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
-            const values = [name, desc, userCreate, start, due, pass];
 
             client.query(text, values, (err, res) => {
                 if (err) {
                     console.log(err.stack)
                 } else {
-
-                    console.log('----------------------------------project is created--------------------------------');
-                    
                     //updating list shown
                     var list = []
                     const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate", Ch."ChatRoom_ID", Ch."ChatName" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" JOIN "ChatRoom" Ch ON Ch."Project_ID" = Pa."Project_ID" WHERE "UserName" = \'' + user+ '\' ORDER BY "StartDate"'
@@ -617,15 +598,7 @@ io.on('connection', (socket) => {
         })
   		
   		promise1.then(function(text) {
-
-
-
-            console.log("in edit project, project name, id = ", name, id)
-
             var promise2 = new Promise(function(resolve, reject){
-
-                console.log("Attempting to update for project name, id = ", name, id)
-
                 const text = 'SELECT "TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = \'' + id + '\';'
                 client.query(text, (err, res) => {
                     if (err) {
@@ -633,7 +606,6 @@ io.on('connection', (socket) => {
                     } else {
                         for (let ttid of res.rows) {
                             var roomTT = 'TT' + ttid["TaskTool_ID"];
-                                console.log("in edit proj at index, updagin projName users in roomTT = ", roomTT)
                                 io.to(roomTT).emit('updateProjectName', "This project as been modified. Please log in again.");
                         }
                     }
@@ -665,8 +637,6 @@ io.on('connection', (socket) => {
 		            if (err) {
 		                console.log(err.stack)
 		            } else {
-		                console.log('----------------------------------project is modified--------------------------------');
-
 	                    io.to('UHP').emit('refreshProjectList')
 
 		            }
@@ -726,14 +696,9 @@ io.on('connection', (socket) => {
         //Deleting the project
         promise1.then(function(obj) {
         	//obj = {userID, projectID} DIFFERENT FROM JOIN
-            
+         
             var id = obj[1];
-
-            console.log("in delete project, project id = ", id)
-
             var promise2 = new Promise(function(resolve, reject){
-
-                console.log("Attempting to redirect PHP for project id = ", id)
 
                 const text = 'SELECT "TaskTool_ID" FROM "TaskTool" WHERE "Project_ID" = \'' + id + '\';'
                 client.query(text, (err, res) => {
@@ -742,7 +707,6 @@ io.on('connection', (socket) => {
                     } else {
                         for (let ttid of res.rows) {
                             var roomTT = 'TT' + ttid["TaskTool_ID"];
-                                console.log("in delete at index, redirecting users in roomTT = ", roomTT)
                                 io.to(roomTT).emit('redirectToLogin', "This project as been deleted. Please log in again.");
                         }
                     }
@@ -774,8 +738,6 @@ io.on('connection', (socket) => {
                     if (err) {
                         console.log(err.stack)
                     } else {
-                        console.log('----------------------------------project has been deleted--------------------------------');
-                        
                         //Displaying project list again
                         io.to('UHP').emit('refreshProjectList')
                     }
@@ -863,7 +825,6 @@ io.on('connection', (socket) => {
                     }
                 })
             }
-            console.log('----------------------------------record is created--------------------------------')
         })
         // Display subtasks
         client.query('SELECT * FROM "Task" AS t1 JOIN "TaskCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."TaskTool_ID" = \'' + user.TaskTool_ID + '\' ORDER BY "DueDate";', (error, results) => {
@@ -925,7 +886,6 @@ io.on('connection', (socket) => {
                     }
                 })
             }
-            console.log('----------------------------------record is updated--------------------------------')
         })
         // Display subtasks
         client.query('SELECT * FROM "Task" AS t1 JOIN "TaskCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."TaskTool_ID" = \'' + user.TaskTool_ID + '\' ORDER BY "DueDate";', (error, results) => {
@@ -975,7 +935,6 @@ io.on('connection', (socket) => {
             else {
                 //console.log(res.rows[0])
             }
-            console.log('----------------------------------record is deleted--------------------------------')
         })
         // Display subtasks
         client.query('SELECT * FROM "Task" AS t1 JOIN "TaskCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."TaskTool_ID" = \'' + user.TaskTool_ID + '\' ORDER BY "DueDate";', (error, results) => {
@@ -1095,7 +1054,6 @@ io.on('connection', (socket) => {
                     }
                 })
             }
-            console.log('----------------------------------record is created--------------------------------')
         })
         // Display requirements
         client.query('SELECT * FROM "Requirement" AS t1 JOIN "ReqCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
@@ -1157,7 +1115,6 @@ io.on('connection', (socket) => {
                     }
                 })
             }
-            console.log('----------------------------------record is updated--------------------------------')
         })
         // Display requirements
         client.query('SELECT * FROM "Requirement" AS t1 JOIN "ReqCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
@@ -1207,7 +1164,6 @@ io.on('connection', (socket) => {
             else {
                 //console.log(res.rows[0])
             }
-            console.log('----------------------------------record is deleted--------------------------------')
         })
         // Display requirements
         client.query('SELECT * FROM "Requirement" AS t1 JOIN "ReqCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
@@ -1332,7 +1288,6 @@ io.on('connection', (socket) => {
                     }
                 })
             }
-            console.log('----------------------------------record is created--------------------------------')
         })
         // Display issues
         client.query('SELECT * FROM "Issue" AS t1 JOIN "IssueCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
@@ -1395,7 +1350,6 @@ io.on('connection', (socket) => {
                     }
                 })
             }
-            console.log('----------------------------------record is updated--------------------------------')
         })
         // Display issues
         client.query('SELECT * FROM "Issue" AS t1 JOIN "IssueCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
@@ -1446,7 +1400,6 @@ io.on('connection', (socket) => {
             else {
                 //console.log(res.rows[0])
             }
-            console.log('----------------------------------record is deleted--------------------------------')
         })
         // Display issues
         client.query('SELECT * FROM "Issue" AS t1 JOIN "IssueCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
@@ -1534,7 +1487,6 @@ app.get("/UserHomePage/", function (req, res) {
                 var thisUserID = useridresult["rows"][0]["User_ID"]
                 res.cookie("userInfo",{name:username, userid: thisUserID, password: password, chatname: "TestingChatroom", chatroomid: 1})
                 res.render("UserHomePage", { user: req.cookies.userInfo })
-               //Are we only using cookie to display username?
             })
         } else if (loginMatch == 2) { //username exists, bad password
             io.to(req.query.socketid).emit('failedLogin', 'Login unsuccessful: Wrong password'); //socket.emit('failedLogin', 'Login unsuccessful: Wrong password')
@@ -1675,67 +1627,17 @@ app.post("/backToProjectHomePage", function (req, res) {
 })
 
 
-//     // When user clicks button to join an existing project
-// app.post("/UserHomePage/joinProject", function (req, res) {
-//     var userid = JSON.stringify(req.cookies.userInfo.userid)
-//     var projectName = req.body.projectName
-//     client.query('SELECT "Project_ID", "ProjectDesc" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err1, projectresult) => { // get project ID of input project
-//         if (err1) {console.log(err1.stack)}
-//         const projectid = projectresult["rows"][0]["Project_ID"]
-//         const projectDesc = projectresult["rows"][0]["ProjectDesc"]
-//         const attachValues = [userid, projectid]
-//         const attachText = 'INSERT INTO "AttachUserP"("User_ID", "Project_ID") VALUES($1,$2) RETURNING *'
-//         client.query(attachText, attachValues, (err2, res2) => { // add new link to AttachUserP table
-//             if (err2) {console.log(err2.stack)}     // THIS NEEDS TO BE PUT INTO A refreshCookie() function
-//             var newCookie = req.cookies.userInfo
-//             newCookie.projects.push(projectid) // update cookie from req -> res to add the new project that the user is assigned to
-//             newCookie.projectNames.push(projectName)
-//             newCookie.projectDescs.push(projectDesc)
-//             res.cookie("userInfo", newCookie)
-//             res.redirect('/UserHomePage/');
-//         })
-//     })
-// })
-
-
-
-
-
-// app.post("/failedLoginPage/submit", function (req, res) {  //--EDIT DELETE
-//     var username = req.body.username
-//     var password = req.body.password
-//     client.query('SELECT "UserName" FROM "User";', (error, results) => {
-//         if (error) throw error
-//         for (let row of results.rows) {
-//             if (row["UserName"] == username) {
-//                 client.query('SELECT "Password" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results1) => {
-//                     if (error1) throw error1
-//                     console.log(results1["rows"][0]["Password"])
-//                     if (results1["rows"][0]["Password"] == password) {
-//                         res.redirect('/loginResult/' + username)
-//                     }
-//                 })
-//             }
-//         }
-//     })
-//     res.redirect('/failedLoginPage')
-// });
 
 app.get("/createNewUser/submit", function (req, res) { 
     var username = req.query.username
     var password = req.query.password
     var socketid = req.query.socketid2
-
-    console.log("Create user gets username, pass, socket ", username, password, socketid);
-
     client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \'' + username + '\';', (error1, results1) => {
         if (error1){
             throw error1
 
         //User already exists
         } else if (results1.rows.length != 0){
-            console.log("Emitting from createNewUser/submit app.post, socket id, username, results = ", socketid, username, results1.rows);
-
             io.to(socketid).emit('failedRegistration', 'Username already taken.');
 
         //Create an account by adding inforamtion to DB
@@ -1749,59 +1651,6 @@ app.get("/createNewUser/submit", function (req, res) {
 
         }
     })
-});
-
-app.post("/contact-submitted", function (req, res) {
-    var cname = req.body.name;
-    var cemail = req.body.email;
-    var cmessage = req.body.message;
-    var chuman = req.body.human;
-
-    console.log(cname);
-    console.log(cemail);
-    console.log(cmessage);
-    console.log(chuman);
-});
-
-app.post("/userform-submitted", function (req, res) {
-    var uname = req.body.name;
-    var uemail = req.body.email;
-    var umessage = req.body.message;
-    var uhuman = req.body.human;
-
-    console.log(uname);
-    console.log(uemail);
-    console.log(umessage);
-    console.log(uhuman);
-});
-
-// When user clicks button to create new project (could be create, update, or delete) --EDIT DELETE, goes to socket instead
-// app.post("/projectform-submitted", function (req, res) {
-//     project.crudProject(req, res);
-// });
-
-
-app.post("/requirementform-submitted", function (req, res) {
-    requirement.crudRequirement(req, res);
-    console.log('post method of requirement form');
-    res.redirect('/');
-});
-
-app.post("/taskform-submitted", function (req, res) {
-    task.crudTask(req, res);
-    console.log('post method of task form');
-    res.redirect('/');
-});
-
-// When user clicks button to create new task tool (could be create, update, or delete)
-app.post("/taskToolform-submitted", function (req, res) {
-    taskTool.crudTaskTool(req, res);
-});
-
-app.post("/issueform-submitted", function (req, res) {
-    issue.crudIssue(req, res);
-    console.log('post method of issue form');
-    res.redirect('/');
 });
 
 //This server is running through the port 3000

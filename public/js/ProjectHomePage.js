@@ -66,8 +66,7 @@ const cButton = Mustache.render(chatappButtonTemplate, {
     room: chatname,	
     chatroomid: chatid	
 })	
-$chatappButton.innerHTML = cButton	
-console.log("loading button: ", cButton)	
+$chatappButton.innerHTML = cButton		
 
 
 
@@ -120,7 +119,6 @@ $editTaskToolForm.addEventListener('submit', (e) => {
     const taskTool = e.target.elements.TaskToolName.value
     const Project_ID = e.target.elements.editTaskTool_ProjectID.value
     const TaskTool_ID = e.target.elements.TaskTool_ID.value
-    console.log("edit:" ,{taskTool, Project_ID, TaskTool_ID})
 
     socket.emit('editTaskTool', {taskTool, Project_ID, TaskTool_ID} , (error) => {
         // Enable form
@@ -142,7 +140,6 @@ $deleteTaskToolForm.addEventListener('submit', (e) => {
 
     // Retrieve values of createSubTaskForm form
     const TaskTool_ID = e.target.elements.TaskTool_ID.value
-    console.log("delete:" ,{projectidVP, TaskTool_ID})
     socket.emit('deleteTaskTool', {projectidVP, TaskTool_ID} , (error) => {
         // Enable form
 
@@ -167,23 +164,18 @@ socket.on("redirectToLogin", (eMessage) => {
 
 
 socket.on("setPassword", (pass) =>{
-
-    console.log("Setting password = ", pass)
     document.getElementById("password").value = pass;
 })
 
 var i = 0;
 // When a user enters a projecthomepage, sends user info to server
 socket.emit('enterProjectHomePage', { usernameVP, useridVP, projectNameVP, projectidVP }, (error) => {
-    console.log("entering: ", { usernameVP, useridVP, projectNameVP, projectidVP })
     if (error) {
         alert(error)
         location.href = '/'
     }
 
     id = socket.id;
-
-    console.log("Socket id = ", id, "Username = ", username)
     document.getElementById("socketid").value = id;
     document.getElementById("username").value = usernameVP;
     

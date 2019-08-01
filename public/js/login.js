@@ -1,5 +1,4 @@
 
-console.log('running login script')
 const socket = io()
 //console.log("SocketID ", socket.id)
 
@@ -7,7 +6,6 @@ var id = 0;
 
 // When a user enters the login page, sends socket info to server
 socket.emit('enterLogin', (error) => {
-	//console.log("IN LOGIN.JS: ", socket.id);
 	id = socket.id;
 
 	document.getElementById("socketid").value = id;
@@ -21,7 +19,6 @@ socket.emit('enterLogin', (error) => {
 
 //Error message
 socket.on('failedRegistration', (eMessage) => {
-    console.log("We are getting here at login.js failed Registraton")
 
     alert('Username already taken.');
     location.href = '/';
