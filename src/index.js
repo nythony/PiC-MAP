@@ -166,8 +166,9 @@ io.on('connection', (socket) => {
      	})
 
 
-        client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectNameVP+'\';', (err, projectidresult) => { // get project ID of input project
-            projectidVP = projectidresult["rows"][0]["Project_ID"] // get project ID (this might get deleted if VP button is added
+        //client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectNameVP+'\';', (err, projectidresult) => { // get project ID of input project
+        //    projectidVP = projectidresult["rows"][0]["Project_ID"] // get project ID (this might get deleted if VP button is added
+            
             const { error, user} = addUserToProjectHomePage({ id: socket.id, usernameVP, useridVP, projectNameVP, projectidVP }) // register user on page
             if (error) {
                 return callback(error)
@@ -182,7 +183,7 @@ io.on('connection', (socket) => {
                 }
                 socket.emit('taskTool', (tasktools))
             })
-        })
+        //})
         //socket.emit('projectData', {projectname: user.projectNameVP, users: getAllUsersInProject(user.projectNameVP)})
         callback()
     })
@@ -442,7 +443,7 @@ io.on('connection', (socket) => {
             })
         });
 
-        //Creating new project
+        //Joining new project
         promise1.then(function(obj) {
         	//obj = {projectID, userID, username} DIFFERENT FROM DELETE
 
@@ -456,23 +457,24 @@ io.on('connection', (socket) => {
                     
                     //Displaying project list again
                     var list = []
-                    const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate", Ch."ChatRoom_ID", Ch."ChatName" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" JOIN "ChatRoom" Ch ON Ch."Project_ID" = Pa."Project_ID" WHERE "UserName" = \'' + obj[2] + '\' ORDER BY "StartDate"'
+                    const text = 'SELECT Up."User_ID", Pa."Project_ID", Pa."ProjectName", Pa."ProjectDesc", Pa."StartDate", Pa."DueDate", Ch."ChatRoom_ID", Ch."ChatName" FROM "Project" Pa JOIN "AttachUserP" Ap ON Ap."Project_ID" = Pa."Project_ID" JOIN "User" Up ON Up."User_ID" = Ap."User_ID" JOIN "ChatRoom" Ch ON Ch."Project_ID" = Pa."Project_ID" WHERE "UserName" = \'' + obj[2] + '\' ORDER BY "StartDate";'
                     client.query(text, (err, results) => { 
                         for (let line of results.rows){
                             var proj = {
 			                	username: obj[2] 
 			                }
-			                proj['userid'] = obj["User_ID"]
-			                proj['Project_ID'] = obj["Project_ID"]
-			                proj['projectName'] = obj["ProjectName"]
-			                proj['projectDesc'] = obj["ProjectDesc"]
-			                proj['chatName'] = obj["ChatName"]
-			                proj['Chat_ID'] = obj["ChatRoom_ID"]
-			                proj['StartDate'] = moment(obj["StartDate"]).format('MM/DD/YY')
-			                proj['DueDate'] = moment(obj["DueDate"]).format('MM/DD/YY')                         
+			                proj['userid'] = line["User_ID"]
+			                proj['Project_ID'] = line["Project_ID"]
+			                proj['projectName'] = line["ProjectName"]
+			                proj['projectDesc'] = line["ProjectDesc"]
+			                proj['chatName'] = line["ChatName"]
+			                proj['Chat_ID'] = line["ChatRoom_ID"]
+			                proj['StartDate'] = moment(line["StartDate"]).format('MM/DD/YY')
+			                proj['DueDate'] = moment(line["DueDate"]).format('MM/DD/YY')                         
                             
                             list.push(proj);
                         }
+                        console.log("WE ARE GETTING TO JOINED PROJECT INDEX.JS: ", list);
                         socket.emit('projectList', list)
                     })
                 }
@@ -1369,11 +1371,13 @@ app.get("/UserHomePage/", function (req, res) {
 
 // Project Home Page GET request
 app.get("/ProjectHomePage/", function (req, res) {
-    var projectName = req.query.projectNameVP
-    client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
+   
+    var projectid = req.query.projectidVP
+    //client.query('SELECT "Project_ID" FROM "Project" WHERE "ProjectName" = \''+projectName+'\';', (err, projectidresult) => { // get project ID of input project
+        
         var newCookie = req.cookies.userInfo // duplicate cookie
-        const projectid = projectidresult["rows"][0]["Project_ID"]
-        newCookie["currProjectName"] = projectName
+        //const projectid = projectidresult["rows"][0]["Project_ID"]
+        newCookie["currProjectName"] = req.query.projectNameVP
         newCookie["currProjectID"] = projectid // update cookie for the input project
         client.query('SELECT "ChatRoom_ID","ChatName" FROM "ChatRoom" WHERE "Project_ID" = \''+projectid+'\';', (err1, chatresult) => { // get chatroom name and id for this project
             const chatID = chatresult["rows"][0]["ChatRoom_ID"]
@@ -1385,7 +1389,7 @@ app.get("/ProjectHomePage/", function (req, res) {
             res.render(publicDirectoryPath + "views/ProjectHomePage.html", { user: req.cookies.userInfo })
         })
         
-    })
+//    })
 })
 
 

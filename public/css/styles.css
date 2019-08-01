@@ -40,7 +40,7 @@ input {
 button {
     cursor: pointer;
     padding: 4px;
-    background: #49665d;
+    background: #595959; /*Background color of button without hovering*/
     border: 1px;
     color: white;  /*Text color on buttons */
     font-size: 12px;
@@ -48,13 +48,13 @@ button {
 }
 
 button:hover {
-    background: #FADADD;
+    background: #7cf2b3;
     color: black;
 }
 
 button:disabled {
     cursor: default;
-    background: #FADADD;
+    background: #bfe889;
 }
 
 .header {
@@ -413,7 +413,7 @@ button:disabled {
 }
 
 .UHP__project > div {
-    background-color: #028482;
+    background-color: #028482; /* Color of block*/
     margin: 8px;
     padding: 8px;
     font-size: 12px;
@@ -427,6 +427,3 @@ button:disabled {
     flex-direction: column;
 }
 
-.project a {
-    color: #0074D9;
-}

@@ -144,6 +144,18 @@ socket.emit('joinRequirements', {username, userid, roomNumber, ProjectName, Proj
     }
 })
 
+//A user is getting redirected to login because the project they are in has been deleted
+socket.on("redirectToLogin", (error) => {
+
+    if (error){
+        console.log(error)
+    }
+
+    alert("This project as been deleted. Please log in again.");
+    location.href = '/';
+
+})
+
 // Loading list of users in project
 socket.emit('getUsersInProject', {projectidVP}, (userNamesIds) => {
     const UsersInProjectCreateRequirement = Mustache.render(usersCreateRequirementTemplate, {
