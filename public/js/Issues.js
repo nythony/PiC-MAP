@@ -4,22 +4,28 @@ const socket = io()
 const $header = document.querySelector('#header')
 const $usersCreateIssue = document.querySelector('#usersCreateIssue')
 const $usersEditIssue = document.querySelector('#usersEditIssue')
-const $issueCategory = document.querySelector('#issueCategory')
-const $issue = document.querySelector('#issue')
+//const $issueCategory = document.querySelector('#issueCategory')
+const $issue1 = document.querySelector('#issue1')
+const $issue2 = document.querySelector('#issue2')
+const $issue3 = document.querySelector('#issue3')
 const $createIssueForm = document.querySelector('#createIssueForm')
 const $editIssueForm = document.querySelector('#editIssueForm')
 const $deleteIssueForm = document.querySelector('#deleteIssueForm')
 
 // Templates
 const headerTemplate = document.querySelector('#header-template').innerHTML
-const issueCategoryTemplate = document.querySelector('#issueCategory-template').innerHTML
-const issueTemplate = document.querySelector('#issue-template').innerHTML
+//const issueCategoryTemplate = document.querySelector('#issueCategory-template').innerHTML
+const issue1Template = document.querySelector('#issue1-template').innerHTML
+const issue2Template = document.querySelector('#issue2-template').innerHTML
+const issue3Template = document.querySelector('#issue3-template').innerHTML
 const usersCreateIssueTemplate = document.querySelector('#userscreateissue-template').innerHTML
 const usersEditIssueTemplate = document.querySelector('#userseditissue-template').innerHTML
 
 // Options
 const {username, userid, roomNumber, ProjectName, Project_ID, projectNameVP, projectidVP, chatname, chatid} = Qs.parse(location.search, { ignoreQueryPrefix: true })
 //console.log("qs: ", {username, userid, roomNumber, ProjectName, Project_ID, projectNameVP, projectidVP})
+
+
 
 // Definition for header
 const headerhtml = Mustache.render(headerTemplate, {
@@ -35,20 +41,30 @@ document.querySelector('#header').innerHTML = headerhtml
 //console.log("headerhtml: ", headerhtml)
 
 // Definition for issueCategory event
-socket.on('issueCategory', (issueCategory) => {
-    const html = Mustache.render(issueCategoryTemplate, {
-        IssueCategory: issueCategory.IssueCategory
-    })
-    document.querySelector('#issueCategory').innerHTML = html
-})
+// socket.on('issueCategory', (issueCategory) => {
+//     const html = Mustache.render(issueCategoryTemplate, {
+//         IssueCategory: issueCategory.IssueCategory
+//     })
+//     document.querySelector('#issueCategory').innerHTML = html
+// })
 
-// Definition for issue event
-socket.on('issue', (issues) => {
-    const html = Mustache.render(issueTemplate, {
-        issues
+// Definition for issue1 event
+socket.on('issue', ({issues1, issues2, issues3}) => {
+    const html1 = Mustache.render(issue1Template, {
+        issues1
     })
-    //console.log(issues)
-    document.querySelector('#issue').innerHTML = html
+    const html2 = Mustache.render(issue2Template, {
+        issues2
+    })
+    const html3 = Mustache.render(issue3Template, {
+        issues3
+    })
+    console.log(issues1)
+    console.log(issues2)
+    console.log(issues3)
+    document.querySelector('#issue1').innerHTML = html1
+    document.querySelector('#issue2').innerHTML = html2
+    document.querySelector('#issue3').innerHTML = html3
 })
 
 // Listen for createIssueForm
@@ -124,29 +140,11 @@ $deleteIssueForm.addEventListener('submit', (e) => {
     })
 })
 
-//A user is getting redirected to login because the project they are in has been deleted
-socket.on("redirectToLogin", (error) => {
-
-    if (error){
-        console.log(error)
-    }
-
-    alert("This project as been deleted. Please log in again.");
+//A user is getting redirected to login
+socket.on("redirectToLogin", (eMessage) => {
+    alert(eMessage);
     location.href = '/';
-
-})
-
-//A user is getting redirected to login because the project they are in has been deleted
-socket.on("redirectToLogin", (error) => {
-
-    if (error){
-        console.log(error)
-    }
-
-    alert("This project as been deleted. Please log in again.");
-    location.href = '/';
-
-})
+ })
 
 
 socket.emit('joinIssues', {username, userid, roomNumber, ProjectName, Project_ID}, (error) => {

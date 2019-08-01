@@ -1154,8 +1154,11 @@ io.on('connection', (socket) => {
 
         // Display issues
         client.query('SELECT * FROM "Issue" AS t1 JOIN "IssueCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
-            const issues = []
+            const issues1 = []
+            const issues2 = []
+            const issues3 = []
             var issueusers = []
+            let issue;
             for (let foo of results.rows) {
                 client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserI" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Issue_ID" = \'' + foo["Issue_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
                     for (let foo2 of results2.rows) {
@@ -1165,12 +1168,23 @@ io.on('connection', (socket) => {
                     {
                         issueusers.push("No users assigned")
                     }
-                    const issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: foo["CategoryName"], Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }
-                    issues.push(issue)
+                    issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: foo["CategoryName"], Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }
+                    console.log(issue["IssueCategory"])                    
+                    if (issue["IssueCategory"] == "To Do") {
+                        issues1.push(issue)
+                    }
+                    else if (issue["IssueCategory"] == "Doing") {
+                        issues2.push(issue)
+                    }
+                    else if (issue["IssueCategory"] == 3) {
+                        issues3.push(issue)
+                    }
+                    
+                    //issues.push(issue)
                     issueusers.length = 0
-                    socket.emit('issue', (issues))
                 })
             }
+            socket.emit('issue', ({issues1, issues2, issues3}))
         })
         callback()
     })
