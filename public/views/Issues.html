@@ -53,11 +53,11 @@
     </style>
     <body>
         <div id="header" class="header"></div>
-        <div style="text-align: center"><br><br><button onclick="openCreateIssueForm()" style="display: inline-block;">Create a new Issue</button></div>
+        <div style="text-align: center"><br><br><button onclick="openCreateIssueForm()" style="display: inline-block;">Create a New Issue</button></div>
         <div style="clear: both;"></div><br><br>
-        <div id="issue1" class="project__issue"><h3 style="color: white; text-align:center;">To-Do</h3></div>
-        <div id="issue2" class="project__issue"><h3 style="color: white; text-align:center;">Doing</h3></div>
-        <div id="issue3" class="project__issue"><h3 style="color: white; text-align:center;">Done</h3></div>
+        <div id="issue1" class="project__issue"><h2 style="color: white; text-align:center;">To Do</h2></div>
+        <div id="issue2" class="project__issue"><h2 style="color: white; text-align:center;">Doing</h2></div>
+        <div id="issue3" class="project__issue"><h2 style="color: white; text-align:center;">Done</h2></div>
         
         <div class="form-popup" id="createIssue">
             <form class="form-container" id="createIssueForm" name="createIssueForm">
@@ -70,7 +70,7 @@
                 <br></b><p id="usersCreateIssue"></p><br>
                 <label><b>Assign status of Issue</b></label><br>
                 <div id="IssueCat">
-                    <input type="radio" id="r1" name="cat" value="1" required>To-Do  
+                    <input type="radio" id="r1" name="cat" value="1" required>To Do  
                     <input type="radio" id="r2" name="cat" value="2">Doing  
                     <input type="radio" id="r3" name="cat" value="3">Done  
                 </div><br>
@@ -93,7 +93,7 @@
                 <br></b><p id="usersEditIssue"></p><br>
                 <label><b>Assign status of Issue</b></label><br>
                 <div id="IssueCat">
-                    <input type="radio" id="r4" name="cat" value="1" required>To-Do  
+                    <input type="radio" id="r4" name="cat" value="1" required>To Do  
                     <input type="radio" id="r5" name="cat" value="2">Doing  
                     <input type="radio" id="r6" name="cat" value="3">Done  
                 </div><br>
@@ -172,45 +172,45 @@
         </script>
 
         <script id="issue1-template" type="text/html">
-            <h3 style="color: white; text-align:center;">To-Do</h3>
+            <h2 style="color: white; text-align:center;">To Do</h2>
             {{#issues1}}
                 <div class="issue"><p>
                     <button onclick=openEditIssueForm({{Issue_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
                     <button onclick=openDeleteIssueForm({{Issue_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
-                    <h2><br><br>{{IssueName}}</h2><br>
+                    <h2><br>{{IssueName}}</h2>
                     <br>{{IssueDesc}}<br>
-                    <br>{{IssueUsers}}
-                    <br>{{DueDate}}<br><br>
+                    <br>Users Assigned: {{IssueUsers}}
+                    <br>Due Date: {{DueDate}}<br><br>
                     
                 </p></div>
             {{/issues1}}
         </script>
 
         <script id="issue2-template" type="text/html">
-            <h3 style="color: white; text-align:center;">Doing</h3>
+            <h2 style="color: white; text-align:center;">Doing</h2>
             {{#issues2}}
                 <div class="issue"><p>
                     <button onclick=openEditIssueForm({{Issue_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
                     <button onclick=openDeleteIssueForm({{Issue_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
-                    <h2><br><br>{{IssueName}}</h2><br>
+                    <h2><br>{{IssueName}}</h2>
                     <br>{{IssueDesc}}<br>
-                    <br>{{IssueUsers}}
-                    <br>{{DueDate}}<br><br>
+                    <br>Users Assigned: {{IssueUsers}}
+                    <br>Due Date: {{DueDate}}<br><br>
                     
                 </p></div>
             {{/issues2}}
         </script>
 
         <script id="issue3-template" type="text/html">
-            <h3 style="color: white; text-align:center;">Done</h3>
+            <h2 style="color: white; text-align:center;">Done</h2>
             {{#issues3}}
                 <div class="issue"><p>
                     <button onclick=openEditIssueForm({{Issue_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
                     <button onclick=openDeleteIssueForm({{Issue_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
-                    <h2><br><br>{{IssueName}}</h2><br>
+                    <h2><br>{{IssueName}}</h2>
                     <br>{{IssueDesc}}<br>
-                    <br>{{IssueUsers}}
-                    <br>{{DueDate}}<br><br>
+                    <br>Users Assigned: {{IssueUsers}}
+                    <br>Due Date: {{DueDate}}<br><br>
                     
                 </p></div>
             {{/issues3}}
