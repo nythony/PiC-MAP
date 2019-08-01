@@ -7,15 +7,17 @@
     <meta name="viewport" charset="utf-8" content="width=device-width, initial-scale=1">
 <style>
     body {font-family: Arial, Helvetica, sans-serif;}
+    h2 {color: #f1f1f1;}
+    p {color: #f1f1f1;}
     * {box-sizing: border-box;}
 
-    /* Button used to open the contact form - fixed at the bottom of the page */
+    /* Button used to open the contact form */
     .open-button {
-      background-color: #555;
+      /*background-color: #555; Changes background color of button before hover 
       color: white;
       border: none;
       cursor: pointer;
-      opacity: 0.8;
+      opacity: 0.8;*/
     }
 
     /* The popup form - hidden by default */
@@ -63,7 +65,7 @@
       opacity: 1;
     }
 
-    #header {
+    #headerText {
         text-align: right;
         margin-top: 50px;
         margin-right: 10px;
@@ -71,14 +73,14 @@
         font-family: arial;
     }
 
-    #projects {
+/*    #projects {
         text-align: center;
         margin-top: 50px;
         font-size: 120%;
         font-family: arial;
-    }
+    }*/
 
-    #newItems {
+/*    #newItems {
         text-align: left;
         margin-top: 50px;
         margin-left: 50px;
@@ -98,12 +100,16 @@
         margin-left: 50px;
         font-size: 100%;
         font-family: arial;
-    }
+    }*/
 </style>
 </head>
 
 <body>
-    <div id="header">
+    
+
+    <!--GOES ABOVE PROJECT BLOCKS-->
+
+    <div id="headerText">
         <!--Welcome user template-->
        <div id="welcomeUser"></div>
         <script id="welcomeUser-template" type="text/html">
@@ -117,6 +123,18 @@
         </form>
 
     </div>
+
+    <!--GOES ABOVE PROJECT BLOCKS-->
+
+
+    <!--Background for project blocks>
+    <div id="header" class="header"></div>
+    <div id="taskTool" class="tasktool__subtask"></div-->
+    <div id="projectElement" class="UHP__project"></div>
+
+
+
+
 
     <button class="open-button" onclick=openJoinProjectForm()>Join an Existing Project</button>
 
@@ -143,39 +161,73 @@
     <!--Change #projects to change layout of project list-->
 
 
-    <div id="projects">
+    <!--div id="projects"-->
 
-            <div id = "projectElement"></div>
-
+            <!--div id = "projectElement"></div-->
             <script id="projectList-template" type="text/html">
                 {{#projectList}}
-                        <h2><b> {{projectName}} </b></h2>
-                        <p>{{projectDesc}}</p>
-                        <p>Start: {{StartDate}}</p>
-                        <p>Due: {{DueDate}}</p>
-                        <p><i>Project ID: {{Project_ID}}</i></p>
-                    
-                    <button class="open-button" onclick=openEditProjectForm({{Project_ID}})>Edit</button>
-                    <button class="open-button" onclick=openDeleteProjectForm({{Project_ID}})>Delete</button>
+                <div class="project">
+                  <p>
+          
+                      <button onclick=openEditProjectForm({{Project_ID}}) style="display: inline; float:right; padding: 4px;" type = "button" >Edit</button>
+                      <button onclick=openDeleteProjectForm({{Project_ID}}) style="display: inline; float:left; padding: 4px;">Delete</button>
 
-                    <form action="/ProjectHomePage">
-                        <input type="hidden" id="usernameVP" name="usernameVP" value= "{{username}}" required />
-                        <input type="hidden" id="useridVP" name="useridVP" value="{{userid}}" required />
-                        <input type="hidden" id="projectidVP" name="projectidVP" value = "{{Project_ID}}"required />
-                        <input type="hidden" id="projectNameVP" name="projectNameVP" value = "{{projectName}}" required><br>
-                        <input type="hidden" id="chatname" name="chatname" value = "{{chatName}}" required><br>
-                        <input type="hidden" id="chatid" name="chatid" value = "{{Chat_ID}}" required><br>
-                        <button>View</button>
-                    </form>
+                      <br><br><br><br>
 
+                      <h2><b> {{projectName}} </b></h2>
+                      <p>{{projectDesc}}</p>
+                      <p>Start: {{StartDate}}</p>
+                      <p>Due: {{DueDate}}</p>
+                      <p><i>Project ID: {{Project_ID}}</i></p>
+                  
+                  <form action="/ProjectHomePage" >
+                      <input type="hidden" id="usernameVP" name="usernameVP" value= "{{username}}" required />
+                      <input type="hidden" id="useridVP" name="useridVP" value="{{userid}}" required />
+                      <input type="hidden" id="projectidVP" name="projectidVP" value = "{{Project_ID}}"required />
+                      <input type="hidden" id="projectNameVP" name="projectNameVP" value = "{{projectName}}" required><br>
+                      <button>View</button>
+                      <input type="hidden" id="chatname" name="chatname" value = "{{chatName}}" required><br>
+                      <input type="hidden" id="chatid" name="chatid" value = "{{Chat_ID}}" required><br>
+                  </form>
 
-
-                </form>
-
-                    <br><br>
-
+                    <br>
+                  </p>
+                </div>
+                
                 {{/projectList}}
-             </script>
+
+            </script>
+
+
+
+
+    <!--script id="tasktool-template" type="text/html">
+        {{#tasktools}}
+        <div class="subtask">
+            <p>
+                <button class="open-button" onclick=openDeleteTaskToolForm({{TaskTool_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
+                <button class="open-button" onclick=openEditTaskToolForm({{TaskTool_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
+                <br><br>{{TaskToolName}}
+                <form action="/TaskTool" style="display: inline; float:left; padding: 4px;">
+                    <input type="hidden" id="username" name="username" value="{{username}}" required />
+                    <input type="hidden" id="userid" name="userid" value="{{userid}}" required />
+                    <input type="hidden" id="roomNumber" name="roomNumber" value="TT{{TaskTool_ID}}" required />
+                    <input type="hidden" id="TaskToolName" name="TaskToolName" value="{{TaskToolName}}" required />
+                    <input type="hidden" id="TaskTool_ID" name="TaskTool_ID" value="{{TaskTool_ID}}" required />
+                    <input type="hidden" id="projectNameVP" name="projectNameVP" value="{{ProjectName}}" required />
+                    <input type="hidden" id="projectidVP" name="projectidVP" value="{{Project_ID}}" required />
+                    <button>View</button>
+                </form>
+            </p>
+        </div>
+        {{/tasktools}}
+    </script-->
+
+
+
+
+
+
 
 
         <!--POP UP FOR EDITING A PROJECT-->   
@@ -230,7 +282,7 @@
                   </form>
             </div>
 
-    </div>
+    <!--/div-->
 
 
 
@@ -238,7 +290,7 @@
     <!--POP UP FOR CREATING A PROJECT-->
     <button class="open-button" onclick="openCreateProjectForm()">Create Project</button>
 
-    <div id="newItems">
+    <!--div id="newItems"-->
 
      <div class="form-popup" id="projectForm">
           <form class="form-container" id="create-project-form">
@@ -265,7 +317,7 @@
             <button type="submit" class="btn">Create</button> <!--The array of users get parsed an should create appropriate AttachUserP-->
             <button type="button" class="btn cancel" onclick="closeCreateProjectForm()">Close</button>
           </form>
-        </div>
+    </div>
 
 
         <script>
@@ -313,7 +365,7 @@
 
         </script>
 
-    </div>
+    <!--/div-->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
