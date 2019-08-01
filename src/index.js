@@ -19,13 +19,6 @@ const { addUserRequirements, removeUserRequirements, getUserRequirements, getUse
 const { addUserIssues, removeUserIssues, getUserIssues, getUsersInIssues } = require('./utils/usersAtIssues')
 
 
-//const project = require('./projectForm.js')
-// const requirement = require('./requirementForm.js')
-// const task = require('./taskForm.js')
-// const taskTool = require('./taskToolForm.js')
-// const issue = require('./issueForm.js')
-//const login = require('./loginTools.js')
-
 //Connecting to cloud based database:
 const client = new Client({
     //connectionString: process.env.DATABASE_URL,
@@ -78,9 +71,7 @@ io.on('connection', (socket) => {
             }
         })
 
-        // socket.emit('message', generateMessage('Admin', `Welcome to ${room}!`))
-        // Display to everyone but the connection
-        // socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined ${room}`))
+
         io.to(user.roomNumber).emit('roomData', {
             room: user.room,
             users: getUsersInRoomChat(user.roomNumber)
@@ -102,9 +93,7 @@ io.on('connection', (socket) => {
             }
         })
         io.to(user.roomNumber).emit('message', generateMessage(user.username, message))
-        // We can use this below for redirecting!
-        // var destination = ('/loginPage')
-        // io.to(user.room).emit('redirect', destination)
+
         callback()
     })
 
@@ -479,11 +468,6 @@ io.on('connection', (socket) => {
 
         //Convert username to userID
         var promise1 = new Promise(function(resolve, reject) {
-
-            //FIXED VIA HTML RESTRICTION
-            // if (name.indexOf('\'') >= 0) {
-            //    callback("Please do not enter an apostrophe");
-            // }
             
             //else{ 
                 client.query('SELECT "User_ID" FROM "User" WHERE "UserName" = \''+user+'\';', (err, res) => {
@@ -529,7 +513,7 @@ io.on('connection', (socket) => {
                     client.query(text, (err, results) => { 
                         for (let obj of results.rows){
                             var proj = {
-                                userid: userCreate, 
+                                username: user, 
                             }
                             proj['userid'] = obj["User_ID"]
 			                proj['Project_ID'] = obj["Project_ID"]
@@ -1456,16 +1440,6 @@ app.get("/loginPage", function (req, res) { //Redirect to home page/login page, 
     res.sendFile(publicDirectoryPath + "views/loginPage.html")
 })
 
-// When user enters incorrect login information - sends failedLoginPage.html
-// app.get("/failedLoginPage", function (req, res) {
-//     res.sendFile(publicDirectoryPath + "views/failedLoginPage.html")
-// })
-
-// When createNewUser is loaded - sends createNewUser.html --DELETE
-// app.get("/createNewUser", function (req, res) {
-//     res.sendFile(publicDirectoryPath + "views/createNewUser.html")
-// })
-
 // User Home Page GET request
 app.get("/UserHomePage/", function (req, res) {
     var username = req.query.username
@@ -1509,21 +1483,7 @@ app.get("/ProjectHomePage/", function (req, res) {
             res.render(publicDirectoryPath + "views/ProjectHomePage.html", { user: req.cookies.userInfo })
         })
         
-//    })
 })
-
-
-// Was using this to test some react stuff.
-// app.get('/', function (req, res) {
-//     res.sendfile(publicDirectoryPath + 'views/HelloWorld.html');
-// })
-
-
-// Current version of how to submit projects to db --EDIT DELETE
-// app.get("/projectForm", function (req, res) {
-//     project.getProject(req, res);
-//     res.render("projectForm", { user: req.cookies.userInfo })
-// })
 
 app.get("/requirementform", function (req, res) {
     requirement.getRequirement(req, res);
@@ -1561,32 +1521,10 @@ app.get("/Issues", function (req, res) {
 })
 
 
-// App.post stuff
-
-// When user wants to navigate to create new user page - redirects to createNewUser --DELETE
-// app.post("/loginPage/createNewUser", function (req, res) {
-//     res.redirect('/createNewUser')
-// })
-
 // For use when logging out
 app.post("/logout", function (req, res) {
     res.redirect('/loginPage')
 })
-
-// When user wants to navigate to create new user page from failedLoginPage - redirects to createNewUser --DELETE
-// app.post("/failedLoginPage/createNewUser", function (req, res) {
-//     res.redirect('/createNewUser')
-// })
-
-// When user wants to navigate to login page from createNewUser - redirects to loginPage --DELETE
-// app.post("/createNewUser/login", function (req, res) {
-//     res.redirect('/loginPage')
-// })
-
-// When user wants to navigate to projectForm page from UserHomePage --EDIT DELETE
-// app.post("/UserHomePage/createProject", function (req, res) {
-//     res.redirect('/projectForm')
-// })
 
 // When user wants to navigate to UserHomePage from projectForm --EDIT DELETE (currently if you submit project form you get redirected here)
 app.post("/projectForm/backToUserHomePage", function (req, res) {
