@@ -1041,10 +1041,10 @@ io.on('connection', (socket) => {
         callback()
     })
 
-    socket.on('editRequirement', ({RequirementName, RequirementDesc, DueDate, Project_ID, Req_ID, Users}, callback) => {
+    socket.on('editRequirement', ({RequirementName, RequirementDesc, DueDate, Project_ID, Req_ID, Users, RequirementCat}, callback) => {
         const user = getUserRequirements(socket.id)
-        const text = 'UPDATE "Requirement" SET "RequirementName"=$1, "RequirementDesc"=$2, "DueDate"=$3 WHERE "Req_ID" = \'' + Req_ID + '\' RETURNING *'
-        const values = [RequirementName, RequirementDesc, DueDate]
+        const text = 'UPDATE "Requirement" SET "RequirementName"=$1, "RequirementDesc"=$2, "DueDate"=$3, "Category_ID"=$4 WHERE "Req_ID" = \'' + Req_ID + '\' RETURNING *'
+        const values = [RequirementName, RequirementDesc, DueDate, RequirementCat]
         client.query(text, values, (err, res) => {
             if (err) {
                 console.log(err.stack)
@@ -1069,8 +1069,11 @@ io.on('connection', (socket) => {
         })
         // Display requirements
         client.query('SELECT * FROM "Requirement" AS t1 JOIN "ReqCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
-            const requirements = []
+            let requirements1 = []
+            let requirements2 = []
+            let requirements3 = []
             var requirementusers = []
+            let requirement;
             for (let foo of results.rows) {
                 client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserR" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Req_ID" = \'' + foo["Req_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
                     for (let foo2 of results2.rows) {
@@ -1080,10 +1083,20 @@ io.on('connection', (socket) => {
                     {
                         requirementusers.push("No users assigned")
                     }
-                    const requirement = { RequirementName: foo["RequirementName"] , RequirementDesc: foo["RequirementDesc"], RequirementUsers: requirementusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), RequirementLabel: foo["RequirementLabel"], RequirementCategory: foo["CategoryName"], Req_ID: foo["Req_ID"], Req_ID2: foo["Req_ID"] }
-                    requirements.push(requirement)
+                    requirement = { RequirementName: foo["RequirementName"] , RequirementDesc: foo["RequirementDesc"], RequirementUsers: requirementusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), RequirementLabel: foo["RequirementLabel"], RequirementCategory: foo["CategoryName"], Req_ID: foo["Req_ID"], Req_ID2: foo["Req_ID"] }
+                    if (requirement["RequirementCategory"] == "To Do") {
+                        requirements1.push(requirement)
+                    }
+                    else if (requirement["RequirementCategory"] == "Doing") {
+                        requirements2.push(requirement)
+                    }
+                    else if (requirement["RequirementCategory"] == "Done") {
+                        requirements3.push(requirement)
+                    }
                     requirementusers.length = 0
-                    io.to(user.roomNumber).emit('requirement', (requirements))
+                    io.to(user.roomNumber).emit('requirement1', (requirements1))
+                    io.to(user.roomNumber).emit('requirement2', (requirements2))
+                    io.to(user.roomNumber).emit('requirement3', (requirements3))
                 })
             }
         })
@@ -1106,11 +1119,16 @@ io.on('connection', (socket) => {
         })
         // Display requirements
         client.query('SELECT * FROM "Requirement" AS t1 JOIN "ReqCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
-            const requirements = []
+            let requirements1 = []
+            let requirements2 = []
+            let requirements3 = []
             var requirementusers = []
+            let requirement;
             if (results.rows.length < 1)
             {
-                io.to(user.roomNumber).emit('requirement', ([]))
+                io.to(user.roomNumber).emit('requirement1', ([]))
+                io.to(user.roomNumber).emit('requirement2', ([]))
+                io.to(user.roomNumber).emit('requirement3', ([]))
             }
             else
             {
@@ -1123,10 +1141,20 @@ io.on('connection', (socket) => {
                         {
                             requirementusers.push("No users assigned")
                         }
-                        const requirement = { RequirementName: foo["RequirementName"] , RequirementDesc: foo["RequirementDesc"], RequirementUsers: requirementusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), RequirementLabel: foo["RequirementLabel"], RequirementCategory: foo["CategoryName"], Req_ID: foo["Req_ID"], Req_ID2: foo["Req_ID"] }
-                        requirements.push(requirement)
+                        requirement = { RequirementName: foo["RequirementName"] , RequirementDesc: foo["RequirementDesc"], RequirementUsers: requirementusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), RequirementLabel: foo["RequirementLabel"], RequirementCategory: foo["CategoryName"], Req_ID: foo["Req_ID"], Req_ID2: foo["Req_ID"] }
+                        if (requirement["RequirementCategory"] == "To Do") {
+                            requirements1.push(requirement)
+                        }
+                        else if (requirement["RequirementCategory"] == "Doing") {
+                            requirements2.push(requirement)
+                        }
+                        else if (requirement["RequirementCategory"] == "Done") {
+                            requirements3.push(requirement)
+                        }
                         requirementusers.length = 0
-                        io.to(user.roomNumber).emit('requirement', (requirements))
+                        io.to(user.roomNumber).emit('requirement1', (requirements1))
+                        io.to(user.roomNumber).emit('requirement2', (requirements2))
+                        io.to(user.roomNumber).emit('requirement3', (requirements3))
                     })
                 }
             }
@@ -1154,9 +1182,9 @@ io.on('connection', (socket) => {
 
         // Display issues
         client.query('SELECT * FROM "Issue" AS t1 JOIN "IssueCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
-            const issues1 = []
-            const issues2 = []
-            const issues3 = []
+            let issues1 = []
+            let issues2 = []
+            let issues3 = []
             var issueusers = []
             let issue;
             for (let foo of results.rows) {
@@ -1168,8 +1196,7 @@ io.on('connection', (socket) => {
                     {
                         issueusers.push("No users assigned")
                     }
-                    issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: foo["CategoryName"], Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }
-                    console.log(issue["IssueCategory"])                    
+                    issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: foo["CategoryName"], Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }                
                     if (issue["IssueCategory"] == "To Do") {
                         issues1.push(issue)
                     }
@@ -1181,17 +1208,19 @@ io.on('connection', (socket) => {
                     }
                     //issues.push(issue)
                     issueusers.length = 0
+                    socket.emit('issue1', (issues1))
+                    socket.emit('issue2', (issues2))
+                    socket.emit('issue3', (issues3))
                 })
             }
-            socket.emit('issue', ({issues1, issues2, issues3}))
         })
         callback()
     })
 
-    socket.on('createIssue', ({IssueName, IssueDesc, DueDate, Project_ID, Users}, callback) => {
+    socket.on('createIssue', ({IssueName, IssueDesc, DueDate, Project_ID, Users, IssueCat}, callback) => {
         const user = getUserIssues(socket.id)
-        const text = 'INSERT INTO "Issue"( "IssueName", "IssueDesc", "DueDate", "Project_ID" ) VALUES($1, $2, $3, $4) RETURNING *'
-        const values = [IssueName, IssueDesc, DueDate, Project_ID]
+        const text = 'INSERT INTO "Issue" ( "IssueName", "IssueDesc", "DueDate", "Project_ID", "Category_ID" ) VALUES($1, $2, $3, $4, $5) RETURNING *'
+        const values = [IssueName, IssueDesc, DueDate, Project_ID, IssueCat]
         client.query(text, values, (err, res) => {
             if (err) {
                 console.log(err.stack)
@@ -1216,8 +1245,11 @@ io.on('connection', (socket) => {
         })
         // Display issues
         client.query('SELECT * FROM "Issue" AS t1 JOIN "IssueCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
-            const issues = []
+            let issues1 = []
+            let issues2 = []
+            let issues3 = []
             var issueusers = []
+            let issue;
             for (let foo of results.rows) {
                 client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserI" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Issue_ID" = \'' + foo["Issue_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
                     for (let foo2 of results2.rows) {
@@ -1227,20 +1259,31 @@ io.on('connection', (socket) => {
                     {
                         issueusers.push("No users assigned")
                     }
-                    const issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: foo["CategoryName"], Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }
-                    issues.push(issue)
+                    issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: foo["CategoryName"], Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }                
+                    if (issue["IssueCategory"] == "To Do") {
+                        issues1.push(issue)
+                    }
+                    else if (issue["IssueCategory"] == "Doing") {
+                        issues2.push(issue)
+                    }
+                    else if (issue["IssueCategory"] == "Done") {
+                        issues3.push(issue)
+                    }
+                    //issues.push(issue)
                     issueusers.length = 0
-                    io.to(user.roomNumber).emit('issue', (issues))
+                    io.to(user.roomNumber).emit('issue1', (issues1))
+                    io.to(user.roomNumber).emit('issue2', (issues2))
+                    io.to(user.roomNumber).emit('issue3', (issues3))
                 })
             }
         })
         callback()
     })
 
-    socket.on('editIssue', ({IssueName, IssueDesc, DueDate, Project_ID, Issue_ID, Users}, callback) => {
+    socket.on('editIssue', ({IssueName, IssueDesc, DueDate, Project_ID, Issue_ID, Users, IssueCat}, callback) => {
         const user = getUserIssues(socket.id)
-        const text = 'UPDATE "Issue" SET "IssueName"=$1, "IssueDesc"=$2, "DueDate"=$3 WHERE "Issue_ID" = \'' + Issue_ID + '\' RETURNING *'
-        const values = [IssueName, IssueDesc, DueDate]
+        const text = 'UPDATE "Issue" SET "IssueName"=$1, "IssueDesc"=$2, "DueDate"=$3, "Category_ID"=$4 WHERE "Issue_ID" = \'' + Issue_ID + '\' RETURNING *'
+        const values = [IssueName, IssueDesc, DueDate, IssueCat]
         client.query(text, values, (err, res) => {
             if (err) {
                 console.log(err.stack)
@@ -1265,8 +1308,11 @@ io.on('connection', (socket) => {
         })
         // Display issues
         client.query('SELECT * FROM "Issue" AS t1 JOIN "IssueCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
-            const issues = []
+            let issues1 = []
+            let issues2 = []
+            let issues3 = []
             var issueusers = []
+            let issue;
             for (let foo of results.rows) {
                 client.query('SELECT t1."UserName" FROM "User" AS t1 JOIN "AttachUserI" AS t2 ON t1."User_ID" = t2."User_ID" WHERE t2."Issue_ID" = \'' + foo["Issue_ID"] + '\' ORDER BY "UserName";', (error, results2) => {
                     for (let foo2 of results2.rows) {
@@ -1276,10 +1322,21 @@ io.on('connection', (socket) => {
                     {
                         issueusers.push("No users assigned")
                     }
-                    const issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: foo["CategoryName"], Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }
-                    issues.push(issue)
+                    issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: foo["CategoryName"], Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }                
+                    if (issue["IssueCategory"] == "To Do") {
+                        issues1.push(issue)
+                    }
+                    else if (issue["IssueCategory"] == "Doing") {
+                        issues2.push(issue)
+                    }
+                    else if (issue["IssueCategory"] == "Done") {
+                        issues3.push(issue)
+                    }
+                    //issues.push(issue)
                     issueusers.length = 0
-                    io.to(user.roomNumber).emit('issue', (issues))
+                    io.to(user.roomNumber).emit('issue1', (issues1))
+                    io.to(user.roomNumber).emit('issue2', (issues2))
+                    io.to(user.roomNumber).emit('issue3', (issues3))
                 })
             }
         })
@@ -1302,11 +1359,16 @@ io.on('connection', (socket) => {
         })
         // Display issues
         client.query('SELECT * FROM "Issue" AS t1 JOIN "IssueCategory" AS t2 ON t1."Category_ID" = t2."Category_ID" WHERE t1."Project_ID" = \'' + user.Project_ID + '\' ORDER BY "DueDate";', (error, results) => {
-            var issues = []
+            let issues1 = []
+            let issues2 = []
+            let issues3 = []
             var issueusers = []
+            let issue;
             if (results.rows.length < 1)
             {
-                io.to(user.roomNumber).emit('issue', ([]))
+                io.to(user.roomNumber).emit('issue1', ([]))
+                io.to(user.roomNumber).emit('issue2', ([]))
+                io.to(user.roomNumber).emit('issue3', ([]))
             }
             else
             {
@@ -1319,10 +1381,20 @@ io.on('connection', (socket) => {
                         {
                             issueusers.push("No users assigned")
                         }
-                        const issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: foo["CategoryName"], Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }
-                        issues.push(issue)
+                        issue = { IssueName: foo["IssueName"] , IssueDesc: foo["IssueDesc"], IssueUsers: issueusers.toString().replace(/,/g , ", "), DueDate: moment(foo["DueDate"]).format('dddd MM/DD/YY'), IssueLabel: foo["IssueLabel"], IssueCategory: foo["CategoryName"], Issue_ID: foo["Issue_ID"], Issue_ID2: foo["Issue_ID"] }                
+                        if (issue["IssueCategory"] == "To Do") {
+                            issues1.push(issue)
+                        }
+                        else if (issue["IssueCategory"] == "Doing") {
+                            issues2.push(issue)
+                        }
+                        else if (issue["IssueCategory"] == "Done") {
+                            issues3.push(issue)
+                        }
                         issueusers.length = 0
-                        io.to(user.roomNumber).emit('issue', (issues))
+                        io.to(user.roomNumber).emit('issue1', (issues1))
+                        io.to(user.roomNumber).emit('issue2', (issues2))
+                        io.to(user.roomNumber).emit('issue3', (issues3))
                     })
                 }
             }
