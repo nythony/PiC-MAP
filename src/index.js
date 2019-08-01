@@ -1176,10 +1176,9 @@ io.on('connection', (socket) => {
                     else if (issue["IssueCategory"] == "Doing") {
                         issues2.push(issue)
                     }
-                    else if (issue["IssueCategory"] == 3) {
+                    else if (issue["IssueCategory"] == "Done") {
                         issues3.push(issue)
                     }
-                    
                     //issues.push(issue)
                     issueusers.length = 0
                 })
