@@ -73,7 +73,7 @@ $createSubTaskForm.addEventListener('submit', (e) => {
         TaskCat = document.getElementById('r14').value;
     }
     else  if (document.getElementById('r15').checked) {
-        TaskCat = document.getElementById('r16').value;
+        TaskCat = document.getElementById('r15').value;
     }
     const Users = Array.from(document.querySelectorAll('input[type=checkbox]:checked'))
         .map(item => item.value)
