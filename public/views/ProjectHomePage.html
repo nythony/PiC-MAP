@@ -75,17 +75,7 @@
         </script>
         <button>ChatApp</button>
     </form>
-    <!--
-    <form action="/UserHomePage" id="backToUserHomePage" method="get" style="display: inline-block; float:right; padding: 4px;">
-        <input type="hidden" id="username" name="username" value="{{username}}" required />
-        <input type="hidden" id="password" name="password" required />
-        <script type="text/javascript">
-            document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
-            document.getElementById('password').value = <%- JSON.stringify(user.password) %>;
-        </script>
-        <button class"button" type="submit">Return to User Home Page</button>
-    </form>
-        -->
+
     <div style="clear: both;"></div>
 
     <div class="form-popup" id="createTaskTool">
@@ -161,21 +151,19 @@
         <h1 style="text-align:center;">{{projectName}}</h1>
         <h1 style="text-align:right;">{{username}}</h1>
 
-        <!--ALINA: Button for going back to UserHomePage. The following are fields required for URL. The id and name must be the same as loginpage-->
-        <form id="backToUserHomePage" action = "/UserHomePage">
-            <input type="hidden" id="username" name="username" required />
-            <input type="hidden" id="password" name="password" required />
-            <input type="hidden" id="socketid" name="socketid" required />
-            <button type="submit">Back to User Home Page</button>
-        </form>
-
-
-
-
 
         <form action="/logout" method="post" style="display: inline-block; float:right; padding: 4px;">
             <button class"button" type="submit">Log Out</button>
         </form>
+
+                <!--ALINA: Button for going back to UserHomePage. The following are fields required for URL. The id and name must be the same as loginpage-->
+        <form id="backToUserHomePage" action = "/UserHomePage">
+            <input type="hidden" id="username" name="username" required />
+            <input type="hidden" id="password" name="password" required />
+            <input type="hidden" id="socketid" name="socketid" required />
+            <button type="submit">Return to User Home Page</button>
+        </form>
+
         <br>
         <br>
         <div style="clear: both;"></div>
