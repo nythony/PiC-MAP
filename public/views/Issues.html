@@ -122,6 +122,9 @@
             function openCreateIssueForm() {
                 document.getElementById("createIssue").style.display = "block";
                 document.getElementById("createProject_ID").value = Project_ID;
+
+                document.getElementById("editIssue").style.display = "none";
+                document.getElementById("deleteIssue").style.display = "none";
             }
                 
             function closeCreateIssueForm() {
@@ -133,6 +136,9 @@
                 document.getElementById("editIssue").style.display = "block";
                 document.getElementById("editProject_ID").value = Project_ID;
                 document.getElementById("editIssue_ID").value = Issue_ID;
+
+                document.getElementById("createIssue").style.display = "none";
+                document.getElementById("deleteIssue").style.display = "none";
             }
 
             function closeEditIssueForm() {
@@ -144,6 +150,9 @@
                 document.getElementById("deleteIssue").style.display = "block";
                 document.getElementById("deleteProject_ID").value = Project_ID;
                 document.getElementById("deleteIssue_ID").value = Issue_ID;
+
+                document.getElementById("createIssue").style.display = "none";
+                document.getElementById("editIssue").style.display = "none";
             }
 
             function closeDeleteIssueForm() {

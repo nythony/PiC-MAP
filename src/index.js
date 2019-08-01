@@ -605,19 +605,19 @@ io.on('connection', (socket) => {
 
                 //Redirect users in Chatroom of that project
                 var roomC = 'C' + id;
-                    io.to(roomC).emit('redirectToLogin', "This project as been modified. Please log in again.");
+                    io.to(roomC).emit('redirectToLogin', "This project has been modified. Please log in again.");
 
                 //Redirect users in ProjectHomePage of that project
                 var roomP = 'PHP' + id;
-                    io.to(roomP).emit('redirectToLogin', "This project as been modified. Please log in again.");
+                    io.to(roomP).emit('redirectToLogin', "This project has been modified. Please log in again.");
 
                 //Redirect users in RequirementTool of that project
                 var roomR = 'R' + id;
-                    io.to(roomR).emit('redirectToLogin', "This project as been modified. Please log in again.");
+                    io.to(roomR).emit('redirectToLogin', "This project has been modified. Please log in again.");
 
                 //Redirect users in IssueTool of that project
                 var roomI = 'I' + id
-                    io.to(roomI).emit('redirectToLogin', "This project as been modified. Please log in again.");
+                    io.to(roomI).emit('redirectToLogin', "This project has been modified. Please log in again.");
 
                 resolve() 
             })

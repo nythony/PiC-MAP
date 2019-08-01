@@ -133,6 +133,9 @@
             function openCreateSubTaskForm() {
                 document.getElementById("createSubTask").style.display = "block";
                 document.getElementById("createTaskTool_ID").value = TaskTool_ID;
+
+                document.getElementById("editSubTask").style.display = "none";
+                document.getElementById("deleteSubTask").style.display = "none";
             }
                 
             function closeCreateSubTaskForm() {
@@ -144,6 +147,9 @@
                 document.getElementById("editSubTask").style.display = "block";
                 document.getElementById("editTaskTool_ID").value = TaskTool_ID;
                 document.getElementById("editTask_ID").value = Task_ID;
+
+                document.getElementById("createSubTask").style.display = "none";
+                document.getElementById("deleteSubTask").style.display = "none";
             }
 
             function closeEditSubTaskForm() {
@@ -155,6 +161,9 @@
                 document.getElementById("deleteSubTask").style.display = "block";
                 document.getElementById("deleteTaskTool_ID").value = TaskTool_ID;
                 document.getElementById("deleteTask_ID").value = Task_ID;
+
+                document.getElementById("createSubTask").style.display = "none";
+                document.getElementById("editSubTask").style.display = "none";
             }
 
             function closeDeleteSubTaskForm() {

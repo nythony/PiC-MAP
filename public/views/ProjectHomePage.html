@@ -114,6 +114,9 @@
             function openCreateTaskToolForm() {
                 document.getElementById("createTaskTool").style.display = "block";
                 document.getElementById("createTaskTool_ProjectID").value = projectidVP;
+
+                document.getElementById("editTaskTool").style.display = "none";
+                document.getElementById("deleteTaskTool").style.display = "none";
             }
 
             function closeCreateTaskToolForm() {
@@ -125,6 +128,9 @@
                 document.getElementById("editTaskTool").style.display = "block";
                 document.getElementById("editTaskTool_ProjectID").value = projectidVP;
                 document.getElementById("editTaskTool_TaskToolID").value = TaskTool_ID;
+
+                document.getElementById("createTaskTool").style.display = "none";
+                document.getElementById("deleteTaskTool").style.display = "none";
             }
 
             function closeEditTaskToolForm() {
@@ -136,6 +142,9 @@
                 document.getElementById("deleteTaskTool").style.display = "block";
                 document.getElementById("deleteTaskTool_ProjectID").value = projectidVP;
                 document.getElementById("deleteTaskTool_TaskToolID").value = TaskTool_ID;
+
+                document.getElementById("createTaskTool").style.display = "none";
+                document.getElementById("editTaskTool").style.display = "none";
             }
 
             function closeDeleteTaskToolForm() {

@@ -124,6 +124,9 @@
             function openCreateRequirementForm() {
                 document.getElementById("createRequirement").style.display = "block";
                 document.getElementById("createProject_ID").value = Project_ID;
+
+                document.getElementById("editRequirement").style.display = "none";
+                document.getElementById("deleteRequirement").style.display = "none";
             }
                 
             function closeCreateRequirementForm() {
@@ -135,6 +138,9 @@
                 document.getElementById("editRequirement").style.display = "block";
                 document.getElementById("editProject_ID").value = Project_ID;
                 document.getElementById("editReq_ID").value = Req_ID;
+
+                document.getElementById("createRequirement").style.display = "none";
+                document.getElementById("deleteRequirement").style.display = "none";
             }
 
             function closeEditRequirementForm() {
@@ -146,6 +152,9 @@
                 document.getElementById("deleteRequirement").style.display = "block";
                 document.getElementById("deleteProject_ID").value = Project_ID;
                 document.getElementById("deleteReq_ID").value = Req_ID;
+
+                document.getElementById("createRequirement").style.display = "none";
+                document.getElementById("editRequirement").style.display = "none";
             }
 
             function closeDeleteRequirementForm() {
