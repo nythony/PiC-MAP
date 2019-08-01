@@ -295,20 +295,39 @@
         function openCreateProjectForm(Project_ID){
             document.getElementById("projectForm").style.display = "block";
             document.getElementById("createProject_ID").value = Project_ID;
+
+            document.getElementById("joinProjectForm").style.display = "none";
+            document.getElementById("editProjectForm").style.display = "none";
+            document.getElementById("deleteProjectForm").style.display = "none";
+
         }
 
         function openEditProjectForm(Project_ID){
             document.getElementById("editProjectForm").style.display = "block";
             document.getElementById("editProject_ID").value = Project_ID;
+
+            document.getElementById("joinProjectForm").style.display = "none";
+            document.getElementById("projectForm").style.display = "none";
+            document.getElementById("deleteProjectForm").style.display = "none";
         }
 
         function openDeleteProjectForm(Project_ID){
             document.getElementById("deleteProjectForm").style.display = "block";
             document.getElementById("deleteProject_ID").value = Project_ID;
+
+            document.getElementById("joinProjectForm").style.display = "none";
+            document.getElementById("projectForm").style.display = "none";
+            document.getElementById("editProjectForm").style.display = "none";
+
         }
 
         function openJoinProjectForm(){
             document.getElementById("joinProjectForm").style.display = "block";
+
+            document.getElementById("projectForm").style.display = "none";
+            document.getElementById("editProjectForm").style.display = "none";
+            document.getElementById("deleteProjectForm").style.display = "none";
+
         }
 
 
