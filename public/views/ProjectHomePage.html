@@ -5,8 +5,11 @@
     <title>PiC-MAP - Project Home Page</title>
     <link rel="icon" href="/img/favicon.png">
     <link rel="stylesheet" href="/css/styles.css">
+    <meta name="viewport" charset="utf-8" content="width=device-width, initial-scale=1">
 </head>
 <style>
+    h2 {color: #f1f1f1;}
+    p {color: #f1f1f1;}
         /* Button used to open the contact form - fixed at the bottom of the page */
 /*        .open-button {
             background-color: #555;
@@ -17,44 +20,50 @@
         }*/
 
         /* The popup form - hidden by default */
-        .form-popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 300px;
-            height: 300px;
-            margin-left: -150px;
-            margin-top: -150px;
-            border: 3px solid #f1f1f1;
-        }
 
-        /* Add styles to the form container */
-        .form-container {
-            max-width: 300px;
-            padding: 10px;
-            background-color: white;
-        }
+    .form-popup {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      right: 15px;
+      border: 3px solid #f1f1f1;
+      z-index: 9;
+    }
 
-        /* Full-width input fields */
-        .form-container input[type=text], .form-container input[type=password] {
-            width: 100%;
-            padding: 15px;
-            margin: 5px 0 22px 0;
-            border: none;
-            background: #f1f1f1;
-        }
+    /* Add styles to the form container */
+    .form-container {
+      max-width: 300px;
+      padding: 10px;
+      background-color: white;
+    }
 
-        /* When the inputs get focus, do something */
-        .form-container input[type=text]:focus, .form-container input[type=password]:focus {
-            background-color: #ddd;
-            outline: none;
-        }
+    /* Full-width input fields */
+    .form-container input[type=text], .form-container input[type=password] {
+      width: 100%;
+      padding: 15px;
+      margin: 5px 0 22px 0;
+      border: none;
+      background: #f1f1f1;
+    }
 
-        /* Add some hover effects to buttons */
-        .form-container .btn:hover, .open-button:hover {
-            opacity: 1;
-        }
+    .form-container input[type=date], .form-container input[type=password] {
+      width: 100%;
+      padding: 15px;
+      margin: 5px 0 22px 0;
+      border: none;
+      background: #f1f1f1;
+    }
+
+    /* When the inputs get focus, do something */
+    .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+      background-color: #ddd;
+      outline: none;
+    }
+
+    /* Add some hover effects to buttons */
+    .form-container .btn:hover, .open-button:hover {
+      opacity: 1;
+    }
 </style>
 <body>
     <div id="header" class="header"></div>
@@ -92,8 +101,8 @@
     <div class="form-popup" id="deleteTaskTool">
         <form class="form-container" id="deleteTaskToolForm" name="deleteTaskToolForm">
             <h1>Delete a Task Tool</h1>
-            <p><b>Are you sure you wish to delete this task tool?</b></p>
-            <p><b>This can not be undone once deleted.</b></p>
+            <label><b>Are you sure you wish to delete this task tool?</b></label></p>
+            <label><b>This can not be undone once deleted.</b></label></p>
             <input type="hidden" id="deleteTaskTool_ProjectID" name="deleteTaskTool_ProjectID" autocomplete="off" />
             <input type="hidden" id="deleteTaskTool_TaskToolID" name="TaskTool_ID" autocomplete="off" />
             <button class="btn" type="submit">Delete</button>
@@ -162,7 +171,10 @@
             <p>
                 <button onclick=openDeleteTaskToolForm({{TaskTool_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
                 <button onclick=openEditTaskToolForm({{TaskTool_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
-                <br><br>{{TaskToolName}}
+                <br><br>
+
+                <h2>{{TaskToolName}}</h2><br>
+
                 <form action="/TaskTool" style="display: inline; float:left; padding: 4px;">
                     <input type="hidden" id="username" name="username" value="{{username}}" required />
                     <input type="hidden" id="userid" name="userid" value="{{userid}}" required />

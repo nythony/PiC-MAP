@@ -7,13 +7,13 @@
     </head>
     <style>
         /* Button used to open the contact form - fixed at the bottom of the page */
-/*        .open-button {
+        .open-button {
             background-color: #555;
             color: white;
             border: none;
             cursor: pointer;
             opacity: 0.8;
-        }*/
+        }
 
         /* The popup form - hidden by default */
         .form-popup {
@@ -151,7 +151,7 @@
             <form action="/logout" method="post" style="display: inline-block; float:right; padding: 4px;">
                 <button class"button" type="submit">Log Out</button>
             </form>
-            <form action="/ProjectHomePage" id="backToProjectHomePage" method="get">
+            <form action="/ProjectHomePage" id="backToProjectHomePage" method="get" style="display: inline-block; float:right; padding: 4px;">
                 <input type="hidden" id="usernameVP" name="usernameVP" value="{{username}}" required />
                 <input type="hidden" id="useridVP" name="useridVP" value="{{userid}}" required />
                 <input type="hidden" id="projectidVP" name="projectidVP" value="{{projectidVP}}" required />
@@ -174,13 +174,13 @@
         <script id="issue1-template" type="text/html">
             {{#issues1}}
                 <div class="issue"><p>
-                    <button onclick=openEditIssueForm({{Issue_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
+                    <button class="open-button" onclick=openEditIssueForm({{Issue_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
                     <br><br>{{IssueName}}
                     <br>{{IssueDesc}}
                     <br>{{IssueUsers}}
                     <br>{{DueDate}}
                     <br>{{IssueCategory}}<br><br>
-                    <button onclick=openDeleteIssueForm({{Issue_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
+                    <button class="open-button" onclick=openDeleteIssueForm({{Issue_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
                 </p></div>
             {{/issues1}}
         </script>
@@ -188,13 +188,13 @@
         <script id="issue2-template" type="text/html">
             {{#issues2}}
                 <div class="issue"><p>
-                    <button onclick=openEditIssueForm({{Issue_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
+                    <button class="open-button" onclick=openEditIssueForm({{Issue_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
                     <br><br>{{IssueName}}
                     <br>{{IssueDesc}}
                     <br>{{IssueUsers}}
                     <br>{{DueDate}}
                     <br>{{IssueCategory}}<br><br>
-                    <button onclick=openDeleteIssueForm({{Issue_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
+                    <button class="open-button" onclick=openDeleteIssueForm({{Issue_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
                 </p></div>
             {{/issues2}}
         </script>
@@ -202,13 +202,13 @@
         <script id="issue3-template" type="text/html">
             {{#issues3}}
                 <div class="issue"><p>
-                    <button onclick=openEditIssueForm({{Issue_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
+                    <button class="open-button" onclick=openEditIssueForm({{Issue_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
                     <br><br>{{IssueName}}
                     <br>{{IssueDesc}}
                     <br>{{IssueUsers}}
                     <br>{{DueDate}}
                     <br>{{IssueCategory}}<br><br>
-                    <button onclick=openDeleteIssueForm({{Issue_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
+                    <button class="open-button" onclick=openDeleteIssueForm({{Issue_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
                 </p></div>
             {{/issues3}}
         </script>
