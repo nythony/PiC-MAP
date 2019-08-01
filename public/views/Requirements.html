@@ -54,11 +54,11 @@
     </style>
     <body>
         <div id="header" class="header"></div>
-        <div style="text-align: center"><br><br><button class="open-button" onclick="openCreateRequirementForm()" style="display: inline-block;">Create a new Requirement</button></div>
+        <div style="text-align: center"><br><br><button class="open-button" onclick="openCreateRequirementForm()" style="display: inline-block;">Create a New Requirement</button></div>
         <div style="clear: both;"></div>
-        <div id="requirement1" class="project__requirement"><h3 style="color: white; text-align:center;">To-Do</h3></div>
-        <div id="requirement2" class="project__requirement"><h3 style="color: white; text-align:center;">Doing</h3></div>
-        <div id="requirement3" class="project__requirement"><h3 style="color: white; text-align:center;">Done</h3></div>
+        <div id="requirement1" class="project__requirement"><h2 style="color: white; text-align:center;">To Do</h2></div>
+        <div id="requirement2" class="project__requirement"><h2 style="color: white; text-align:center;">Doing</h2></div>
+        <div id="requirement3" class="project__requirement"><h2 style="color: white; text-align:center;">Done</h2></div>
 
         
         <div class="form-popup" id="createRequirement">
@@ -72,7 +72,7 @@
                 <br></b><p id="usersCreateRequirement"></p><br>
                 <label><b>Assign status of Requirement</b></label><br>
                 <div id="RequirementCat">
-                    <input type="radio" id="r7" name="cat" value="1" required>To-Do  
+                    <input type="radio" id="r7" name="cat" value="1" required>To Do  
                     <input type="radio" id="r8" name="cat" value="2">Doing  
                     <input type="radio" id="r9" name="cat" value="3">Done  
                 </div><br>
@@ -95,7 +95,7 @@
                 <br></b><p id="usersEditRequirement"></p><br>
                 <label><b>Assign status of Requirement</b></label><br>
                 <div id="RequirementCat">
-                    <input type="radio" id="r10" name="cat" value="1" required>To-Do  
+                    <input type="radio" id="r10" name="cat" value="1" required>To Do  
                     <input type="radio" id="r11" name="cat" value="2">Doing  
                     <input type="radio" id="r12" name="cat" value="3">Done  
                 </div><br>
@@ -174,45 +174,45 @@
         </script>
 
         <script id="requirement1-template" type="text/html">
-            <h3 style="color: white; text-align:center;">To-Do</h3>
+            <h2 style="color: white; text-align:center;">To Do</h2>
             {{#requirements1}}
                 <div class="requirement"><p>
                     <button onclick=openEditRequirementForm({{Req_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
                     <button onclick=openDeleteRequirementForm({{Req_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
-                    <h2><br><br>{{RequirementName}}</h2><br>
+                    <h2><br>{{RequirementName}}</h2>
                     <br>{{RequirementDesc}}<br>
-                    <br>{{RequirementUsers}}
-                    <br>{{DueDate}}<br><br>
+                    <br>Users Assigned: {{RequirementUsers}}
+                    <br>Due Date: {{DueDate}}<br><br>
                     
                 </p></div>
             {{/requirements1}}
         </script>
 
         <script id="requirement2-template" type="text/html">
-            <h3 style="color: white; text-align:center;">Doing</h3>
+            <h2 style="color: white; text-align:center;">Doing</h2>
             {{#requirements2}}
                 <div class="requirement"><p>
                     <button onclick=openEditRequirementForm({{Req_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
                     <button onclick=openDeleteRequirementForm({{Req_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
-                    <h2><br><br>{{RequirementName}}</h2><br>
+                    <h2><br>{{RequirementName}}</h2>
                     <br>{{RequirementDesc}}<br>
-                    <br>{{RequirementUsers}}
-                    <br>{{DueDate}}<br><br>
+                    <br>Users Assigned: {{RequirementUsers}}
+                    <br>Due Date: {{DueDate}}<br><br>
                     
                 </p></div>
             {{/requirements2}}
         </script>
 
         <script id="requirement3-template" type="text/html">
-            <h3 style="color: white; text-align:center;">Done</h3>
+            <h2 style="color: white; text-align:center;">Done</h2>
             {{#requirements3}}
             <div class="requirement"><p>
                     <button onclick=openEditRequirementForm({{Req_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
                     <button onclick=openDeleteRequirementForm({{Req_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
-                    <h2><br><br>{{RequirementName}}</h2><br>
+                    <h2><br>{{RequirementName}}</h2>
                     <br>{{RequirementDesc}}<br>
-                    <br>{{RequirementUsers}}
-                    <br>{{DueDate}}<br><br>
+                    <br>Users Assigned: {{RequirementUsers}}
+                    <br>Due Date: {{DueDate}}<br><br>
                     
                 </p></div>
             {{/requirements3}}

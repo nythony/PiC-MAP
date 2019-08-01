@@ -64,11 +64,11 @@
     </style>
     <body>
         <div id="header" class="header"></div>
-        <div style="text-align: center"><br><br><button class="open-button" onclick="openCreateSubTaskForm()" style="display: inline-block;">Create a new Subtask</button></div>
+        <div style="text-align: center"><br><br><button class="open-button" onclick="openCreateSubTaskForm()" style="display: inline-block;">Create a New Subtask</button></div>
         <div style="clear: both;"></div>
-        <div id="subtask1" class="project__subtask1"><h3 style="color: white; text-align:center;">To-Do</h3></div>
-        <div id="subtask2" class="project__subtask1"><h3 style="color: white; text-align:center;">Doing</h3></div>
-        <div id="subtask3" class="project__subtask1"><h3 style="color: white; text-align:center;">Done</h3></div>
+        <div id="subtask1" class="project__subtask1"><h2 style="color: white; text-align:center;">To Do</h2></div>
+        <div id="subtask2" class="project__subtask1"><h2 style="color: white; text-align:center;">Doing</h2></div>
+        <div id="subtask3" class="project__subtask1"><h2 style="color: white; text-align:center;">Done</h2></div>
 
         <div class="form-popup" id="createSubTask">
             <form class="form-container" id="createSubTaskForm" name="createSubTaskForm">
@@ -81,7 +81,7 @@
                 <br></b><p id="usersCreateTask"></p><br>
                 <label><b>Assign status of Subtask</b></label><br>
                 <div id="TaskCat">
-                    <input type="radio" id="r13" name="cat" value="1" required>To-Do
+                    <input type="radio" id="r13" name="cat" value="1" required>To Do
                     <input type="radio" id="r14" name="cat" value="2">Doing 
                     <input type="radio" id="r15" name="cat" value="3">Done
                 </div><br>
@@ -104,7 +104,7 @@
                 <br><p id="usersEditTask"></p><br>
                 <label><b>Assign status of Subtask</b></label><br>
                 <div id="TaskCat">
-                    <input type="radio" id="r16" name="cat" value="1" required>To-Do  
+                    <input type="radio" id="r16" name="cat" value="1" required>To Do  
                     <input type="radio" id="r17" name="cat" value="2">Doing  
                     <input type="radio" id="r18" name="cat" value="3">Done  
                 </div><br>
@@ -183,45 +183,45 @@
         </script>
 
         <script id="subtask1-template" type="text/html">
-            <h3 style="color: white; text-align:center;">To-Do</h3>
+            <h2 style="color: white; text-align:center;">To Do</h2>
             {{#subtask1}}
                 <div class="subtask1"><p>
                     <button onclick=openEditSubTaskForm({{Task_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
                     <button onclick=openDeleteSubTaskForm({{Task_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
-                    <h2><br><br>{{TaskName}}</h2><br>
+                    <h2><br>{{TaskName}}</h2>
                     <br>{{TaskDesc}}<br>
-                    <br>{{TaskUsers}}
-                    <br>{{DueDate}}<br><br>
+                    <br>Users Assigned: {{TaskUsers}}
+                    <br>Due Date: {{DueDate}}<br><br>
                     
                 </p></div>
             {{/subtask1}}
         </script>
 
         <script id="subtask2-template" type="text/html">
-            <h3 style="color: white; text-align:center;">Doing</h3>
+            <h2 style="color: white; text-align:center;">Doing</h2>
             {{#subtask2}}
                 <div class="subtask1"><p>
                     <button onclick=openEditSubTaskForm({{Task_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
                     <button onclick=openDeleteSubTaskForm({{Task_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
-                    <h2><br><br>{{TaskName}}</h2><br>
+                    <h2><br>{{TaskName}}</h2>
                     <br>{{TaskDesc}}<br>
-                    <br>{{TaskUsers}}
-                    <br>{{DueDate}}<br><br>
+                    <br>Users Assigned: {{TaskUsers}}
+                    <br>Due Date: {{DueDate}}<br><br>
                     
                 </p></div>
             {{/subtask2}}
         </script>
 
         <script id="subtask3-template" type="text/html">
-            <h3 style="color: white; text-align:center;">Done</h3>
+            <h2 style="color: white; text-align:center;">Done</h2>
             {{#subtask3}}
                 <div class="subtask1"><p>
                     <button onclick=openEditSubTaskForm({{Task_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
                     <button onclick=openDeleteSubTaskForm({{Task_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
-                    <h2><br><br>{{TaskName}}</h2><br>
+                    <h2><br>{{TaskName}}</h2>
                     <br>{{TaskDesc}}<br>
-                    <br>{{TaskUsers}}
-                    <br>{{DueDate}}<br><br>
+                    <br>Users Assigned: {{TaskUsers}}
+                    <br>Due Date: {{DueDate}}<br><br>
                     
                 </p></div>
             {{/subtask3}}
