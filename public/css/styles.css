@@ -206,13 +206,13 @@ button:disabled {
     padding: 8px;
     display: flex;
     flex-wrap: wrap;
-    background-color: black;
+    background-color: white;
     text-align: center;
     justify-content: center;
 }
 
 .tasktool__subtaskCategory > div {
-    background-color: #ffffff;
+    background-color: #028482;
     margin: 8px;
     padding: 8px;
     font-size: 12px;
@@ -224,13 +224,13 @@ button:disabled {
     padding: 8px;
     display: flex;
     flex-wrap: wrap;
-    background-color: black;
+    background-color: white;
     text-align: center;
     justify-content: center;
 }
 
 .tasktool__subtask > div {
-    background-color: #ffffff;
+    background-color: #028482;
     margin: 8px;
     padding: 8px;
     font-size: 12px;
@@ -281,13 +281,12 @@ button:disabled {
     text-align: center;
     justify-content: center;
     vertical-align: top;
-    
 }
 
 .project__subtask1 > div {
-    background-color: #ffffff;
     margin: 6px;
     padding: 6px;
+    background-color: white;
     font-size: 12px;
     font-weight: 600;
     max-width: 100%;
