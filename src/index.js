@@ -519,7 +519,6 @@ io.on('connection', (socket) => {
                 text = 'INSERT INTO "Project"("ProjectName", "ProjectDesc", "UserCreate", "StartDate", "DueDate", "ProjectPassword") VALUES($1,$2,$3,$4,$5,$6) RETURNING *';
                 values = [name, desc, userCreate, start, due, pass];
             }
-            console.log(text)
             client.query(text, values, (err, res) => {
                 if (err) {
                     console.log(err.stack)

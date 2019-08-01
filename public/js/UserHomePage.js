@@ -127,8 +127,6 @@ $createProjectForm.addEventListener('submit', (e) => {
 
     //To be heard by index.js
     socket.emit('createProject', {pass, name, desc, start, due, user}, (error) => {
-        console.log("sending: ",{pass, name, desc, start, due, user})
-  
         if (error) {
             return alert(error)
         }
