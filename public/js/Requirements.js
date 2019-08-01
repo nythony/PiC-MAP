@@ -4,16 +4,18 @@ const socket = io()
 const $header = document.querySelector('#header')
 const $usersCreateRequirement = document.querySelector('#usersCreateRequirement')
 const $usersEditRequirement = document.querySelector('#usersEditRequirement')
-const $requirementCategory = document.querySelector('#requirementCategory')
-const $requirement = document.querySelector('#requirement')
+const $requirement1 = document.querySelector('#requirement1')
+const $requirement2 = document.querySelector('#requirement2')
+const $requirement3 = document.querySelector('#requirement3')
 const $createRequirementForm = document.querySelector('#createRequirementForm')
 const $editRequirementForm = document.querySelector('#editRequirementForm')
 const $deleteRequirementForm = document.querySelector('#deleteRequirementForm')
 
 // Templates
 const headerTemplate = document.querySelector('#header-template').innerHTML
-const requirementCategoryTemplate = document.querySelector('#requirementCategory-template').innerHTML
-const requirementTemplate = document.querySelector('#requirement-template').innerHTML
+const requirement1Template = document.querySelector('#requirement1-template').innerHTML
+const requirement2Template = document.querySelector('#requirement2-template').innerHTML
+const requirement3Template = document.querySelector('#requirement3-template').innerHTML
 const usersCreateRequirementTemplate = document.querySelector('#userscreaterequirement-template').innerHTML
 const usersEditRequirementTemplate = document.querySelector('#userseditrequirement-template').innerHTML
 
@@ -34,21 +36,26 @@ const headerhtml = Mustache.render(headerTemplate, {
 document.querySelector('#header').innerHTML = headerhtml
 //console.log("headerhtml: ", headerhtml)
 
-// Definition for requirementCategory event
-socket.on('requirementCategory', (requirementCategory) => {
-    const html = Mustache.render(requirementCategoryTemplate, {
-        RequirementCategory: requirementCategory.RequirementCategory
+// Definitions for requirement event
+socket.on('requirement1', (requirements1) => {
+    const html1 = Mustache.render(requirement1Template, {
+        requirements1
     })
-    document.querySelector('#requirementCategory').innerHTML = html
+    document.querySelector('#requirement1').innerHTML = html1
 })
 
-// Definition for requirement event
-socket.on('requirement', (requirements) => {
-    const html = Mustache.render(requirementTemplate, {
-        requirements
+socket.on('requirement2', (requirements2) => {
+    const html2 = Mustache.render(requirement2Template, {
+        requirements2
     })
-    //console.log(requirements)
-    document.querySelector('#requirement').innerHTML = html
+    document.querySelector('#requirement2').innerHTML = html2
+})
+
+socket.on('requirement3', (requirements3) => {
+    const html3 = Mustache.render(requirement3Template, {
+        requirements3
+    })
+    document.querySelector('#requirement3').innerHTML = html3
 })
 
 // Listen for createRequirementForm
@@ -60,10 +67,20 @@ $createRequirementForm.addEventListener('submit', (e) => {
     const RequirementDesc = e.target.elements.RequirementDesc.value
     const DueDate = e.target.elements.DueDate.value
     const Project_ID = e.target.elements.Project_ID.value
+    let RequirementCat;
+    if (document.getElementById('r7').checked) {
+        RequirementCat = document.getElementById('r7').value;
+    }
+    else  if (document.getElementById('r8').checked) {
+        RequirementCat = document.getElementById('r8').value;
+    }
+    else  if (document.getElementById('r9').checked) {
+        RequirementCat = document.getElementById('r9').value;
+    }
     const Users = Array.from(document.querySelectorAll('input[type=checkbox]:checked'))
         .map(item => item.value)
 
-    socket.emit('createRequirement', {RequirementName, RequirementDesc, DueDate, Project_ID, Users} , (error) => {
+    socket.emit('createRequirement', {RequirementName, RequirementDesc, DueDate, Project_ID, Users, RequirementCat} , (error) => {
         // Enable form
 
         if (error) {
@@ -86,10 +103,20 @@ $editRequirementForm.addEventListener('submit', (e) => {
     const RequirementDesc = e.target.elements.RequirementDesc.value
     const DueDate = e.target.elements.DueDate.value
     const Req_ID = e.target.elements.Req_ID.value
+    let RequirementCat;
+    if (document.getElementById('r10').checked) {
+        RequirementCat = document.getElementById('r10').value;
+    }
+    else  if (document.getElementById('r11').checked) {
+        RequirementCat = document.getElementById('r11').value;
+    }
+    else  if (document.getElementById('r12').checked) {
+        RequirementCat = document.getElementById('r12').value;
+    }
     const Users = Array.from(document.querySelectorAll('input[type=checkbox]:checked'))
         .map(item => item.value)
 
-    socket.emit('editRequirement', {RequirementName, RequirementDesc, DueDate, Project_ID, Req_ID, Users} , (error) => {
+    socket.emit('editRequirement', {RequirementName, RequirementDesc, DueDate, Project_ID, Req_ID, Users, RequirementCat} , (error) => {
         // Enable form
 
         if (error) {

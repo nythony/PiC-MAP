@@ -34,7 +34,7 @@ const headerhtml = Mustache.render(headerTemplate, {
 })
 document.querySelector('#header').innerHTML = headerhtml
 
-// Definition for issue1 event
+// Definitions for issue event
 socket.on('issue1', (issues1) => {
     const html1 = Mustache.render(issue1Template, {
         issues1

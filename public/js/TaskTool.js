@@ -4,22 +4,23 @@ const socket = io()
 const $header = document.querySelector('#header')
 const $usersCreateTask = document.querySelector('#usersCreateTask')
 const $usersEditTask = document.querySelector('#usersEditTask')
-const $subtaskCategory = document.querySelector('#subtaskCategory')
-const $subtask = document.querySelector('#subtask')
+const $subtask1 = document.querySelector('#subtask1')
+const $subtask2 = document.querySelector('#subtask2')
+const $subtask3 = document.querySelector('#subtask3')
 const $createSubTaskForm = document.querySelector('#createSubTaskForm')
 const $editSubTaskForm = document.querySelector('#editSubTaskForm')
 const $deleteSubTaskForm = document.querySelector('#deleteSubTaskForm')
 
 // Templates
 const headerTemplate = document.querySelector('#header-template').innerHTML
-const subtaskCategoryTemplate = document.querySelector('#subtaskCategory-template').innerHTML
-const subtaskTemplate = document.querySelector('#subtask-template').innerHTML
+const subtask1Template = document.querySelector('#subtask1-template').innerHTML
+const subtask2Template = document.querySelector('#subtask2-template').innerHTML
+const subtask3Template = document.querySelector('#subtask3-template').innerHTML
 const usersCreateTaskTemplate = document.querySelector('#userscreatetask-template').innerHTML
 const usersEditTaskTemplate = document.querySelector('#usersedittask-template').innerHTML
 
 // Options
 const {username, userid, roomNumber, TaskToolName, TaskTool_ID, projectNameVP, projectidVP, chatname, chatid} = Qs.parse(location.search, { ignoreQueryPrefix: true })
-//console.log("qs: ", {username, userid, roomNumber, TaskToolName, TaskTool_ID, projectNameVP, projectidVP})
 
 // Definition for header
 const headerhtml = Mustache.render(headerTemplate, {
@@ -33,21 +34,26 @@ const headerhtml = Mustache.render(headerTemplate, {
 })
 document.querySelector('#header').innerHTML = headerhtml
 
-// Definition for subtaskCategory event
-socket.on('subtaskCategory', (subtaskCategory) => {
-    const html = Mustache.render(subtaskCategoryTemplate, {
-        TaskCategory: subtaskCategory.TaskCategory
+// Definitions for subtask event
+socket.on('subtask1', (subtask1) => {
+    const html1 = Mustache.render(subtask1Template, {
+        subtask1
     })
-    document.querySelector('#subtaskCategory').innerHTML = html
+    document.querySelector('#subtask1').innerHTML = html1
 })
 
-// Definition for subtask event
-socket.on('subtask', (subtasks) => {
-    const html = Mustache.render(subtaskTemplate, {
-        subtasks
+socket.on('subtask2', (subtask2) => {
+    const html2 = Mustache.render(subtask2Template, {
+        subtask2
     })
-    //console.log(subtasks)
-    document.querySelector('#subtask').innerHTML = html
+    document.querySelector('#subtask2').innerHTML = html2
+})
+
+socket.on('subtask3', (subtask3) => {
+    const html3 = Mustache.render(subtask3Template, {
+        subtask3
+    })
+    document.querySelector('#subtask3').innerHTML = html3
 })
 
 // Listen for createSubTaskForm
@@ -59,10 +65,20 @@ $createSubTaskForm.addEventListener('submit', (e) => {
     const TaskDesc = e.target.elements.TaskDesc.value
     const DueDate = e.target.elements.DueDate.value
     const TaskTool_ID = e.target.elements.TaskTool_ID.value
+    let TaskCat;
+    if (document.getElementById('r13').checked) {
+        TaskCat = document.getElementById('r13').value;
+    }
+    else  if (document.getElementById('r14').checked) {
+        TaskCat = document.getElementById('r14').value;
+    }
+    else  if (document.getElementById('r15').checked) {
+        TaskCat = document.getElementById('r16').value;
+    }
     const Users = Array.from(document.querySelectorAll('input[type=checkbox]:checked'))
         .map(item => item.value)
 
-    socket.emit('createSubTask', {TaskName, TaskDesc, DueDate, TaskTool_ID, Users} , (error) => {
+    socket.emit('createSubTask', {TaskName, TaskDesc, DueDate, TaskTool_ID, Users, TaskCat} , (error) => {
         // Enable form
 
         if (error) {
@@ -85,10 +101,20 @@ $editSubTaskForm.addEventListener('submit', (e) => {
     const TaskDesc = e.target.elements.TaskDesc.value
     const DueDate = e.target.elements.DueDate.value
     const Task_ID = e.target.elements.Task_ID.value
+    let TaskCat;
+    if (document.getElementById('r16').checked) {
+        TaskCat = document.getElementById('r16').value;
+    }
+    else  if (document.getElementById('r17').checked) {
+        TaskCat = document.getElementById('r17').value;
+    }
+    else  if (document.getElementById('r18').checked) {
+        TaskCat = document.getElementById('r18').value;
+    }
     const Users = Array.from(document.querySelectorAll('input[type=checkbox]:checked'))
         .map(item => item.value)
 
-    socket.emit('editSubTask', {TaskName, TaskDesc, DueDate, TaskTool_ID, Task_ID, Users} , (error) => {
+    socket.emit('editSubTask', {TaskName, TaskDesc, DueDate, TaskTool_ID, Task_ID, Users, TaskCat} , (error) => {
         // Enable form
 
         if (error) {

@@ -264,29 +264,77 @@ button:disabled {
 
 
 
-/* Requirements Stuff */
 
+/* Subtask in TT Stuff */
 
+/* Don't Delete! */
 
-/* Requirements Page Layout */
+/* subtask in TT Layout */
 
-.project__requirement {
-    margin: 8px;
-    padding: 8px;
-    display: flex;
-    flex-wrap: wrap;
-    background-color: black;
+.project__subtask1 {
+    margin: 6px;
+    padding: 6px;
+    width: 31%;
+    height: 100%;
+    display: inline-block;
+    background-color: #028482;
     text-align: center;
     justify-content: center;
+    vertical-align: top;
+    
+}
+
+.project__subtask1 > div {
+    background-color: #ffffff;
+    margin: 6px;
+    padding: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    max-width: 100%;
+}
+
+/* Requirement Styles */
+
+.subtask1 {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.subtask1 a {
+    color: #0074D9;
+}
+
+
+
+
+
+/* Requirement Stuff */
+
+
+
+/* Requirement Layout */
+
+.project__requirement {
+    margin: 6px;
+    padding: 6px;
+    width: 31%;
+    height: 100%;
+    display: inline-block;
+    background-color: #028482;
+    text-align: center;
+    justify-content: center;
+    vertical-align: top;
+    
 }
 
 .project__requirement > div {
     background-color: #ffffff;
-    margin: 8px;
-    padding: 8px;
+    margin: 6px;
+    padding: 6px;
     font-size: 12px;
     font-weight: 600;
-    max-width: 25%;
+    max-width: 100%;
 }
 
 /* Requirement Styles */
