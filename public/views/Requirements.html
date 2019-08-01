@@ -66,10 +66,12 @@
     </style>
     <body>
         <div id="header" class="header"></div>
-        <div id="requirementCategory" class="project__requirementCategory"></div>
-        <div id="requirement" class="project__requirement"></div>
-        <button onclick="openCreateRequirementForm()" style="position: absolute; left: 25%; display: inline-block;">Create a new Requirement</button>
+        <div style="text-align: center"><br><br><button class="open-button" onclick="openCreateRequirementForm()" style="display: inline-block;">Create a new Requirement</button></div>
         <div style="clear: both;"></div>
+        <div id="requirement1" class="project__requirement"><h3 style="color: white; text-align:center;">To-Do</h3></div>
+        <div id="requirement2" class="project__requirement"><h3 style="color: white; text-align:center;">Doing</h3></div>
+        <div id="requirement3" class="project__requirement"><h3 style="color: white; text-align:center;">Done</h3></div>
+
         
         <div class="form-popup" id="createRequirement">
             <form class="form-container" id="createRequirementForm" name="createRequirementForm">
@@ -80,6 +82,12 @@
                 <input type="text" name="RequirementDesc" placeholder="Requirement Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
                 <label><b>Assign requirement to user</b></label>
                 <br></b><p id="usersCreateRequirement"></p><br>
+                <label><b>Assign status of Requirement</b></label><br>
+                <div id="RequirementCat">
+                    <input type="radio" id="r7" name="cat" value="1" required>To-Do  
+                    <input type="radio" id="r8" name="cat" value="2">Doing  
+                    <input type="radio" id="r9" name="cat" value="3">Done  
+                </div><br>
                 <label><b>Due date</b></label>
                 <input type="date" name="DueDate" id="createDueDate" required autocomplete="off"><br>
                 <input type="hidden" id="createProject_ID" name="Project_ID" autocomplete="off"/>
@@ -97,6 +105,12 @@
                 <input type="text" name="RequirementDesc" placeholder="Requirement Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
                 <label><b>Assign requirement to user</b></label>
                 <br></b><p id="usersEditRequirement"></p><br>
+                <label><b>Assign status of Requirement</b></label><br>
+                <div id="RequirementCat">
+                    <input type="radio" id="r10" name="cat" value="1" required>To-Do  
+                    <input type="radio" id="r11" name="cat" value="2">Doing  
+                    <input type="radio" id="r12" name="cat" value="3">Done  
+                </div><br>
                 <label><b>Due date</b></label>
                 <input type="date" name="DueDate" id="editDueDate" required autocomplete="off"><br>
                 <input type="hidden" id="editProject_ID" name="Project_ID" autocomplete="off"/>
@@ -170,30 +184,49 @@
             <div style="clear: both;"></div>
         </script>
 
-        <script id="requirementCategory-template" type="text/html">
-            {{#requirementCategories}}
-                <div class="requirementCategory"><p>
-                    {{RequirementCategory}}<
+        <script id="requirement1-template" type="text/html">
+            <h3 style="color: white; text-align:center;">To-Do</h3>
+            {{#requirements1}}
+                <div class="requirement"><p>
+                    <button class="open-button" onclick=openEditRequirementForm({{Req_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
+                    <br><br>{{RequirementName}}
+                    <br>{{RequirementDesc}}
+                    <br>{{RequirementUsers}}
+                    <br>{{DueDate}}
+                    <br>{{RequirementCategory}}<br><br>
+                    <button class="open-button" onclick=openDeleteRequirementForm({{Req_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
                 </p></div>
-            {{/requirementCategories}}
+            {{/requirements1}}
         </script>
 
-        <script id="requirement-template" type="text/html">
-            {{#requirements}}
+        <script id="requirement2-template" type="text/html">
+            <h3 style="color: white; text-align:center;">Doing</h3>
+            {{#requirements2}}
                 <div class="requirement"><p>
-                    <button onclick=openEditRequirementForm({{Req_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
-                    <button onclick=openDeleteRequirementForm({{Req_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
-
-                    <br><br>
-
-                    <h2><b>{{RequirementName}}</b></h2><br>
-                    <p>{{RequirementDesc}}</p><br>
-                    <p>{{RequirementUsers}}</p>
-                    <p>{{DueDate}}</p>
-                    <p>{{RequirementCategory}}<p><br><br>
-                    
+                    <button class="open-button" onclick=openEditRequirementForm({{Req_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
+                    <br><br>{{RequirementName}}
+                    <br>{{RequirementDesc}}
+                    <br>{{RequirementUsers}}
+                    <br>{{DueDate}}
+                    <br>{{RequirementCategory}}<br><br>
+                    <button class="open-button" onclick=openDeleteRequirementForm({{Req_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
                 </p></div>
-            {{/requirements}}
+            {{/requirements2}}
+        </script>
+
+        <script id="requirement3-template" type="text/html">
+            <h3 style="color: white; text-align:center;">Done</h3>
+            {{#requirements3}}
+            <div class="requirement"><p>
+                    <button class="open-button" onclick=openEditRequirementForm({{Req_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
+                    <br><br>{{RequirementName}}
+                    <br>{{RequirementDesc}}
+                    <br>{{RequirementUsers}}
+                    <br>{{DueDate}}
+                    <br>{{RequirementCategory}}<br><br>
+                    <button class="open-button" onclick=openDeleteRequirementForm({{Req_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
+                </p></div>
+            {{/requirements3}}
         </script>
 
         <script id="userscreaterequirement-template" type="text/html">

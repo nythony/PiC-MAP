@@ -264,59 +264,76 @@ button:disabled {
 
 
 
-/* Requirements Stuff */
 
+/* Subtask in TT Stuff */
 
+/* Don't Delete! */
 
-/* Requirements Page Layout */
+/* subtask in TT Layout */
 
-.project__requirementCategory {
-    margin: 8px;
-    padding: 8px;
-    display: flex;
-    flex-wrap: wrap;
-    background-color: white;
+.project__subtask1 {
+    margin: 6px;
+    padding: 6px;
+    width: 31%;
+    height: 100%;
+    display: inline-block;
+    background-color: #028482;
     text-align: center;
     justify-content: center;
+    vertical-align: top;
 }
 
-.project__requirementCategory > div {
-    background-color: #028482;
-    margin: 8px;
-    padding: 8px;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.project__requirement {
-    margin: 8px;
-    padding: 8px;
-    display: flex;
-    flex-wrap: wrap;
+.project__subtask1 > div {
+    margin: 6px;
+    padding: 6px;
     background-color: white;
-    text-align: center;
-    justify-content: center;
-}
-
-.project__requirement > div {
-    background-color: #028482;
-    margin: 8px;
-    padding: 8px;
     font-size: 12px;
     font-weight: 600;
-    max-width: 25%;
+    max-width: 100%;
 }
 
-/* RequirementCategory Styles */
+/* Requirement Styles */
 
-.requirementCategory {
+.subtask1 {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
 
-.requirementCategory a {
+.subtask1 a {
     color: #0074D9;
+}
+
+
+
+
+
+/* Requirement Stuff */
+
+
+
+/* Requirement Layout */
+
+.project__requirement {
+    margin: 6px;
+    padding: 6px;
+    width: 31%;
+    height: 100%;
+    display: inline-block;
+    background-color: #028482;
+    text-align: center;
+    justify-content: center;
+    vertical-align: top;
+    
+}
+
+.project__requirement > div {
+    background-color: #ffffff;
+    margin: 6px;
+    padding: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    max-width: 100%;
 }
 
 /* Requirement Styles */
@@ -339,53 +356,26 @@ button:disabled {
 
 /* Issues Page Layout */
 
-.project__issueCategory {
-    margin: 8px;
-    padding: 8px;
-    display: flex;
-    flex-wrap: wrap;
-    background-color: white;
-    text-align: center;
-    justify-content: center;
-}
-
-.project__issueCategory > div {
-    background-color: #028482;
-    margin: 8px;
-    padding: 8px;
-    font-size: 12px;
-    font-weight: 600;
-}
-
 .project__issue {
-    margin: 8px;
-    padding: 8px;
-    display: flex;
-    flex-wrap: wrap;
-    background-color: white;
+    margin: 6px;
+    padding: 6px;
+    width: 31%;
+    height: 100%;
+    display: inline-block;
+    background-color: #028482;
     text-align: center;
     justify-content: center;
+    vertical-align: top;
+    
 }
 
 .project__issue > div {
-    background-color: #028482;
-    margin: 8px;
-    padding: 8px;
+    background-color: #ffffff;
+    margin: 6px;
+    padding: 6px;
     font-size: 12px;
     font-weight: 600;
-    max-width: 25%;
-}
-
-/* IssueCategory Styles */
-
-.issueCategory {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.issueCategory a {
-    color: #0074D9;
+    max-width: 100%;
 }
 
 /* Issue Styles */

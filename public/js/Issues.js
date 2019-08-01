@@ -4,7 +4,6 @@ const socket = io()
 const $header = document.querySelector('#header')
 const $usersCreateIssue = document.querySelector('#usersCreateIssue')
 const $usersEditIssue = document.querySelector('#usersEditIssue')
-//const $issueCategory = document.querySelector('#issueCategory')
 const $issue1 = document.querySelector('#issue1')
 const $issue2 = document.querySelector('#issue2')
 const $issue3 = document.querySelector('#issue3')
@@ -14,7 +13,6 @@ const $deleteIssueForm = document.querySelector('#deleteIssueForm')
 
 // Templates
 const headerTemplate = document.querySelector('#header-template').innerHTML
-//const issueCategoryTemplate = document.querySelector('#issueCategory-template').innerHTML
 const issue1Template = document.querySelector('#issue1-template').innerHTML
 const issue2Template = document.querySelector('#issue2-template').innerHTML
 const issue3Template = document.querySelector('#issue3-template').innerHTML
@@ -23,9 +21,6 @@ const usersEditIssueTemplate = document.querySelector('#userseditissue-template'
 
 // Options
 const {username, userid, roomNumber, ProjectName, Project_ID, projectNameVP, projectidVP, chatname, chatid} = Qs.parse(location.search, { ignoreQueryPrefix: true })
-//console.log("qs: ", {username, userid, roomNumber, ProjectName, Project_ID, projectNameVP, projectidVP})
-
-
 
 // Definition for header
 const headerhtml = Mustache.render(headerTemplate, {
@@ -38,32 +33,26 @@ const headerhtml = Mustache.render(headerTemplate, {
     chatid: chatid
 })
 document.querySelector('#header').innerHTML = headerhtml
-//console.log("headerhtml: ", headerhtml)
 
-// Definition for issueCategory event
-// socket.on('issueCategory', (issueCategory) => {
-//     const html = Mustache.render(issueCategoryTemplate, {
-//         IssueCategory: issueCategory.IssueCategory
-//     })
-//     document.querySelector('#issueCategory').innerHTML = html
-// })
-
-// Definition for issue1 event
-socket.on('issue', ({issues1, issues2, issues3}) => {
+// Definitions for issue event
+socket.on('issue1', (issues1) => {
     const html1 = Mustache.render(issue1Template, {
         issues1
     })
+    document.querySelector('#issue1').innerHTML = html1
+})
+
+socket.on('issue2', (issues2) => {
     const html2 = Mustache.render(issue2Template, {
         issues2
     })
+    document.querySelector('#issue2').innerHTML = html2
+})
+
+socket.on('issue3', (issues3) => {
     const html3 = Mustache.render(issue3Template, {
         issues3
     })
-    console.log(issues1)
-    console.log(issues2)
-    console.log(issues3)
-    document.querySelector('#issue1').innerHTML = html1
-    document.querySelector('#issue2').innerHTML = html2
     document.querySelector('#issue3').innerHTML = html3
 })
 
@@ -76,10 +65,20 @@ $createIssueForm.addEventListener('submit', (e) => {
     const IssueDesc = e.target.elements.IssueDesc.value
     const DueDate = e.target.elements.DueDate.value
     const Project_ID = e.target.elements.Project_ID.value
+    let IssueCat;
+    if (document.getElementById('r1').checked) {
+        IssueCat = document.getElementById('r1').value;
+    }
+    else  if (document.getElementById('r2').checked) {
+        IssueCat = document.getElementById('r2').value;
+    }
+    else  if (document.getElementById('r3').checked) {
+        IssueCat = document.getElementById('r3').value;
+    }
     const Users = Array.from(document.querySelectorAll('input[type=checkbox]:checked'))
         .map(item => item.value)
 
-    socket.emit('createIssue', {IssueName, IssueDesc, DueDate, Project_ID, Users} , (error) => {
+    socket.emit('createIssue', {IssueName, IssueDesc, DueDate, Project_ID, Users, IssueCat} , (error) => {
         // Enable form
 
         if (error) {
@@ -102,10 +101,20 @@ $editIssueForm.addEventListener('submit', (e) => {
     const IssueDesc = e.target.elements.IssueDesc.value
     const DueDate = e.target.elements.DueDate.value
     const Issue_ID = e.target.elements.Issue_ID.value
+    let IssueCat;
+    if (document.getElementById('r4').checked) {
+        IssueCat = document.getElementById('r4').value;
+    }
+    else  if (document.getElementById('r5').checked) {
+        IssueCat = document.getElementById('r5').value;
+    }
+    else  if (document.getElementById('r6').checked) {
+        IssueCat = document.getElementById('r6').value;
+    }
     const Users = Array.from(document.querySelectorAll('input[type=checkbox]:checked'))
         .map(item => item.value)
 
-    socket.emit('editIssue', {IssueName, IssueDesc, DueDate, Project_ID, Issue_ID, Users} , (error) => {
+    socket.emit('editIssue', {IssueName, IssueDesc, DueDate, Project_ID, Issue_ID, Users, IssueCat} , (error) => {
         // Enable form
 
         if (error) {
