@@ -60,17 +60,39 @@
     <div id="header" class="header"></div>
     <div id="taskTool" class="tasktool__subtask"></div>
     <button class="open-button" onclick="openCreateTaskToolForm()" style="position: absolute; left: 25%; display: inline-block;">Create a new Task Tool</button>
-    <div id="reqButton"></div>
-    <div id="issuesButton"></div>
-    <div id="chatappButton"></div>
-
+    <form action="/chatapp" style="display: inline-block; float:right; padding: 4px">
+        <input type="hidden" id="username" name="username" required />
+        <input type="hidden" id="userid" name="userid" required />
+        <input type="hidden" id="room" name="room" required />
+        <input type="hidden" id="chatroomid" name="chatroomid" required />
+        <input type="hidden" id="roomNumber" name="roomNumber" required />
+        <script type="text/javascript">
+            document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
+            document.getElementById('userid').value = <%- JSON.stringify(user.userid) %>;
+            document.getElementById('room').value = <%- JSON.stringify(user.chatname) %>;
+            document.getElementById('chatroomid').value = <%- JSON.stringify(user.chatroomid) %>;
+            document.getElementById('roomNumber').value = 'C'+<%- JSON.stringify(user.currProjectID) %>;
+        </script>
+        <button>ChatApp</button>
+    </form>
+    <!--
+    <form action="/UserHomePage" id="backToUserHomePage" method="get" style="display: inline-block; float:right; padding: 4px;">
+        <input type="hidden" id="username" name="username" value="{{username}}" required />
+        <input type="hidden" id="password" name="password" required />
+        <script type="text/javascript">
+            document.getElementById('username').value = <%- JSON.stringify(user.name) %>;
+            document.getElementById('password').value = <%- JSON.stringify(user.password) %>;
+        </script>
+        <button class"button" type="submit">Return to User Home Page</button>
+    </form>
+        -->
     <div style="clear: both;"></div>
 
     <div class="form-popup" id="createTaskTool">
         <form class="form-container" id="createTaskToolForm" name="createTaskToolForm">
             <h1>Create a new Task Tool</h1>
             <label><b>Task Tool Name</b></label>
-            <input type="text" name="TaskToolName" placeholder="new task tool name" required autocomplete="off">
+            <input type="text" name="TaskToolName" placeholder="new task tool name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
             <input type="hidden" id="createTaskTool_ProjectID" name="createTaskTool_ProjectID" autocomplete="off" />
             <button class="btn" type="submit">Create Task Tool</button>
             <button class="btn cancel" onclick="closeCreateTaskToolForm()" type="reset">Cancel</button>
@@ -81,7 +103,7 @@
         <form class="form-container" id="editTaskToolForm" name="editTaskToolForm">
             <h1>Edit a Task Tool</h1>
             <label><b>Name</b></label>
-            <input type="text" name="TaskToolName" placeholder="new task tool name" required autocomplete="off" />
+            <input type="text" name="TaskToolName" placeholder="new task tool name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes"required autocomplete="off" />
             <input type="hidden" id="editTaskTool_ProjectID" name="editTaskTool_ProjectID" autocomplete="off" />
             <input type="hidden" id="editTaskTool_TaskToolID" name="TaskTool_ID" autocomplete="off" />
             <button class="btn" type="submit">Update Task Tool</button>
@@ -140,12 +162,16 @@
         <h1 style="text-align:right;">{{username}}</h1>
 
         <!--ALINA: Button for going back to UserHomePage. The following are fields required for URL. The id and name must be the same as loginpage-->
-        <form id="backToUserHomePage" action="/UserHomePage">
+        <form id="backToUserHomePage" action = "/UserHomePage">
             <input type="hidden" id="username" name="username" required />
             <input type="hidden" id="password" name="password" required />
             <input type="hidden" id="socketid" name="socketid" required />
             <button type="submit">Back to User Home Page</button>
         </form>
+
+
+
+
 
         <form action="/logout" method="post" style="display: inline-block; float:right; padding: 4px;">
             <button class"button" type="submit">Log Out</button>
@@ -170,59 +196,12 @@
                     <input type="hidden" id="TaskTool_ID" name="TaskTool_ID" value="{{TaskTool_ID}}" required />
                     <input type="hidden" id="projectNameVP" name="projectNameVP" value="{{ProjectName}}" required />
                     <input type="hidden" id="projectidVP" name="projectidVP" value="{{Project_ID}}" required />
-                    <input type="hidden" id="chatname" name="chatname" value="{{chatname}}" required />
-                    <input type="hidden" id="chatid" name="chatid" value="{{chatid}}" required />
                     <button>View</button>
                 </form>
             </p>
         </div>
         {{/tasktools}}
     </script>
-
-    <script id="requirementsButton-template" type="text/html">
-        <form action="/Requirements" style="display: inline-block; float:right; padding:4px">
-            <input type="hidden" id="username" name="username" value="{{username}}" required />
-            <input type="hidden" id="userid" name="userid" value="{{userid}}" required />
-            <input type="hidden" id="roomNumber" name="roomNumber" value="R{{Project_ID}}" required />
-            <input type="hidden" id="ProjectName" name="ProjectName" value="{{ProjectName}}" required />
-            <input type="hidden" id="Project_ID" name="Project_ID" value="{{Project_ID}}" required />
-            <input type="hidden" id="projectNameVP" name="projectNameVP" value="{{ProjectName}}" required />
-            <input type="hidden" id="projectidVP" name="projectidVP" value="{{Project_ID}}" required />
-            <input type="hidden" id="chatname" name="chatname" value="{{chatname}}" required />
-            <input type="hidden" id="chatid" name="chatid" value="{{chatid}}" required />
-            <button>Project Requirements</button>
-        </form>
-    </script>
-
-    <script id="issuesButton-template" type="text/html">
-        <form action="/Issues" style="display: inline-block; float:right; padding:4px">
-            <input type="hidden" id="username" name="username" value="{{username}}" required />
-            <input type="hidden" id="userid" name="userid" value="{{userid}}" required />
-            <input type="hidden" id="roomNumber" name="roomNumber" value="I{{Project_ID}}" required />
-            <input type="hidden" id="ProjectName" name="ProjectName" value="{{ProjectName}}" required />
-            <input type="hidden" id="Project_ID" name="Project_ID" value="{{Project_ID}}" required />
-            <input type="hidden" id="projectNameVP" name="projectNameVP" value="{{ProjectName}}" required />
-            <input type="hidden" id="projectidVP" name="projectidVP" value="{{Project_ID}}" required />
-            <input type="hidden" id="chatname" name="chatname" value="{{chatname}}" required />
-            <input type="hidden" id="chatid" name="chatid" value="{{chatid}}" required />
-            <button>Project Issues</button>
-        </form>
-    </script>
-
-    <script id="chatappButton-template" type="text/html">
-        <form action="/chatapp" style="display: inline-block; float:right; padding: 4px">
-            <input type="hidden" id="username" name="username" value="{{username}}" required />
-            <input type="hidden" id="userid" name="userid" value="{{userid}}" required />
-            <input type="hidden" id="room" name="room" value="{{room}}" required />
-            <input type="hidden" id="chatroomid" name="chatroomid" value="{{chatroomid}}" required />
-            <input type="hidden" id="roomNumber" name="roomNumber" value="C{{Project_ID}}" required />
-            <input type="hidden" id="projectNameVP" name="projectNameVP" value="{{ProjectName}}" required />
-            <input type="hidden" id="projectidVP" name="projectidVP" value="{{Project_ID}}" required />
-            <button>ChatApp</button>
-        </form>
-    </script>
-
-
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
