@@ -206,13 +206,13 @@ button:disabled {
     padding: 8px;
     display: flex;
     flex-wrap: wrap;
-    background-color: black;
+    background-color: white;
     text-align: center;
     justify-content: center;
 }
 
 .tasktool__subtaskCategory > div {
-    background-color: #ffffff;
+    background-color: #028482;
     margin: 8px;
     padding: 8px;
     font-size: 12px;
@@ -224,13 +224,13 @@ button:disabled {
     padding: 8px;
     display: flex;
     flex-wrap: wrap;
-    background-color: black;
+    background-color: white;
     text-align: center;
     justify-content: center;
 }
 
 .tasktool__subtask > div {
-    background-color: #ffffff;
+    background-color: #028482;
     margin: 8px;
     padding: 8px;
     font-size: 12px;
@@ -275,13 +275,13 @@ button:disabled {
     padding: 8px;
     display: flex;
     flex-wrap: wrap;
-    background-color: black;
+    background-color: white;
     text-align: center;
     justify-content: center;
 }
 
 .project__requirementCategory > div {
-    background-color: #ffffff;
+    background-color: #028482;
     margin: 8px;
     padding: 8px;
     font-size: 12px;
@@ -293,13 +293,13 @@ button:disabled {
     padding: 8px;
     display: flex;
     flex-wrap: wrap;
-    background-color: black;
+    background-color: white;
     text-align: center;
     justify-content: center;
 }
 
 .project__requirement > div {
-    background-color: #ffffff;
+    background-color: #028482;
     margin: 8px;
     padding: 8px;
     font-size: 12px;
@@ -344,13 +344,13 @@ button:disabled {
     padding: 8px;
     display: flex;
     flex-wrap: wrap;
-    background-color: black;
+    background-color: white;
     text-align: center;
     justify-content: center;
 }
 
 .project__issueCategory > div {
-    background-color: #ffffff;
+    background-color: #028482;
     margin: 8px;
     padding: 8px;
     font-size: 12px;
@@ -362,13 +362,13 @@ button:disabled {
     padding: 8px;
     display: flex;
     flex-wrap: wrap;
-    background-color: black;
+    background-color: white;
     text-align: center;
     justify-content: center;
 }
 
 .project__issue > div {
-    background-color: #ffffff;
+    background-color: #028482;
     margin: 8px;
     padding: 8px;
     font-size: 12px;

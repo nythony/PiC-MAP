@@ -7,13 +7,13 @@
     </head>
     <style>
         /* Button used to open the contact form - fixed at the bottom of the page */
-        .open-button {
+/*        .open-button {
             background-color: #555;
             color: white;
             border: none;
             cursor: pointer;
             opacity: 0.8;
-        }
+        }*/
 
         /* The popup form - hidden by default */
         .form-popup {
@@ -59,7 +59,7 @@
         <div id="header" class="header"></div>
         <div id="requirementCategory" class="project__requirementCategory"></div>
         <div id="requirement" class="project__requirement"></div>
-        <button class="open-button" onclick="openCreateRequirementForm()" style="position: absolute; left: 25%; display: inline-block;">Create a new Requirement</button>
+        <button onclick="openCreateRequirementForm()" style="position: absolute; left: 25%; display: inline-block;">Create a new Requirement</button>
         <div style="clear: both;"></div>
         
         <div class="form-popup" id="createRequirement">
@@ -149,7 +149,7 @@
             <form action="/logout" method="post" style="display: inline-block; float:right; padding: 4px;">
                 <button class"button" type="submit">Log Out</button>
             </form>
-            <form action="/ProjectHomePage" id="backToProjectHomePage" method="get" style="display: inline-block; float:right; padding: 4px;">
+            <form action="/ProjectHomePage" id="backToProjectHomePage" method="get">
                 <input type="hidden" id="usernameVP" name="usernameVP" value="{{username}}" required />
                 <input type="hidden" id="useridVP" name="useridVP" value="{{userid}}" required />
                 <input type="hidden" id="projectidVP" name="projectidVP" value="{{projectidVP}}" required />
@@ -172,13 +172,13 @@
         <script id="requirement-template" type="text/html">
             {{#requirements}}
                 <div class="requirement"><p>
-                    <button class="open-button" onclick=openEditRequirementForm({{Req_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
+                    <button onclick=openEditRequirementForm({{Req_ID}}) style="display: inline; float:right; padding: 4px;" type="button">Edit</button>
                     <br><br>{{RequirementName}}
                     <br>{{RequirementDesc}}
                     <br>{{RequirementUsers}}
                     <br>{{DueDate}}
                     <br>{{RequirementCategory}}<br><br>
-                    <button class="open-button" onclick=openDeleteRequirementForm({{Req_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
+                    <button onclick=openDeleteRequirementForm({{Req_ID2}}) style="display: inline; float:left; padding: 4px;" type="button">Delete</button>
                 </p></div>
             {{/requirements}}
         </script>
