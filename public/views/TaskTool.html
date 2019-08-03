@@ -65,9 +65,9 @@
             <form class="form-container" id="createSubTaskForm" name="createSubTaskForm">
                 <h1>Create a new Subtask</h1>
                 <label><b>Name</b></label>
-                <input type="text" name="TaskName" placeholder="Subtask Name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
+                <input type="text" name="TaskName" placeholder="Subtask Name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" maxlength="100" required autocomplete="off">
                 <label><b>Description</b></label>
-                <input type="text" name="TaskDesc" placeholder="Subtask Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
+                <input type="text" name="TaskDesc" placeholder="Subtask Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" maxlength="100" required autocomplete="off">
                 <label><b>Assign task to user</b></label>
                 <br></b><p id="usersCreateTask"></p><br>
                 <label><b>Assign status of Subtask</b></label><br>
@@ -88,9 +88,9 @@
             <form class="form-container" id="editSubTaskForm" name="editSubTaskForm">
                 <h1>Edit a Subtask</h1>
                 <label><b>Name</b></label>
-                <input type="text" name="TaskName" placeholder="Subtask Name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
+                <input type="text" name="TaskName" placeholder="Subtask Name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" maxlength="100" required autocomplete="off">
                 <label><b>Description</b></label>
-                <input type="text" name="TaskDesc" placeholder="Subtask Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
+                <input type="text" name="TaskDesc" placeholder="Subtask Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" maxlength="100" required autocomplete="off">
                 <label><b>Assign task to user</b></label>
                 <br><p id="usersEditTask"></p><br>
                 <label><b>Assign status of Subtask</b></label><br>

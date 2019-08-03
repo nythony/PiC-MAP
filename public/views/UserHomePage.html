@@ -101,13 +101,13 @@
               <br>
 
             <label><b>Project Name</b></label>
-            <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" pattern="[^'\x22]+" autocomplete="off" title = "Please do not enter any single or double quotes" required>
+            <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" pattern="[^'\x22]+" autocomplete="off" title = "Please do not enter any single or double quotes" maxlength="100" required>
 
             <label><b>Project Password</b> </label>
-            <input type="password" id="projectPassword" name="projectPassword" placeholder="Enter the project password" pattern="[^'\x22]+" autocomplete="off" title = "Please do not enter any single or double quotes" required>
+            <input type="password" id="projectPassword" name="projectPassword" placeholder="Enter the project password" pattern="[^'\x22]+" autocomplete="off" title = "Please do not enter any single or double quotes" maxlength="100" required>
 
             <label><b>Project ID</b> </label>
-            <input type="text" id="joinid" name="joinid" placeholder="Enter the project ID" pattern="[0-9]+" autocomplete="off" title = "Please only enter numbers" required>
+            <input type="text" id="joinid" name="joinid" placeholder="Enter the project ID" pattern="[0-9]+" autocomplete="off" title = "Please only enter numbers" maxlength="100" required>
 
             <button type="submit" class="btn">Join</button>
             <button type="button" class="btn cancel" onclick="closeJoinProjectForm()">Close</button>
@@ -157,10 +157,10 @@
                     <h1>Edit Your Project</h1>
                     <br>
                     <label><b>Name</b> </label>
-                    <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required>
+                    <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" maxlength="100" required>
 
                     <label><b>Description</b> <i>(optional)</i></label>
-                    <input type="text" id="projectDescription" name="projectDescription" placeholder="Enter the project description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" value = "">
+                    <input type="text" id="projectDescription" name="projectDescription" placeholder="Enter the project description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" maxlength="100" value = "">
 
                     <label><b>Start Date</b> <i>(optional)</i></label>
                     <input type="date" id="startDate" name="startDate"> <!--Defaulted to creation timestamp-->
@@ -185,7 +185,7 @@
                       
                     <!--Display project name for associated project-->
                     <label><b>Enter project name to confirm</b> </label>
-                    <input type="text" id="projectName" name="projectName" pattern="[^'\x22]+" placeholder="Enter the project name" autocomplete="off" title = "Please do not enter any single or double quotes" required>
+                    <input type="text" id="projectName" name="projectName" pattern="[^'\x22]+" placeholder="Enter the project name" autocomplete="off" title = "Please do not enter any single or double quotes" maxlength="100" required>
 
                     <input type="hidden" id="deleteProject_ID" name="Project_ID" />
 
@@ -206,13 +206,13 @@
             <br>
 
             <label><b>Project Password</b> <i>(required for users to join your project)</i></label>
-            <input type="password" id="projectPassword" name="projectPassword" placeholder="Enter the project password" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required>
+            <input type="password" id="projectPassword" name="projectPassword" placeholder="Enter the project password" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" maxlength="100" required>
 
             <label><b>Name</b></label>
-            <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required>
+            <input type="text" id="projectName" name="projectName" placeholder="Enter the project name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" maxlength="100" required>
 
             <label><b>Description</b> <i>(optional)</i></label>
-            <input type="text" id="projectDescription" name="projectDescription" placeholder="Enter the project description" pattern="[^'\x22]+" value = "" title = "Please do not enter any single or double quotes">
+            <input type="text" id="projectDescription" name="projectDescription" placeholder="Enter the project description" pattern="[^'\x22]+" value = "" title = "Please do not enter any single or double quotes" maxlength="100" >
 
             <label><b>Start Date</b> <i>(optional)</i></label>
             <input type="date" id="startDate" name="startDate"> <!--Defaulted to creation timestamp-->
