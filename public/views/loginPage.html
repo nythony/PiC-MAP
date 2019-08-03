@@ -92,8 +92,8 @@ body {font-family: Arial, Helvetica, sans-serif;}
         <h2>Please enter your username and password to sign in.</h2>
 
         <form id="login-form" action = "/UserHomePage">
-            <input type="text" name="username" placeholder="username" value = "" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required>
-            <input type="password" name="password" placeholder="password" value = "" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required>
+            <input type="text" name="username" placeholder="username" value = "" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" maxlength="100" required>
+            <input type="password" name="password" placeholder="password" value = "" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" maxlength="100" required>
             <input type="hidden" id="socketid" name="socketid" required />
             <!--pass in socket.id in order to emit to specific socket after inside app.get/UserHomePage-->
             <button type="submit">Sign In</button>
@@ -108,10 +108,10 @@ body {font-family: Arial, Helvetica, sans-serif;}
             <h1>Register</h1><br>
 
             <label><b>Username</b> </label>
-            <input type="text" name="username" placeholder="username" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required>
+            <input type="text" name="username" placeholder="username" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" maxlength="100" required>
 
             <label><b>Password</b></label>
-            <input type="password" name="password" placeholder="password" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes"required>
+            <input type="password" name="password" placeholder="password" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes"maxlength="100" required>
 
             <input type="hidden" id="socketid2" name="socketid2" required />
             <!--pass in socket.id in order to emit to specific socket after inside app.get/UserHomePage-->

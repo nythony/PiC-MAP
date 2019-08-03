@@ -65,9 +65,9 @@
             <form class="form-container" id="createRequirementForm" name="createRequirementForm">
                 <h1>Create a new Requirement</h1>
                 <label><b>Name</b></label>
-                <input type="text" name="RequirementName" placeholder="Requirement Name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
+                <input type="text" name="RequirementName" placeholder="Requirement Name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" maxlength="100" required autocomplete="off">
                 <label><b>Description</b></label>
-                <input type="text" name="RequirementDesc" placeholder="Requirement Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
+                <input type="text" name="RequirementDesc" placeholder="Requirement Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" maxlength="100" required autocomplete="off">
                 <label><b>Assign requirement to user</b></label>
                 <br></b><p id="usersCreateRequirement"></p><br>
                 <label><b>Assign status of Requirement</b></label><br>
@@ -88,9 +88,9 @@
             <form class="form-container" id="editRequirementForm" name="editRequirementForm">
                 <h1>Edit a Requirement</h1>
                 <label><b>Name</b></label>
-                <input type="text" name="RequirementName" placeholder="Requirement Name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
+                <input type="text" name="RequirementName" placeholder="Requirement Name" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" maxlength="100" required autocomplete="off">
                 <label><b>Description</b></label>
-                <input type="text" name="RequirementDesc" placeholder="Requirement Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" required autocomplete="off">
+                <input type="text" name="RequirementDesc" placeholder="Requirement Description" pattern="[^'\x22]+" title = "Please do not enter any single or double quotes" maxlength="100" required autocomplete="off">
                 <label><b>Assign requirement to user</b></label>
                 <br></b><p id="usersEditRequirement"></p><br>
                 <label><b>Assign status of Requirement</b></label><br>
