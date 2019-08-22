@@ -1,6 +1,4 @@
 # PiC-MAP.github.io
-Visit us at picmapmanager.herokuapp.com!
-
 PiC-MAP - Capitalizing on Project Management and Communication while minimizing issues!
 
 Hello!
@@ -11,5 +9,7 @@ and issue tracking as well as the option to create additional boards. Additional
 
 The application was built using NodeJs and simple HTML/CSS. Live display of information for all members watching a board is 
 possible through the use of Socket.io.
+
+Visit us at picmapmanager.herokuapp.com!
 
 This project was created by a team of students in a Software Engineering course at Boston University.
