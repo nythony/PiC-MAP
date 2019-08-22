@@ -1,4 +1,6 @@
 # PiC-MAP.github.io
+Visit us at picmapmanager.herokuapp.com!
+
 PiC-MAP - Capitalizing on Project Management and Communication while minimizing issues!
 
 Hello!
