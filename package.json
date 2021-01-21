@@ -18,7 +18,7 @@
     "moment": "^2.24.0",
     "pg": "^7.11.0",
     "require": "^2.4.20",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.4.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
